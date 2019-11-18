@@ -55,6 +55,8 @@
             this.ColumnProject = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnContent = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnFinishTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label7 = new System.Windows.Forms.Label();
+            this.textBoxKeyWord = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -63,6 +65,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.textBoxKeyWord);
+            this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.buttonSearch);
             this.groupBox1.Controls.Add(this.comboBoxSearchProject);
             this.groupBox1.Controls.Add(this.label3);
@@ -73,17 +77,17 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(5, 5);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(722, 57);
+            this.groupBox1.Size = new System.Drawing.Size(722, 99);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "查询";
             // 
             // buttonSearch
             // 
-            this.buttonSearch.Location = new System.Drawing.Point(627, 25);
+            this.buttonSearch.Location = new System.Drawing.Point(393, 25);
             this.buttonSearch.Name = "buttonSearch";
-            this.buttonSearch.Size = new System.Drawing.Size(75, 23);
-            this.buttonSearch.TabIndex = 6;
+            this.buttonSearch.Size = new System.Drawing.Size(75, 55);
+            this.buttonSearch.TabIndex = 8;
             this.buttonSearch.Text = "查询";
             this.buttonSearch.UseVisualStyleBackColor = true;
             this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
@@ -92,15 +96,15 @@
             // 
             this.comboBoxSearchProject.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSearchProject.FormattingEnabled = true;
-            this.comboBoxSearchProject.Location = new System.Drawing.Point(442, 25);
+            this.comboBoxSearchProject.Location = new System.Drawing.Point(59, 60);
             this.comboBoxSearchProject.Name = "comboBoxSearchProject";
-            this.comboBoxSearchProject.Size = new System.Drawing.Size(150, 20);
+            this.comboBoxSearchProject.Size = new System.Drawing.Size(140, 20);
             this.comboBoxSearchProject.TabIndex = 5;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(395, 30);
+            this.label3.Location = new System.Drawing.Point(12, 65);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(41, 12);
             this.label3.TabIndex = 4;
@@ -154,7 +158,7 @@
             this.groupBox2.Controls.Add(this.comboBoxAddProject);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox2.Location = new System.Drawing.Point(5, 62);
+            this.groupBox2.Location = new System.Drawing.Point(5, 104);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(722, 180);
             this.groupBox2.TabIndex = 1;
@@ -253,7 +257,7 @@
             this.comboBoxAddProject.FormattingEnabled = true;
             this.comboBoxAddProject.Location = new System.Drawing.Point(59, 27);
             this.comboBoxAddProject.Name = "comboBoxAddProject";
-            this.comboBoxAddProject.Size = new System.Drawing.Size(150, 20);
+            this.comboBoxAddProject.Size = new System.Drawing.Size(140, 20);
             this.comboBoxAddProject.TabIndex = 1;
             // 
             // label4
@@ -269,9 +273,9 @@
             // 
             this.groupBox3.Controls.Add(this.dataGridViewShow);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox3.Location = new System.Drawing.Point(5, 242);
+            this.groupBox3.Location = new System.Drawing.Point(5, 284);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(722, 290);
+            this.groupBox3.Size = new System.Drawing.Size(722, 248);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "显示";
@@ -294,7 +298,7 @@
             this.dataGridViewShow.RowHeadersVisible = false;
             this.dataGridViewShow.RowTemplate.Height = 23;
             this.dataGridViewShow.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewShow.Size = new System.Drawing.Size(716, 270);
+            this.dataGridViewShow.Size = new System.Drawing.Size(716, 228);
             this.dataGridViewShow.TabIndex = 1;
             this.dataGridViewShow.SelectionChanged += new System.EventHandler(this.dataGridViewShow_SelectionChanged);
             // 
@@ -324,6 +328,22 @@
             this.ColumnFinishTime.Name = "ColumnFinishTime";
             this.ColumnFinishTime.ReadOnly = true;
             this.ColumnFinishTime.Width = 120;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(205, 65);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(53, 12);
+            this.label7.TabIndex = 6;
+            this.label7.Text = "关键字：";
+            // 
+            // textBoxKeyWord
+            // 
+            this.textBoxKeyWord.Location = new System.Drawing.Point(264, 60);
+            this.textBoxKeyWord.Name = "textBoxKeyWord";
+            this.textBoxKeyWord.Size = new System.Drawing.Size(104, 21);
+            this.textBoxKeyWord.TabIndex = 7;
             // 
             // MainForm
             // 
@@ -377,6 +397,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnFinishTime;
         private System.Windows.Forms.Button buttonDelete;
         private System.Windows.Forms.Button buttonDateTimeNow;
+        private System.Windows.Forms.TextBox textBoxKeyWord;
+        private System.Windows.Forms.Label label7;
     }
 }
 

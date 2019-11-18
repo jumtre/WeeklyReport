@@ -74,7 +74,7 @@ namespace WeeklyReport
                 Name = "（全部）"
             };
             projectList.Add(projectAll);
-            DataTable dtProject = accessHelper.GetDataTable("select ID,Name from Project");
+            DataTable dtProject = accessHelper.GetDataTable("select ID, Name from Project");
             if (dtProject != null && dtProject.Rows.Count > 0)
             {
                 foreach (DataRow row in dtProject.Rows)
@@ -101,11 +101,13 @@ namespace WeeklyReport
                 reportAll.Clear();
             StringBuilder sql = new StringBuilder("select r.ID,r.UserID,u.Name as UserName,r.ProjectID,p.Name as ProjectName,r.Content,r.FinishTime from (Report r left join [User] u on r.UserID=u.ID) left join Project p on r.ProjectID=p.ID where 1=1");
             if (dateTimePickerSearchFrom.Checked)
-                sql.Append(" and r.FinishTime>=#" + dateTimePickerSearchFrom.Value.ToString(CommonData.DateFormat + " 00:00:00") + "#");
+                sql.Append(" and r.FinishTime >= #" + dateTimePickerSearchFrom.Value.ToString(CommonData.DateFormat + " 00:00:00") + "#");
             if (dateTimePickerSearchTo.Checked)
-                sql.Append(" and r.FinishTime<=#" + dateTimePickerSearchTo.Value.ToString(CommonData.DateFormat + " 23:59:59") + "#");
+                sql.Append(" and r.FinishTime <= #" + dateTimePickerSearchTo.Value.ToString(CommonData.DateFormat + " 23:59:59") + "#");
             if (comboBoxSearchProject.SelectedItem is Project project && project.ID > 0)
-                sql.Append(" and r.ProjectID=" + comboBoxSearchProject.SelectedValue);
+                sql.Append(" and r.ProjectID = " + comboBoxSearchProject.SelectedValue);
+            if (!string.IsNullOrWhiteSpace(textBoxKeyWord.Text.Trim()))
+                sql.Append(" and r.Content like '%" + textBoxKeyWord.Text.Trim() + "%'");
             sql.Append(" order by r.FinishTime,r.ID");
 
             if (reportAll == null)
