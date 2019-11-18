@@ -1,0 +1,15 @@
+﻿################################################################################
+# 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
+################################################################################
+
+/.vs/WeeklyReport
+/Common/bin
+/Common/obj
+/Management/bin
+/Management/obj
+/Model/bin
+/Model/obj
+/WeeklyReport/bin
+/WeeklyReport/obj
+/WRManagement/bin
+/WRManagement/obj
