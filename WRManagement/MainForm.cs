@@ -59,47 +59,12 @@ namespace WRManagement
             List<string> dictList = new List<string>() { "", "用户", "项目" };
             comboBoxDict.DataSource = dictList;
 
-            comboBoxCurrentUser.DataSource = GetUserList();
-            comboBoxCurrentUser.ValueMember = "ID";
-            comboBoxCurrentUser.DisplayMember = "Name";
+            BindUserDict();
         }
 
-        private List<User> GetUserList()
+        private void BindUserDict(bool lazyLoad = true)
         {
-            List<User> list = new List<User>();
-            DataTable dt = accessHelper.GetDataTable("select ID,Name from [User]");
-            if (dt != null && dt.Rows.Count > 0)
-            {
-                foreach (DataRow row in dt.Rows)
-                {
-                    User user = new User()
-                    {
-                        ID = DataConvert.ToInt(row["ID"]),
-                        Name = DataConvert.ToString(row["Name"])
-                    };
-                    list.Add(user);
-                }
-            }
-            return list;
-        }
-
-        private List<Project> GetProjectList()
-        {
-            List<Project> list = new List<Project>();
-            DataTable dt = accessHelper.GetDataTable("select ID,Name from Project");
-            if (dt != null && dt.Rows.Count > 0)
-            {
-                foreach (DataRow row in dt.Rows)
-                {
-                    Project project = new Project()
-                    {
-                        ID = DataConvert.ToInt(row["ID"]),
-                        Name = DataConvert.ToString(row["Name"])
-                    };
-                    list.Add(project);
-                }
-            }
-            return list;
+            CommonFunc.BindUserListToComboBox(comboBoxCurrentUser, null, false, lazyLoad);
         }
 
         private void BindUserList(List<User> list = null)
@@ -107,7 +72,7 @@ namespace WRManagement
             fireSelectionChanged = false;
             dataGridViewShow.Rows.Clear();
             if (list == null)
-                list = GetUserList();
+                list = CommonFunc.GetUserList(false);
             if (list == null || list.Count == 0)
                 return;
             foreach (User user in list)
@@ -128,7 +93,7 @@ namespace WRManagement
             fireSelectionChanged = false;
             dataGridViewShow.Rows.Clear();
             if (list == null)
-                list = GetProjectList();
+                list = CommonFunc.GetProjectList(false);
             if (list == null || list.Count == 0)
                 return;
             foreach (Project project in list)
@@ -144,10 +109,13 @@ namespace WRManagement
             fireSelectionChanged = true;
         }
 
-        private void RefreshDataGridView()
+        private void RefreshData()
         {
             if (currentDataType == CurrentDataType.User)
+            {
                 BindUserList();
+                BindUserDict(false);
+            }
             else if (currentDataType == CurrentDataType.Project)
                 BindProjectList();
         }
@@ -164,7 +132,7 @@ namespace WRManagement
                 currentDataType = CurrentDataType.User;
             else if (comboBoxDict.SelectedValue?.ToString() == "项目")
                 currentDataType = CurrentDataType.Project;
-            RefreshDataGridView();
+            RefreshData();
             //dataGridViewShow.SelectionChanged += dataGridViewShow_SelectionChanged;
             fireSelectionChanged = true;
         }
@@ -226,7 +194,7 @@ namespace WRManagement
             {
                 textBoxItemName.Text = string.Empty;
                 textBoxItemName.Tag = null;
-                RefreshDataGridView();
+                RefreshData();
             }
         }
 
@@ -319,9 +287,35 @@ namespace WRManagement
                 return;
             }
             if (iniHelper == null)
-                iniHelper = new IniHelper(CommonData.IniFilePath);
+                iniHelper = new IniHelper(CommonData.ConfigFilePath);
             iniHelper.Write("Common", "CurrentUserID", currentUser.ID.ToString());
             iniHelper.Write("Common", "CurrentUserName", currentUser.Name);
+        }
+
+        private void buttonBackup_Click(object sender, EventArgs e)
+        {
+            if (!checkBoxBackupDatabase.Checked && !checkBoxBackupConfigFile.Checked)
+            {
+                MessageBox.Show("请至少选择数据库和配置文件中的一项", "提示");
+                return;
+            }
+            this.Cursor = Cursors.WaitCursor;
+            buttonBackup.Enabled = false;
+            string backupPath = Path.Combine(CommonData.BackupPath, DateTime.Now.ToString(CommonData.DateTimeDetailFormat));
+            if (!Directory.Exists(backupPath))
+                Directory.CreateDirectory(backupPath);
+
+            //todo 文件锁定状态下的备份
+            //using
+            //FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            //StreamReader sr = new StreamReader(fs, System.Text.Encoding.Default);
+            if (checkBoxBackupDatabase.Checked)
+                File.Copy(CommonData.DBPath, Path.Combine(backupPath, CommonData.DBFileName));
+            if (checkBoxBackupConfigFile.Checked)
+                File.Copy(CommonData.ConfigFilePath, Path.Combine(backupPath, CommonData.ConfigFileName));
+
+            buttonBackup.Enabled = true;
+            this.Cursor = Cursors.Default;
         }
     }
 }

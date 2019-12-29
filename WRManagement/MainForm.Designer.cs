@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.dataGridViewShow = new System.Windows.Forms.DataGridView();
             this.ColumnSortNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -40,6 +41,10 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.textBoxItemName = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonBackup = new System.Windows.Forms.Button();
+            this.checkBoxBackupConfigFile = new System.Windows.Forms.CheckBox();
+            this.checkBoxBackupDatabase = new System.Windows.Forms.CheckBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.buttonSetCurrentUser = new System.Windows.Forms.Button();
             this.comboBoxCurrentUser = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -68,7 +73,7 @@
             this.dataGridViewShow.RowHeadersVisible = false;
             this.dataGridViewShow.RowTemplate.Height = 23;
             this.dataGridViewShow.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewShow.Size = new System.Drawing.Size(422, 141);
+            this.dataGridViewShow.Size = new System.Drawing.Size(422, 181);
             this.dataGridViewShow.TabIndex = 1;
             this.dataGridViewShow.SelectionChanged += new System.EventHandler(this.dataGridViewShow_SelectionChanged);
             // 
@@ -97,9 +102,9 @@
             // 
             this.groupBox3.Controls.Add(this.dataGridViewShow);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox3.Location = new System.Drawing.Point(5, 165);
+            this.groupBox3.Location = new System.Drawing.Point(5, 186);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(428, 161);
+            this.groupBox3.Size = new System.Drawing.Size(428, 201);
             this.groupBox3.TabIndex = 5;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "显示";
@@ -151,7 +156,7 @@
             this.groupBox2.Controls.Add(this.buttonAdd);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox2.Location = new System.Drawing.Point(5, 62);
+            this.groupBox2.Location = new System.Drawing.Point(5, 83);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(428, 103);
             this.groupBox2.TabIndex = 4;
@@ -167,6 +172,10 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.buttonBackup);
+            this.groupBox1.Controls.Add(this.checkBoxBackupConfigFile);
+            this.groupBox1.Controls.Add(this.checkBoxBackupDatabase);
+            this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.buttonSetCurrentUser);
             this.groupBox1.Controls.Add(this.comboBoxCurrentUser);
             this.groupBox1.Controls.Add(this.label2);
@@ -175,10 +184,53 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(5, 5);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(428, 57);
+            this.groupBox1.Size = new System.Drawing.Size(428, 78);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "功能";
+            // 
+            // buttonBackup
+            // 
+            this.buttonBackup.Location = new System.Drawing.Point(203, 48);
+            this.buttonBackup.Name = "buttonBackup";
+            this.buttonBackup.Size = new System.Drawing.Size(75, 23);
+            this.buttonBackup.TabIndex = 8;
+            this.buttonBackup.Text = "开始备份";
+            this.buttonBackup.UseVisualStyleBackColor = true;
+            this.buttonBackup.Click += new System.EventHandler(this.buttonBackup_Click);
+            // 
+            // checkBoxBackupConfigFile
+            // 
+            this.checkBoxBackupConfigFile.AutoSize = true;
+            this.checkBoxBackupConfigFile.Checked = true;
+            this.checkBoxBackupConfigFile.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxBackupConfigFile.Location = new System.Drawing.Point(125, 52);
+            this.checkBoxBackupConfigFile.Name = "checkBoxBackupConfigFile";
+            this.checkBoxBackupConfigFile.Size = new System.Drawing.Size(72, 16);
+            this.checkBoxBackupConfigFile.TabIndex = 7;
+            this.checkBoxBackupConfigFile.Text = "配置文件";
+            this.checkBoxBackupConfigFile.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxBackupDatabase
+            // 
+            this.checkBoxBackupDatabase.AutoSize = true;
+            this.checkBoxBackupDatabase.Checked = true;
+            this.checkBoxBackupDatabase.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxBackupDatabase.Location = new System.Drawing.Point(59, 52);
+            this.checkBoxBackupDatabase.Name = "checkBoxBackupDatabase";
+            this.checkBoxBackupDatabase.Size = new System.Drawing.Size(60, 16);
+            this.checkBoxBackupDatabase.TabIndex = 6;
+            this.checkBoxBackupDatabase.Text = "数据库";
+            this.checkBoxBackupDatabase.UseVisualStyleBackColor = true;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 53);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(41, 12);
+            this.label3.TabIndex = 5;
+            this.label3.Text = "备份：";
             // 
             // buttonSetCurrentUser
             // 
@@ -231,10 +283,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(438, 331);
+            this.ClientSize = new System.Drawing.Size(438, 392);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Padding = new System.Windows.Forms.Padding(5);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -268,6 +321,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnID;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnName;
         private System.Windows.Forms.TextBox textBoxItemName;
+        private System.Windows.Forms.CheckBox checkBoxBackupConfigFile;
+        private System.Windows.Forms.CheckBox checkBoxBackupDatabase;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button buttonBackup;
     }
 }
 

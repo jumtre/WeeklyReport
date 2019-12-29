@@ -30,6 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.textBoxKeyWord = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.buttonSearch = new System.Windows.Forms.Button();
             this.comboBoxSearchProject = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -43,11 +45,11 @@
             this.buttonExport = new System.Windows.Forms.Button();
             this.buttonEdit = new System.Windows.Forms.Button();
             this.buttonAdd = new System.Windows.Forms.Button();
-            this.richTextBoxAddContent = new System.Windows.Forms.RichTextBox();
+            this.richTextBoxOperateContent = new System.Windows.Forms.RichTextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.dateTimePickerAddFinishTime = new System.Windows.Forms.DateTimePicker();
+            this.dateTimePickerOperateFinishTime = new System.Windows.Forms.DateTimePicker();
             this.label5 = new System.Windows.Forms.Label();
-            this.comboBoxAddProject = new System.Windows.Forms.ComboBox();
+            this.comboBoxOperateProject = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.dataGridViewShow = new System.Windows.Forms.DataGridView();
@@ -55,8 +57,6 @@
             this.ColumnProject = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnContent = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnFinishTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label7 = new System.Windows.Forms.Label();
-            this.textBoxKeyWord = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -81,6 +81,22 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "查询";
+            // 
+            // textBoxKeyWord
+            // 
+            this.textBoxKeyWord.Location = new System.Drawing.Point(264, 60);
+            this.textBoxKeyWord.Name = "textBoxKeyWord";
+            this.textBoxKeyWord.Size = new System.Drawing.Size(104, 21);
+            this.textBoxKeyWord.TabIndex = 7;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(205, 65);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(53, 12);
+            this.label7.TabIndex = 6;
+            this.label7.Text = "关键字：";
             // 
             // buttonSearch
             // 
@@ -151,11 +167,11 @@
             this.groupBox2.Controls.Add(this.buttonExport);
             this.groupBox2.Controls.Add(this.buttonEdit);
             this.groupBox2.Controls.Add(this.buttonAdd);
-            this.groupBox2.Controls.Add(this.richTextBoxAddContent);
+            this.groupBox2.Controls.Add(this.richTextBoxOperateContent);
             this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Controls.Add(this.dateTimePickerAddFinishTime);
+            this.groupBox2.Controls.Add(this.dateTimePickerOperateFinishTime);
             this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Controls.Add(this.comboBoxAddProject);
+            this.groupBox2.Controls.Add(this.comboBoxOperateProject);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox2.Location = new System.Drawing.Point(5, 104);
@@ -215,13 +231,13 @@
             this.buttonAdd.UseVisualStyleBackColor = true;
             this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
             // 
-            // richTextBoxAddContent
+            // richTextBoxOperateContent
             // 
-            this.richTextBoxAddContent.Location = new System.Drawing.Point(59, 66);
-            this.richTextBoxAddContent.Name = "richTextBoxAddContent";
-            this.richTextBoxAddContent.Size = new System.Drawing.Size(533, 104);
-            this.richTextBoxAddContent.TabIndex = 5;
-            this.richTextBoxAddContent.Text = "";
+            this.richTextBoxOperateContent.Location = new System.Drawing.Point(59, 66);
+            this.richTextBoxOperateContent.Name = "richTextBoxOperateContent";
+            this.richTextBoxOperateContent.Size = new System.Drawing.Size(533, 104);
+            this.richTextBoxOperateContent.TabIndex = 5;
+            this.richTextBoxOperateContent.Text = "";
             // 
             // label6
             // 
@@ -232,15 +248,15 @@
             this.label6.TabIndex = 4;
             this.label6.Text = "内容：";
             // 
-            // dateTimePickerAddFinishTime
+            // dateTimePickerOperateFinishTime
             // 
-            this.dateTimePickerAddFinishTime.CustomFormat = "yyyy年MM月dd日 HH时mm分";
-            this.dateTimePickerAddFinishTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePickerAddFinishTime.Location = new System.Drawing.Point(311, 26);
-            this.dateTimePickerAddFinishTime.Name = "dateTimePickerAddFinishTime";
-            this.dateTimePickerAddFinishTime.ShowCheckBox = true;
-            this.dateTimePickerAddFinishTime.Size = new System.Drawing.Size(200, 21);
-            this.dateTimePickerAddFinishTime.TabIndex = 3;
+            this.dateTimePickerOperateFinishTime.CustomFormat = "yyyy年MM月dd日 HH时mm分";
+            this.dateTimePickerOperateFinishTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dateTimePickerOperateFinishTime.Location = new System.Drawing.Point(311, 26);
+            this.dateTimePickerOperateFinishTime.Name = "dateTimePickerOperateFinishTime";
+            this.dateTimePickerOperateFinishTime.ShowCheckBox = true;
+            this.dateTimePickerOperateFinishTime.Size = new System.Drawing.Size(200, 21);
+            this.dateTimePickerOperateFinishTime.TabIndex = 3;
             // 
             // label5
             // 
@@ -251,14 +267,14 @@
             this.label5.TabIndex = 2;
             this.label5.Text = "完成时间：";
             // 
-            // comboBoxAddProject
+            // comboBoxOperateProject
             // 
-            this.comboBoxAddProject.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxAddProject.FormattingEnabled = true;
-            this.comboBoxAddProject.Location = new System.Drawing.Point(59, 27);
-            this.comboBoxAddProject.Name = "comboBoxAddProject";
-            this.comboBoxAddProject.Size = new System.Drawing.Size(140, 20);
-            this.comboBoxAddProject.TabIndex = 1;
+            this.comboBoxOperateProject.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxOperateProject.FormattingEnabled = true;
+            this.comboBoxOperateProject.Location = new System.Drawing.Point(59, 27);
+            this.comboBoxOperateProject.Name = "comboBoxOperateProject";
+            this.comboBoxOperateProject.Size = new System.Drawing.Size(140, 20);
+            this.comboBoxOperateProject.TabIndex = 1;
             // 
             // label4
             // 
@@ -329,22 +345,6 @@
             this.ColumnFinishTime.ReadOnly = true;
             this.ColumnFinishTime.Width = 120;
             // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(205, 65);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(53, 12);
-            this.label7.TabIndex = 6;
-            this.label7.Text = "关键字：";
-            // 
-            // textBoxKeyWord
-            // 
-            this.textBoxKeyWord.Location = new System.Drawing.Point(264, 60);
-            this.textBoxKeyWord.Name = "textBoxKeyWord";
-            this.textBoxKeyWord.Size = new System.Drawing.Size(104, 21);
-            this.textBoxKeyWord.TabIndex = 7;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -381,11 +381,11 @@
         private System.Windows.Forms.Button buttonSearch;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox comboBoxAddProject;
+        private System.Windows.Forms.ComboBox comboBoxOperateProject;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.DateTimePicker dateTimePickerAddFinishTime;
+        private System.Windows.Forms.DateTimePicker dateTimePickerOperateFinishTime;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.RichTextBox richTextBoxAddContent;
+        private System.Windows.Forms.RichTextBox richTextBoxOperateContent;
         private System.Windows.Forms.Button buttonAdd;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.DataGridView dataGridViewShow;

@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0B99E15E-EF66-49DF-9AD8-54EC0373A0C2}</ProjectGuid>
+    <ProjectGuid>{575FAA64-1937-49EC-A9E9-45730B747C70}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>WRManagement</RootNamespace>
-    <AssemblyName>WRManagement</AssemblyName>
+    <RootNamespace>ToDoList</RootNamespace>
+    <AssemblyName>ToDoList</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,7 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Management.ico</ApplicationIcon>
+    <ApplicationIcon>ToDoList.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -91,7 +91,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Management.ico" />
+    <Content Include="ToDoList.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

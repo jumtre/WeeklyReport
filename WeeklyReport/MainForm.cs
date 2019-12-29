@@ -46,7 +46,7 @@ namespace WeeklyReport
                 this.Close();
                 return;
             }
-            iniHelper = new IniHelper(CommonData.IniFilePath);
+            iniHelper = new IniHelper(CommonData.ConfigFilePath);
             string currentUserIDStr = iniHelper.Read("Common", "CurrentUserID");
             if (!int.TryParse(currentUserIDStr, out currentUserID))
             {
@@ -55,44 +55,21 @@ namespace WeeklyReport
                 return;
             }
             accessHelper = new AccessHelper(CommonData.DBPath);
-            DateTime now = DateTime.Now;
-            DayOfWeek dayOfWeek = DateTime.Now.DayOfWeek;
-            int nDayOfWeek = (int)dayOfWeek;
-            if (dayOfWeek == DayOfWeek.Sunday)
-                nDayOfWeek = 7;
-            dateTimePickerSearchFrom.Value = now.AddDays(-(nDayOfWeek - 1)).Date;
-            dateTimePickerSearchTo.Value = dateTimePickerSearchFrom.Value.Date.AddDays(6).Date.AddHours(23).AddMinutes(59).AddSeconds(59);
+            DateTime dtWeekStart = DateTime.Now;
+            DateTime dtWeekEnd = DateTime.Now;
+            CommonFunc.GetWeekDateTime(ref dtWeekStart, ref dtWeekEnd);
+            dateTimePickerSearchFrom.Value = dtWeekStart;
+            dateTimePickerSearchTo.Value = dtWeekEnd;
             BindDict();
         }
 
         private void BindDict()
         {
-            List<Project> projectList = new List<Project>();
-            Project projectAll = new Project
-            {
-                ID = 0,
-                Name = "（全部）"
-            };
-            projectList.Add(projectAll);
-            DataTable dtProject = accessHelper.GetDataTable("select ID, Name from Project");
-            if (dtProject != null && dtProject.Rows.Count > 0)
-            {
-                foreach (DataRow row in dtProject.Rows)
-                {
-                    Project project = new Project()
-                    {
-                        ID = DataConvert.ToInt(row["ID"]),
-                        Name = DataConvert.ToString(row["Name"])
-                    };
-                    projectList.Add(project);
-                }
-            }
-            comboBoxSearchProject.DataSource = projectList;
-            comboBoxSearchProject.ValueMember = "ID";
-            comboBoxSearchProject.DisplayMember = "Name";
-            comboBoxAddProject.DataSource = new List<Project>(projectList);
-            comboBoxAddProject.ValueMember = "ID";
-            comboBoxAddProject.DisplayMember = "Name";
+            //List<Project> projectList = CommonFunc.GetProjectListForSearch();
+            //CommonFunc.BindProjectListToComboBox(comboBoxSearchProject, projectList, true);
+            //CommonFunc.BindProjectListToComboBox(comboBoxOperateProject, new List<Project>(projectList), true);
+            CommonFunc.BindProjectListToComboBox(comboBoxSearchProject, null, true);
+            CommonFunc.BindProjectListToComboBox(comboBoxOperateProject, null, true);
         }
 
         private void GetReport()
@@ -104,7 +81,7 @@ namespace WeeklyReport
                 sql.Append(" and r.FinishTime >= #" + dateTimePickerSearchFrom.Value.ToString(CommonData.DateFormat + " 00:00:00") + "#");
             if (dateTimePickerSearchTo.Checked)
                 sql.Append(" and r.FinishTime <= #" + dateTimePickerSearchTo.Value.ToString(CommonData.DateFormat + " 23:59:59") + "#");
-            if (comboBoxSearchProject.SelectedItem is Project project && project.ID > 0)
+            if (comboBoxSearchProject.SelectedItem is Project project && project.ID != CommonData.ItemAllValue)
                 sql.Append(" and r.ProjectID = " + comboBoxSearchProject.SelectedValue);
             if (!string.IsNullOrWhiteSpace(textBoxKeyWord.Text.Trim()))
                 sql.Append(" and r.Content like '%" + textBoxKeyWord.Text.Trim() + "%'");
@@ -163,9 +140,9 @@ namespace WeeklyReport
 
         private void ClearAddControls()
         {
-            comboBoxAddProject.SelectedValue = 0;
-            dateTimePickerAddFinishTime.Checked = false;
-            richTextBoxAddContent.Text = string.Empty;
+            comboBoxOperateProject.SelectedValue = 0;
+            dateTimePickerOperateFinishTime.Checked = false;
+            richTextBoxOperateContent.Text = string.Empty;
         }
 
         private void dataGridViewShow_SelectionChanged(object sender, EventArgs e)
@@ -176,13 +153,13 @@ namespace WeeklyReport
             DataGridViewRow row = dataGridViewShow.SelectedRows[0];
             if (!(row.Tag is Report report))
                 return;
-            comboBoxAddProject.SelectedValue = report.Project.ID;
+            comboBoxOperateProject.SelectedValue = report.Project.ID;
             if (report.FinishTime > DateTime.MinValue)
             {
-                dateTimePickerAddFinishTime.Value = report.FinishTime;
-                dateTimePickerAddFinishTime.Checked = true;
+                dateTimePickerOperateFinishTime.Value = report.FinishTime;
+                dateTimePickerOperateFinishTime.Checked = true;
             }
-            richTextBoxAddContent.Text = report.Content;
+            richTextBoxOperateContent.Text = report.Content;
         }
 
         private void buttonSearch_Click(object sender, EventArgs e)
@@ -201,12 +178,12 @@ namespace WeeklyReport
 
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            if (!(comboBoxAddProject.SelectedItem is Project project) || project.ID <= 0)
+            if (!(comboBoxOperateProject.SelectedItem is Project project) || project.ID <= 0)
             {
                 MessageBox.Show("项目不能为空", "提示");
                 return;
             }
-            if (string.IsNullOrWhiteSpace(richTextBoxAddContent.Text))
+            if (string.IsNullOrWhiteSpace(richTextBoxOperateContent.Text))
             {
                 MessageBox.Show("内容不能为空", "提示");
                 return;
@@ -214,19 +191,19 @@ namespace WeeklyReport
             string fileds = "UserID, ProjectID, Content";
             string valuesFormat = "{0}, {1}, '{2}'";
             string values = string.Empty;
-            if (dateTimePickerAddFinishTime.Checked && dateTimePickerAddFinishTime.Value > DateTime.MinValue)
+            if (dateTimePickerOperateFinishTime.Checked && dateTimePickerOperateFinishTime.Value > DateTime.MinValue)
             {
                 fileds += ", FinishTime";
                 valuesFormat += ", #{3}#";
-                values = string.Format(valuesFormat, currentUserID, project.ID, richTextBoxAddContent.Text.Trim(), dateTimePickerAddFinishTime.Value.ToString(CommonData.DateTimeFormat));
+                values = string.Format(valuesFormat, currentUserID, project.ID, richTextBoxOperateContent.Text.Trim(), dateTimePickerOperateFinishTime.Value.ToString(CommonData.DateTimeFormat));
             }
             else
             {
-                values = string.Format(valuesFormat, currentUserID, project.ID, richTextBoxAddContent.Text.Trim());
+                values = string.Format(valuesFormat, currentUserID, project.ID, richTextBoxOperateContent.Text.Trim());
             }
             string sql = "insert into Report (" + fileds + ") values (" + values + ")";
             accessHelper.ExecuteNonQuery(sql);
-            richTextBoxAddContent.Text = string.Empty;
+            richTextBoxOperateContent.Text = string.Empty;
             ShowMessageAskRefresh();
         }
 
@@ -242,21 +219,21 @@ namespace WeeklyReport
                 MessageBox.Show("报告数据错误", "提示");
                 return;
             }
-            if (!(comboBoxAddProject.SelectedItem is Project project) || project.ID <= 0)
+            if (!(comboBoxOperateProject.SelectedItem is Project project) || project.ID <= 0)
             {
                 MessageBox.Show("项目不能为空", "提示");
                 return;
             }
-            if (string.IsNullOrWhiteSpace(richTextBoxAddContent.Text))
+            if (string.IsNullOrWhiteSpace(richTextBoxOperateContent.Text))
             {
                 MessageBox.Show("内容不能为空", "提示");
                 return;
             }
             StringBuilder sql = new StringBuilder();
-            sql.AppendFormat("update Report set ProjectID = {0}, Content = '{1}'", project.ID, richTextBoxAddContent.Text.Trim());
-            if (dateTimePickerAddFinishTime.Checked && dateTimePickerAddFinishTime.Value > DateTime.MinValue)
+            sql.AppendFormat("update Report set ProjectID = {0}, Content = '{1}'", project.ID, richTextBoxOperateContent.Text.Trim());
+            if (dateTimePickerOperateFinishTime.Checked && dateTimePickerOperateFinishTime.Value > DateTime.MinValue)
             {
-                sql.AppendFormat(", FinishTime = #{0}#", dateTimePickerAddFinishTime.Value.ToString(CommonData.DateTimeFormat));
+                sql.AppendFormat(", FinishTime = #{0}#", dateTimePickerOperateFinishTime.Value.ToString(CommonData.DateTimeFormat));
             }
             sql.AppendFormat(" where ID = {0}", report.ID);
             accessHelper.ExecuteNonQuery(sql.ToString());
@@ -290,16 +267,19 @@ namespace WeeklyReport
                 return;
             }
             string reportType = "周";
-            if (dateTimePickerSearchFrom.Value.Day == 1 && dateTimePickerSearchTo.Value - dateTimePickerSearchFrom.Value > new TimeSpan(7, 0, 0, 0))
+            if ((dateTimePickerSearchFrom.Value.Day == 1 && dateTimePickerSearchTo.Value - dateTimePickerSearchFrom.Value > new TimeSpan(7, 0, 0, 0))
+                || (long)DateTimeManger.DateDiff(DateInterval.Month, dateTimePickerSearchFrom.Value, dateTimePickerSearchTo.Value) == 1)
                 reportType = "月";
             ExportForm export = new ExportForm(reportAll, reportType);
-            export.ShowDialog();
+            //export.ShowDialog();
+            //export.Show(this);
+            export.Show();
         }
 
         private void buttonDateTimeNow_Click(object sender, EventArgs e)
         {
-            dateTimePickerAddFinishTime.Value = DateTime.Now;
-            dateTimePickerAddFinishTime.Checked = true;
+            dateTimePickerOperateFinishTime.Value = DateTime.Now;
+            dateTimePickerOperateFinishTime.Checked = true;
         }
     }
 }
