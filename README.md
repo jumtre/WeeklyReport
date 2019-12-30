@@ -7,6 +7,7 @@
 #### 3、开发语言：C#。
 #### 4、数据库：Microsoft Access。轻型数据库，无需搭建环境及部署，以文件的形式存在于本地，便携，方便分发。
 #### 5、“Management”项目为WPF的管理项目，已弃用。
+#### 6、管理项目“WRManagement”和待办事项项目“ToDoList”均会生成到个人周报项目“WeeklyReport”的“\bin\Debug”目录中。
 
 ### 二、文件说明：
 #### 1、数据库文件：DB - NoData.mdb
