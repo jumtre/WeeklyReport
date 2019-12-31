@@ -429,7 +429,7 @@ namespace ToDoList
             }
             if (!string.IsNullOrWhiteSpace(richTextBoxOperateMemo.Text))
             {
-                fields.Append(",Memo");
+                fields.Append(",[Memo]");
                 values.Append("," + DataConvert.ToAccessStringValue(richTextBoxOperateMemo));
             }
             fields.Append(",UserID");
