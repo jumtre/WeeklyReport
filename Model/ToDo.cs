@@ -14,22 +14,22 @@ namespace Model
         /// <summary>
         /// 待办事项ID
         /// </summary>
-        public decimal ToDoID { get; set; }
+        public decimal ID { get; set; }
 
         /// <summary>
-        /// 项目ID
+        /// 项目
         /// </summary>
-        public int ProjectID { get; set; }
+        public Project Project { get; set; }
 
         /// <summary>
         /// 优先级
         /// </summary>
-        public EnumToDoPriority Priority { get; set; }
+        public EnumToDoPriority? Priority { get; set; }
 
         /// <summary>
         /// 严重度
         /// </summary>
-        public EnumToDoSeverity Severity { get; set; }
+        public EnumToDoSeverity? Severity { get; set; }
 
         /// <summary>
         /// 待办标题
@@ -49,7 +49,7 @@ namespace Model
         /// <summary>
         /// 用户ID
         /// </summary>
-        public int UserID { get; set; }
+        public User User { get; set; }
 
         /// <summary>
         /// 计划开始时间
@@ -74,7 +74,7 @@ namespace Model
         /// <summary>
         /// 状态
         /// </summary>
-        public int Status { get; set; }
+        public EnumToDoStatus? Status { get; set; }
 
         /// <summary>
         /// 完成时间
@@ -82,8 +82,8 @@ namespace Model
         public DateTime? FinishTime { get; set; }
 
         /// <summary>
-        /// 完成用户ID
+        /// 完成用户
         /// </summary>
-        public int? FinishUserID { get; set; }
+        public User FinishUser { get; set; }
     }
 }

@@ -42,6 +42,54 @@ namespace Common
         /// </summary>
         public static readonly string ConfigFilePath = Path.Combine(ApplicationPath, ConfigFileName);
 
+        private static AccessHelper accessHelper = null;
+        /// <summary>
+        /// 数据库帮助对象
+        /// </summary>
+        public static AccessHelper AccessHelper
+        {
+            get
+            {
+                if (accessHelper == null)
+                {
+                    try
+                    {
+                        accessHelper = new AccessHelper(CommonData.DBPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        CommonInfoException infoEx = new CommonInfoException("读取数据库出错。", ex);
+                        throw infoEx;
+                    }
+                }
+                return accessHelper;
+            }
+        }
+
+        private static IniHelper iniHelper;
+        /// <summary>
+        /// ini文件帮助对象
+        /// </summary>
+        public static IniHelper IniHelper
+        {
+            get
+            {
+                if (iniHelper == null)
+                {
+                    try
+                    {
+                        iniHelper = new IniHelper(CommonData.ConfigFilePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        CommonInfoException infoEx = new CommonInfoException("读取配置文件出错。", ex);
+                        throw infoEx;
+                    }
+                }
+                return iniHelper;
+            }
+        }
+
         /// <summary>
         /// 备份路径
         /// </summary>
@@ -63,6 +111,11 @@ namespace Common
         public static readonly string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
         /// <summary>
+        /// 日期时间精确到分钟的格式：yyyy-MM-dd HH:mm
+        /// </summary>
+        public static readonly string DateTimeMinuteFormat = "yyyy-MM-dd HH:mm";
+
+        /// <summary>
         /// 日期时间详细格式：yyyyMMddHHmmssfff
         /// </summary>
         public static readonly string DateTimeDetailFormat = "yyyyMMddHHmmssfff";
@@ -76,6 +129,26 @@ namespace Common
         /// 查询时增加的“（全部）”项目的名称：（全部）
         /// </summary>
         public static readonly string ItemAllName = "（全部）";
+
+        private static int currentUserGetTimes = 0;
+        private static User currentUser = null;
+        /// <summary>
+        /// 当前用户
+        /// </summary>
+        public static User CurrentUser
+        {
+            get
+            {
+                if (currentUser == null && currentUserGetTimes == 0)
+                {
+                    currentUserGetTimes++;
+                    return CommonFunc.GetCurrentUser();
+                }
+                else
+                    return currentUser;
+            }
+            set { currentUser = value; }
+        }
 
         private static int projectSearchTimes = 0;
         private static List<Project> projectList = null;
@@ -195,11 +268,6 @@ namespace Common
         }
 
         /// <summary>
-        /// 数据库帮助类
-        /// </summary>
-        private static AccessHelper accessHelper = new AccessHelper(CommonData.DBPath);
-
-        /// <summary>
         /// 通过反射得到枚举值的描述
         /// </summary>
         /// <param name="enumItem">要获取描述的枚举值</param>
@@ -223,6 +291,33 @@ namespace Common
         }
 
         /// <summary>
+        /// 从配置文件中获取当前用户
+        /// </summary>
+        /// <param name="lazyLoad">是否懒加载。默认是</param>
+        /// <returns></returns>
+        public static User GetCurrentUser(bool lazyLoad = true)
+        {
+            if (CommonData.CurrentUser != null && lazyLoad)
+                return CommonData.CurrentUser;
+            int iCurrentUserID = -1;
+            try
+            {
+                string currentUserID = CommonData.IniHelper.Read("Common", "CurrentUserID");
+                if (!int.TryParse(currentUserID, out iCurrentUserID))
+                {
+                    throw new CommonInfoException("配置文件中的 Common.CurrentUserID 配置项数据错误。");
+                }
+                string currentUserName = CommonData.IniHelper.Read("Common", "CurrentUserName");
+                CommonData.CurrentUser = new User { ID = iCurrentUserID, Name = currentUserName };
+                return CommonData.CurrentUser;
+            }
+            catch (Exception ex)
+            {
+                throw new CommonInfoException("配置文件中没有当前用户的设置，请先运行管理工具设置当前用户。", ex);
+            }
+        }
+
+        /// <summary>
         /// 获取项目列表
         /// </summary>
         /// <param name="lazyLoad">是否懒加载。默认是</param>
@@ -232,7 +327,7 @@ namespace Common
             if (CommonData.ProjectList != null && lazyLoad)
                 return CommonData.ProjectList;
             List<Project> projectList = null;
-            DataTable dtProject = accessHelper.GetDataTable("select ID, Name from Project");
+            DataTable dtProject = CommonData.AccessHelper.GetDataTable("select ID, Name from Project");
             if (dtProject != null && dtProject.Rows.Count > 0)
             {
                 projectList = new List<Project>();
@@ -300,7 +395,7 @@ namespace Common
                 return CommonData.UserList;
             List<User> userList = null;
 
-            DataTable dtUser = accessHelper.GetDataTable("select ID, Name from [User]");
+            DataTable dtUser = CommonData.AccessHelper.GetDataTable("select ID, Name from [User]");
             if (dtUser != null && dtUser.Rows.Count > 0)
             {
                 userList = new List<User>();
@@ -536,6 +631,21 @@ namespace Common
         }
 
         /// <summary>
+        /// 转换成可空整型
+        /// </summary>
+        /// <param name="obj">要转换的数据</param>
+        /// <returns></returns>
+        public static int? ToNullableInt(object obj)
+        {
+            if (obj == null)
+                return null;
+            if (int.TryParse(obj.ToString(), out int i))
+                return i;
+            else
+                return null;
+        }
+
+        /// <summary>
         /// 转换成Decimal类型，null转换成0
         /// </summary>
         /// <param name="obj">要转换的数据</param>
@@ -551,6 +661,21 @@ namespace Common
         }
 
         /// <summary>
+        /// 转换成可空Decimal类型
+        /// </summary>
+        /// <param name="obj">要转换的数据</param>
+        /// <returns></returns>
+        public static decimal? ToNullableDecimal(object obj)
+        {
+            if (obj == null)
+                return null;
+            if (decimal.TryParse(obj.ToString(), out decimal i))
+                return i;
+            else
+                return null;
+        }
+
+        /// <summary>
         /// 转换成时间类型，null转换成DateTime.MinValue
         /// </summary>
         /// <param name="obj">要转换的数据</param>
@@ -559,11 +684,200 @@ namespace Common
         {
             if (obj == null)
                 return DateTime.MinValue;
-            DateTime dt = DateTime.MinValue;
-            if (DateTime.TryParse(obj.ToString(), out dt))
+            if (DateTime.TryParse(obj.ToString(), out DateTime dt))
                 return dt;
             else
                 return DateTime.MinValue;
+        }
+
+        /// <summary>
+        /// 转换成可空时间类型
+        /// </summary>
+        /// <param name="obj">要转换的数据</param>
+        /// <returns></returns>
+        public static DateTime? ToNullableDateTime(object obj)
+        {
+            if (obj == null)
+                return null;
+            if (DateTime.TryParse(obj.ToString(), out DateTime dt))
+                return dt;
+            else
+                return null;
+        }
+
+        ///// <summary>
+        ///// 转换成枚举
+        ///// </summary>
+        ///// <typeparam name="T">枚举类型</typeparam>
+        ///// <param name="obj">要转换的数据</param>
+        ///// <returns></returns>
+        //public static T ToEnum<T>(object obj)
+        //{
+        //    if (obj == null)
+        //        return default(T);
+        //    if (obj.GetType() != typeof(int) && obj.GetType() != typeof(char))
+        //        //return default(T);
+        //        throw new CommonInfoException(obj + "不是int或char类型，无法转换成枚举。");
+        //    if (Enum.IsDefined(typeof(T), obj))
+        //        return (T)obj;
+        //    else
+        //        return default(T);
+        //}
+
+        /// <summary>
+        /// 转换成枚举
+        /// </summary>
+        /// <typeparam name="T">枚举类型</typeparam>
+        /// <param name="obj">要转换的数据</param>
+        /// <returns></returns>
+        public static object ToEnum<T>(object obj)
+        {
+            if (obj == null)
+                return null;
+            if (obj.GetType() != typeof(int) && obj.GetType() != typeof(Int16) && obj.GetType() != typeof(Int64) && obj.GetType() != typeof(char))
+                //return default(T);
+                throw new CommonInfoException(obj + "不是int或char类型，无法转换成枚举。");
+            if (obj.GetType() != typeof(Int16) || obj.GetType() != typeof(Int64))
+            {
+                object o = Convert.ToInt32(obj);
+                if (Enum.IsDefined(typeof(T), o))
+                    return (T)o;
+                else
+                    return null;
+            }
+            else
+            {
+                if (Enum.IsDefined(typeof(T), obj))
+                    return (T)obj;
+                else
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// 转换成Access数据库String类型对应的值
+        /// </summary>
+        /// <param name="value">要转换的值</param>
+        /// <returns></returns>
+        public static string ToAccessStringValue(string value)
+        {
+            return "'" + value + "'";
+        }
+
+        /// <summary>
+        /// 转换成Access数据库String类型对应的值
+        /// </summary>
+        /// <param name="textBox">要转换值的TextBox控件</param>
+        /// <param name="trim">是否丢弃首尾的空字符。默认是</param>
+        /// <returns></returns>
+        public static string ToAccessStringValue(TextBox textBox, bool trim = true)
+        {
+            string value = trim ? textBox.Text.Trim() : textBox.Text;
+            return "'" + value + "'";
+        }
+
+        /// <summary>
+        /// 转换成Access数据库String类型对应的值
+        /// </summary>
+        /// <param name="richTextBox">要转换值的RichTextBox控件</param>
+        /// <param name="trim">是否丢弃首尾的空字符。默认是</param>
+        /// <returns></returns>
+        public static string ToAccessStringValue(RichTextBox richTextBox, bool trim = true)
+        {
+            string value = trim ? richTextBox.Text.Trim() : richTextBox.Text;
+            return "'" + value + "'";
+        }
+
+        /// <summary>
+        /// 转换成Access数据库Int类型对应的值
+        /// </summary>
+        /// <param name="value">要转换的值</param>
+        /// <returns></returns>
+        public static string ToAccessIntValue(int value)
+        {
+            return value.ToString();
+        }
+
+        /// <summary>
+        /// 转换成Access数据库Int类型对应的值（仅在ComboBox.SelectedValue取值时使用）
+        /// </summary>
+        /// <param name="comboBox">要转换值的ComboBox控件</param>
+        /// <returns></returns>
+        public static string ToAccessIntValue(ComboBox comboBox)
+        {
+            if (comboBox.SelectedValue is int)
+                return comboBox.SelectedValue.ToString();
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// 转换成Access数据库Decimal类型对应的值
+        /// </summary>
+        /// <param name="value">要转换的值</param>
+        /// <returns></returns>
+        public static string ToAccessDecimalValue(decimal value)
+        {
+            return value.ToString();
+        }
+
+        /// <summary>
+        /// 转换成Access数据库Decimal类型对应的值
+        /// </summary>
+        /// <param name="value">要转换的值</param>
+        /// <returns></returns>
+        public static string ToAccessDecimalValue(decimal? value)
+        {
+            if (value.HasValue)
+                return value.Value.ToString();
+            else
+                return "null";
+        }
+
+        /// <summary>
+        /// 转换成Access数据库Decimal类型对应的值
+        /// </summary>
+        /// <param name="numericUpDown">要转换值的NumericUpDown控件</param>
+        /// <returns></returns>
+        public static string ToAccessDecimalValue(NumericUpDown numericUpDown)
+        {
+            return numericUpDown.Value.ToString();
+        }
+
+        /// <summary>
+        /// 转换成Access数据库DateTime类型对应的值
+        /// </summary>
+        /// <param name="value">要转换的值</param>
+        /// <returns></returns>
+        public static string ToAccessDateTimeValue(DateTime value)
+        {
+            return "#" + value.ToString(CommonData.DateTimeFormat) + "#";
+        }
+
+        /// <summary>
+        /// 转换成Access数据库DateTime类型对应的值
+        /// </summary>
+        /// <param name="value">要转换的值</param>
+        /// <returns></returns>
+        public static string ToAccessDateTimeValue(DateTime? value)
+        {
+            if (value.HasValue)
+                return "#" + value.Value.ToString(CommonData.DateTimeFormat) + "#";
+            else
+                return "null";
+        }
+
+        /// <summary>
+        /// 转换成Access数据库DateTime类型对应的值
+        /// </summary>
+        /// <param name="dateTimePicker">要转换值的DateTimePicker控件</param>
+        /// <returns></returns>
+        public static string ToAccessDateTimeValue(DateTimePicker dateTimePicker)
+        {
+            if ((dateTimePicker.ShowCheckBox && dateTimePicker.Checked) || !dateTimePicker.ShowCheckBox)
+                return "#" + dateTimePicker.Value.ToString(CommonData.DateTimeFormat) + "#";
+            else
+                return "null";
         }
     }
 
@@ -615,5 +929,20 @@ namespace Common
             }
             return dateDiffValue;
         }
+    }
+
+    /// <summary>
+    /// 公共信息类异常
+    /// </summary>
+    [Serializable()]
+    public class CommonInfoException : Exception
+    {
+        public CommonInfoException() : base() { }
+        public CommonInfoException(string message) : base(message) { }
+        public CommonInfoException(string message, System.Exception inner) : base(message, inner) { }
+
+        //当异常从远程服务器传播到客户端时，需要序列化构造函数。
+        protected CommonInfoException(System.Runtime.Serialization.SerializationInfo info,
+            System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }

@@ -35,5 +35,10 @@ namespace Model
         /// 完成时间
         /// </summary>
         public DateTime FinishTime { get; set; }
+
+        /// <summary>
+        /// 来源
+        /// </summary>
+        public EnumReportSource? Source { get; set; }
     }
 }

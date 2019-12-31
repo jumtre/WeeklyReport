@@ -305,7 +305,7 @@ namespace WRManagement
             if (!Directory.Exists(backupPath))
                 Directory.CreateDirectory(backupPath);
 
-            //todo 文件锁定状态下的备份
+            //todo 文件锁定状态下的备份，文件较大时的备份
             //using
             //FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             //StreamReader sr = new StreamReader(fs, System.Text.Encoding.Default);
@@ -313,6 +313,7 @@ namespace WRManagement
                 File.Copy(CommonData.DBPath, Path.Combine(backupPath, CommonData.DBFileName));
             if (checkBoxBackupConfigFile.Checked)
                 File.Copy(CommonData.ConfigFilePath, Path.Combine(backupPath, CommonData.ConfigFileName));
+            MessageBox.Show("备份完成", "提示");
 
             buttonBackup.Enabled = true;
             this.Cursor = Cursors.Default;

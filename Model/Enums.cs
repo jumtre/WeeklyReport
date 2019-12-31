@@ -278,4 +278,19 @@ namespace Model
             this.Severity = severity;
         }
     }
+
+    /// <summary>
+    /// 报告来源
+    /// </summary>
+    public enum EnumReportSource
+    {
+        /// <summary>
+        /// 手动
+        /// </summary>
+        Manual,
+        /// <summary>
+        /// 待办事项
+        /// </summary>
+        Todo
+    }
 }

@@ -20,18 +20,6 @@ namespace WeeklyReport
         /// 所有报告
         /// </summary>
         private List<Report> reportAll;
-        /// <summary>
-        /// 数据库帮助类
-        /// </summary>
-        private AccessHelper accessHelper;
-        /// <summary>
-        /// ini文件帮助类
-        /// </summary>
-        private IniHelper iniHelper;
-        /// <summary>
-        /// 当前用户ID
-        /// </summary>
-        private int currentUserID;
 
         public MainForm()
         {
@@ -46,15 +34,17 @@ namespace WeeklyReport
                 this.Close();
                 return;
             }
-            iniHelper = new IniHelper(CommonData.ConfigFilePath);
-            string currentUserIDStr = iniHelper.Read("Common", "CurrentUserID");
-            if (!int.TryParse(currentUserIDStr, out currentUserID))
+            try
             {
-                MessageBox.Show("配置文件中没有当前用户的设置，请先运行管理工具设置当前用户。", "提示");
+                CommonFunc.GetCurrentUser();
+            }
+            catch (Exception ex)
+            {
+                if (ex is CommonInfoException)
+                    MessageBox.Show(ex.Message, "提示");
                 this.Close();
                 return;
             }
-            accessHelper = new AccessHelper(CommonData.DBPath);
             DateTime dtWeekStart = DateTime.Now;
             DateTime dtWeekEnd = DateTime.Now;
             CommonFunc.GetWeekDateTime(ref dtWeekStart, ref dtWeekEnd);
@@ -76,7 +66,7 @@ namespace WeeklyReport
         {
             if (reportAll != null && reportAll.Count > 0)
                 reportAll.Clear();
-            StringBuilder sql = new StringBuilder("select r.ID,r.UserID,u.Name as UserName,r.ProjectID,p.Name as ProjectName,r.Content,r.FinishTime from (Report r left join [User] u on r.UserID=u.ID) left join Project p on r.ProjectID=p.ID where 1=1");
+            StringBuilder sql = new StringBuilder("select r.ID, r.UserID, u.Name as UserName, r.ProjectID, p.Name as ProjectName, r.Content, r.FinishTime, r.Source from (Report r left join [User] u on r.UserID=u.ID) left join Project p on r.ProjectID=p.ID where 1=1");
             if (dateTimePickerSearchFrom.Checked)
                 sql.Append(" and r.FinishTime >= #" + dateTimePickerSearchFrom.Value.ToString(CommonData.DateFormat + " 00:00:00") + "#");
             if (dateTimePickerSearchTo.Checked)
@@ -92,7 +82,7 @@ namespace WeeklyReport
             else if (reportAll.Count > 0)
                 reportAll.Clear();
             reportAll.Clear();
-            DataTable dt = accessHelper.GetDataTable(sql.ToString());
+            DataTable dt = CommonData.AccessHelper.GetDataTable(sql.ToString());
             if (dt != null && dt.Rows.Count > 0)
             {
                 foreach (DataRow row in dt.Rows)
@@ -111,7 +101,8 @@ namespace WeeklyReport
                             Name = DataConvert.ToString(row["ProjectName"])
                         },
                         Content = DataConvert.ToString(row["Content"]),
-                        FinishTime = DataConvert.ToDateTime(row["FinishTime"])
+                        FinishTime = DataConvert.ToDateTime(row["FinishTime"]),
+                        Source = (EnumReportSource?)DataConvert.ToEnum<EnumReportSource>(row["Source"])
                     };
                     reportAll.Add(report);
                 }
@@ -138,9 +129,9 @@ namespace WeeklyReport
             dataGridViewShow.ClearSelection();
         }
 
-        private void ClearAddControls()
+        private void ClearOperateControls()
         {
-            comboBoxOperateProject.SelectedValue = 0;
+            comboBoxOperateProject.SelectedValue = CommonData.ItemAllValue;
             dateTimePickerOperateFinishTime.Checked = false;
             richTextBoxOperateContent.Text = string.Empty;
         }
@@ -149,7 +140,7 @@ namespace WeeklyReport
         {
             if (dataGridViewShow.SelectedRows.Count != 1)
                 return;
-            ClearAddControls();
+            ClearOperateControls();
             DataGridViewRow row = dataGridViewShow.SelectedRows[0];
             if (!(row.Tag is Report report))
                 return;
@@ -171,7 +162,7 @@ namespace WeeklyReport
         {
             if (MessageBox.Show("操作完成，是否刷新列表？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
-                ClearAddControls();
+                ClearOperateControls();
                 GetReport();
             }
         }
@@ -188,21 +179,15 @@ namespace WeeklyReport
                 MessageBox.Show("内容不能为空", "提示");
                 return;
             }
-            string fileds = "UserID, ProjectID, Content";
-            string valuesFormat = "{0}, {1}, '{2}'";
-            string values = string.Empty;
+            string fields = "UserID, ProjectID, Content, Source";
+            string values = CommonData.CurrentUser.ID + ", " + project.ID + ", " + "'" + richTextBoxOperateContent.Text.Trim() + "', " + (int)EnumReportSource.Manual;
             if (dateTimePickerOperateFinishTime.Checked && dateTimePickerOperateFinishTime.Value > DateTime.MinValue)
             {
-                fileds += ", FinishTime";
-                valuesFormat += ", #{3}#";
-                values = string.Format(valuesFormat, currentUserID, project.ID, richTextBoxOperateContent.Text.Trim(), dateTimePickerOperateFinishTime.Value.ToString(CommonData.DateTimeFormat));
+                fields += ", FinishTime";
+                values += ", #" + dateTimePickerOperateFinishTime.Value.ToString(CommonData.DateTimeFormat) + "#";
             }
-            else
-            {
-                values = string.Format(valuesFormat, currentUserID, project.ID, richTextBoxOperateContent.Text.Trim());
-            }
-            string sql = "insert into Report (" + fileds + ") values (" + values + ")";
-            accessHelper.ExecuteNonQuery(sql);
+            string sql = "insert into Report (" + fields + ") values (" + values + ")";
+            CommonData.AccessHelper.ExecuteNonQuery(sql);
             richTextBoxOperateContent.Text = string.Empty;
             ShowMessageAskRefresh();
         }
@@ -236,7 +221,7 @@ namespace WeeklyReport
                 sql.AppendFormat(", FinishTime = #{0}#", dateTimePickerOperateFinishTime.Value.ToString(CommonData.DateTimeFormat));
             }
             sql.AppendFormat(" where ID = {0}", report.ID);
-            accessHelper.ExecuteNonQuery(sql.ToString());
+            CommonData.AccessHelper.ExecuteNonQuery(sql.ToString());
             //MessageBox.Show("修改完成", "提示");
             ShowMessageAskRefresh();
         }
@@ -253,7 +238,7 @@ namespace WeeklyReport
                 MessageBox.Show("报告数据错误", "提示");
                 return;
             }
-            accessHelper.ExecuteNonQuery("delete from Report where ID = " + report.ID);
+            CommonData.AccessHelper.ExecuteNonQuery("delete from Report where ID = " + report.ID);
             //MessageBox.Show("删除完成", "提示");
             ShowMessageAskRefresh();
         }

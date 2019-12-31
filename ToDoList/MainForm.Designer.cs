@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonSearch = new System.Windows.Forms.Button();
             this.dateTimePickerSearchPlannedEndTo = new System.Windows.Forms.DateTimePicker();
             this.label5 = new System.Windows.Forms.Label();
             this.dateTimePickerSearchPlannedEndFrom = new System.Windows.Forms.DateTimePicker();
@@ -72,7 +72,7 @@
             this.label16 = new System.Windows.Forms.Label();
             this.textBoxOperateTitle = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
-            this.dateTimePickerOperatePlannedStartTo = new System.Windows.Forms.DateTimePicker();
+            this.dateTimePickerOperatePlannedEndTime = new System.Windows.Forms.DateTimePicker();
             this.label14 = new System.Windows.Forms.Label();
             this.comboBoxOperateSeverity = new System.Windows.Forms.ComboBox();
             this.label13 = new System.Windows.Forms.Label();
@@ -84,11 +84,12 @@
             this.buttonAdd = new System.Windows.Forms.Button();
             this.richTextBoxOperateContent = new System.Windows.Forms.RichTextBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.dateTimePickerOperatePlannedStartFrom = new System.Windows.Forms.DateTimePicker();
+            this.dateTimePickerOperatePlannedStartTime = new System.Windows.Forms.DateTimePicker();
             this.label10 = new System.Windows.Forms.Label();
             this.comboBoxOperateProject = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
             this.toolTipInfo = new System.Windows.Forms.ToolTip(this.components);
+            this.label21 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -100,7 +101,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.button1);
+            this.groupBox1.Controls.Add(this.buttonSearch);
             this.groupBox1.Controls.Add(this.dateTimePickerSearchPlannedEndTo);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.dateTimePickerSearchPlannedEndFrom);
@@ -125,27 +126,30 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "查询";
             // 
-            // button1
+            // buttonSearch
             // 
-            this.button1.Location = new System.Drawing.Point(451, 63);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 16;
-            this.button1.Text = "查询";
-            this.button1.UseVisualStyleBackColor = true;
+            this.buttonSearch.Location = new System.Drawing.Point(559, 47);
+            this.buttonSearch.Name = "buttonSearch";
+            this.buttonSearch.Size = new System.Drawing.Size(75, 48);
+            this.buttonSearch.TabIndex = 16;
+            this.buttonSearch.Text = "查询";
+            this.buttonSearch.UseVisualStyleBackColor = true;
+            this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
             // 
             // dateTimePickerSearchPlannedEndTo
             // 
-            this.dateTimePickerSearchPlannedEndTo.Location = new System.Drawing.Point(276, 74);
+            this.dateTimePickerSearchPlannedEndTo.CustomFormat = "yyyy年MM月dd日 HH时mm分";
+            this.dateTimePickerSearchPlannedEndTo.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dateTimePickerSearchPlannedEndTo.Location = new System.Drawing.Point(336, 74);
             this.dateTimePickerSearchPlannedEndTo.Name = "dateTimePickerSearchPlannedEndTo";
             this.dateTimePickerSearchPlannedEndTo.ShowCheckBox = true;
-            this.dateTimePickerSearchPlannedEndTo.Size = new System.Drawing.Size(140, 21);
+            this.dateTimePickerSearchPlannedEndTo.Size = new System.Drawing.Size(200, 21);
             this.dateTimePickerSearchPlannedEndTo.TabIndex = 15;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(253, 80);
+            this.label5.Location = new System.Drawing.Point(313, 80);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(17, 12);
             this.label5.TabIndex = 14;
@@ -153,10 +157,12 @@
             // 
             // dateTimePickerSearchPlannedEndFrom
             // 
+            this.dateTimePickerSearchPlannedEndFrom.CustomFormat = "yyyy年MM月dd日 HH时mm分";
+            this.dateTimePickerSearchPlannedEndFrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dateTimePickerSearchPlannedEndFrom.Location = new System.Drawing.Point(107, 74);
             this.dateTimePickerSearchPlannedEndFrom.Name = "dateTimePickerSearchPlannedEndFrom";
             this.dateTimePickerSearchPlannedEndFrom.ShowCheckBox = true;
-            this.dateTimePickerSearchPlannedEndFrom.Size = new System.Drawing.Size(140, 21);
+            this.dateTimePickerSearchPlannedEndFrom.Size = new System.Drawing.Size(200, 21);
             this.dateTimePickerSearchPlannedEndFrom.TabIndex = 13;
             // 
             // label6
@@ -170,16 +176,18 @@
             // 
             // dateTimePickerSearchPlannedStartTo
             // 
-            this.dateTimePickerSearchPlannedStartTo.Location = new System.Drawing.Point(276, 47);
+            this.dateTimePickerSearchPlannedStartTo.CustomFormat = "yyyy年MM月dd日 HH时mm分";
+            this.dateTimePickerSearchPlannedStartTo.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dateTimePickerSearchPlannedStartTo.Location = new System.Drawing.Point(336, 47);
             this.dateTimePickerSearchPlannedStartTo.Name = "dateTimePickerSearchPlannedStartTo";
             this.dateTimePickerSearchPlannedStartTo.ShowCheckBox = true;
-            this.dateTimePickerSearchPlannedStartTo.Size = new System.Drawing.Size(140, 21);
+            this.dateTimePickerSearchPlannedStartTo.Size = new System.Drawing.Size(200, 21);
             this.dateTimePickerSearchPlannedStartTo.TabIndex = 11;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(253, 53);
+            this.label7.Location = new System.Drawing.Point(313, 53);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(17, 12);
             this.label7.TabIndex = 10;
@@ -187,10 +195,12 @@
             // 
             // dateTimePickerSearchPlannedStartFrom
             // 
+            this.dateTimePickerSearchPlannedStartFrom.CustomFormat = "yyyy年MM月dd日 HH时mm分";
+            this.dateTimePickerSearchPlannedStartFrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dateTimePickerSearchPlannedStartFrom.Location = new System.Drawing.Point(107, 47);
             this.dateTimePickerSearchPlannedStartFrom.Name = "dateTimePickerSearchPlannedStartFrom";
             this.dateTimePickerSearchPlannedStartFrom.ShowCheckBox = true;
-            this.dateTimePickerSearchPlannedStartFrom.Size = new System.Drawing.Size(140, 21);
+            this.dateTimePickerSearchPlannedStartFrom.Size = new System.Drawing.Size(200, 21);
             this.dateTimePickerSearchPlannedStartFrom.TabIndex = 9;
             // 
             // label8
@@ -208,7 +218,7 @@
             this.comboBoxSearchStatus.FormattingEnabled = true;
             this.comboBoxSearchStatus.Location = new System.Drawing.Point(559, 20);
             this.comboBoxSearchStatus.Name = "comboBoxSearchStatus";
-            this.comboBoxSearchStatus.Size = new System.Drawing.Size(66, 20);
+            this.comboBoxSearchStatus.Size = new System.Drawing.Size(75, 20);
             this.comboBoxSearchStatus.TabIndex = 7;
             // 
             // label4
@@ -293,6 +303,8 @@
             // 
             // dataGridViewToDoList
             // 
+            this.dataGridViewToDoList.AllowUserToAddRows = false;
+            this.dataGridViewToDoList.AllowUserToDeleteRows = false;
             this.dataGridViewToDoList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewToDoList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ColumnDone,
@@ -305,28 +317,38 @@
             this.dataGridViewToDoList.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewToDoList.MultiSelect = false;
             this.dataGridViewToDoList.Name = "dataGridViewToDoList";
+            this.dataGridViewToDoList.ReadOnly = true;
             this.dataGridViewToDoList.RowHeadersVisible = false;
             this.dataGridViewToDoList.RowTemplate.Height = 23;
             this.dataGridViewToDoList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewToDoList.Size = new System.Drawing.Size(400, 520);
             this.dataGridViewToDoList.TabIndex = 0;
+            this.dataGridViewToDoList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewToDoList_CellContentClick);
+            this.dataGridViewToDoList.SelectionChanged += new System.EventHandler(this.dataGridViewToDoList_SelectionChanged);
             // 
             // ColumnDone
             // 
+            this.ColumnDone.FalseValue = "false";
             this.ColumnDone.HeaderText = "完成";
+            this.ColumnDone.IndeterminateValue = "indeterminate";
             this.ColumnDone.Name = "ColumnDone";
+            this.ColumnDone.ReadOnly = true;
+            this.ColumnDone.ThreeState = true;
+            this.ColumnDone.TrueValue = "true";
             this.ColumnDone.Width = 40;
             // 
             // ColumnOrderNo
             // 
             this.ColumnOrderNo.HeaderText = "序号";
             this.ColumnOrderNo.Name = "ColumnOrderNo";
+            this.ColumnOrderNo.ReadOnly = true;
             this.ColumnOrderNo.Width = 60;
             // 
             // ColumnProject
             // 
             this.ColumnProject.HeaderText = "项目";
             this.ColumnProject.Name = "ColumnProject";
+            this.ColumnProject.ReadOnly = true;
             // 
             // ColumnTitle
             // 
@@ -334,21 +356,25 @@
             this.ColumnTitle.HeaderText = "标题";
             this.ColumnTitle.MinimumWidth = 150;
             this.ColumnTitle.Name = "ColumnTitle";
+            this.ColumnTitle.ReadOnly = true;
             // 
             // ColumnPriority
             // 
             this.ColumnPriority.HeaderText = "优先级";
             this.ColumnPriority.Name = "ColumnPriority";
+            this.ColumnPriority.ReadOnly = true;
             this.ColumnPriority.Width = 70;
             // 
             // ColumnSeverity
             // 
             this.ColumnSeverity.HeaderText = "严重度";
             this.ColumnSeverity.Name = "ColumnSeverity";
+            this.ColumnSeverity.ReadOnly = true;
             this.ColumnSeverity.Width = 70;
             // 
             // groupBoxDataOperation
             // 
+            this.groupBoxDataOperation.Controls.Add(this.label21);
             this.groupBoxDataOperation.Controls.Add(this.labelHideInfo);
             this.groupBoxDataOperation.Controls.Add(this.buttonWorking);
             this.groupBoxDataOperation.Controls.Add(this.buttonDone);
@@ -363,7 +389,7 @@
             this.groupBoxDataOperation.Controls.Add(this.label16);
             this.groupBoxDataOperation.Controls.Add(this.textBoxOperateTitle);
             this.groupBoxDataOperation.Controls.Add(this.label15);
-            this.groupBoxDataOperation.Controls.Add(this.dateTimePickerOperatePlannedStartTo);
+            this.groupBoxDataOperation.Controls.Add(this.dateTimePickerOperatePlannedEndTime);
             this.groupBoxDataOperation.Controls.Add(this.label14);
             this.groupBoxDataOperation.Controls.Add(this.comboBoxOperateSeverity);
             this.groupBoxDataOperation.Controls.Add(this.label13);
@@ -375,7 +401,7 @@
             this.groupBoxDataOperation.Controls.Add(this.buttonAdd);
             this.groupBoxDataOperation.Controls.Add(this.richTextBoxOperateContent);
             this.groupBoxDataOperation.Controls.Add(this.label9);
-            this.groupBoxDataOperation.Controls.Add(this.dateTimePickerOperatePlannedStartFrom);
+            this.groupBoxDataOperation.Controls.Add(this.dateTimePickerOperatePlannedStartTime);
             this.groupBoxDataOperation.Controls.Add(this.label10);
             this.groupBoxDataOperation.Controls.Add(this.comboBoxOperateProject);
             this.groupBoxDataOperation.Controls.Add(this.label11);
@@ -400,21 +426,23 @@
             // 
             // buttonWorking
             // 
-            this.buttonWorking.Location = new System.Drawing.Point(55, 442);
+            this.buttonWorking.Location = new System.Drawing.Point(136, 442);
             this.buttonWorking.Name = "buttonWorking";
             this.buttonWorking.Size = new System.Drawing.Size(75, 23);
             this.buttonWorking.TabIndex = 26;
             this.buttonWorking.Text = "工作中";
             this.buttonWorking.UseVisualStyleBackColor = true;
+            this.buttonWorking.Click += new System.EventHandler(this.buttonWorking_Click);
             // 
             // buttonDone
             // 
-            this.buttonDone.Location = new System.Drawing.Point(136, 442);
+            this.buttonDone.Location = new System.Drawing.Point(217, 442);
             this.buttonDone.Name = "buttonDone";
             this.buttonDone.Size = new System.Drawing.Size(75, 23);
             this.buttonDone.TabIndex = 27;
             this.buttonDone.Text = "已完成";
             this.buttonDone.UseVisualStyleBackColor = true;
+            this.buttonDone.Click += new System.EventHandler(this.buttonDone_Click);
             // 
             // comboBoxOperateStatus
             // 
@@ -522,16 +550,16 @@
             this.label15.TabIndex = 15;
             this.label15.Text = "标    题：";
             // 
-            // dateTimePickerOperatePlannedStartTo
+            // dateTimePickerOperatePlannedEndTime
             // 
-            this.dateTimePickerOperatePlannedStartTo.CustomFormat = "yyyy年MM月dd日 HH时mm分";
-            this.dateTimePickerOperatePlannedStartTo.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePickerOperatePlannedStartTo.Location = new System.Drawing.Point(95, 132);
-            this.dateTimePickerOperatePlannedStartTo.Name = "dateTimePickerOperatePlannedStartTo";
-            this.dateTimePickerOperatePlannedStartTo.ShowCheckBox = true;
-            this.dateTimePickerOperatePlannedStartTo.Size = new System.Drawing.Size(200, 21);
-            this.dateTimePickerOperatePlannedStartTo.TabIndex = 9;
-            this.dateTimePickerOperatePlannedStartTo.ValueChanged += new System.EventHandler(this.dateTimePickerOperatePlannedTime_ValueChanged);
+            this.dateTimePickerOperatePlannedEndTime.CustomFormat = "yyyy年MM月dd日 HH时mm分";
+            this.dateTimePickerOperatePlannedEndTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dateTimePickerOperatePlannedEndTime.Location = new System.Drawing.Point(95, 132);
+            this.dateTimePickerOperatePlannedEndTime.Name = "dateTimePickerOperatePlannedEndTime";
+            this.dateTimePickerOperatePlannedEndTime.ShowCheckBox = true;
+            this.dateTimePickerOperatePlannedEndTime.Size = new System.Drawing.Size(200, 21);
+            this.dateTimePickerOperatePlannedEndTime.TabIndex = 9;
+            this.dateTimePickerOperatePlannedEndTime.ValueChanged += new System.EventHandler(this.dateTimePickerOperatePlannedTime_ValueChanged);
             // 
             // label14
             // 
@@ -586,15 +614,17 @@
             this.buttonDelete.TabIndex = 25;
             this.buttonDelete.Text = "删除";
             this.buttonDelete.UseVisualStyleBackColor = true;
+            this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
             // 
             // buttonExport
             // 
-            this.buttonExport.Location = new System.Drawing.Point(217, 442);
+            this.buttonExport.Location = new System.Drawing.Point(163, 505);
             this.buttonExport.Name = "buttonExport";
             this.buttonExport.Size = new System.Drawing.Size(75, 23);
             this.buttonExport.TabIndex = 28;
             this.buttonExport.Text = "导出";
             this.buttonExport.UseVisualStyleBackColor = true;
+            this.buttonExport.Visible = false;
             // 
             // buttonEdit
             // 
@@ -604,6 +634,7 @@
             this.buttonEdit.TabIndex = 24;
             this.buttonEdit.Text = "修改";
             this.buttonEdit.UseVisualStyleBackColor = true;
+            this.buttonEdit.Click += new System.EventHandler(this.buttonEdit_Click);
             // 
             // buttonAdd
             // 
@@ -613,6 +644,7 @@
             this.buttonAdd.TabIndex = 23;
             this.buttonAdd.Text = "新增";
             this.buttonAdd.UseVisualStyleBackColor = true;
+            this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
             // 
             // richTextBoxOperateContent
             // 
@@ -631,16 +663,16 @@
             this.label9.TabIndex = 17;
             this.label9.Text = "内    容：";
             // 
-            // dateTimePickerOperatePlannedStartFrom
+            // dateTimePickerOperatePlannedStartTime
             // 
-            this.dateTimePickerOperatePlannedStartFrom.CustomFormat = "yyyy年MM月dd日 HH时mm分";
-            this.dateTimePickerOperatePlannedStartFrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePickerOperatePlannedStartFrom.Location = new System.Drawing.Point(95, 105);
-            this.dateTimePickerOperatePlannedStartFrom.Name = "dateTimePickerOperatePlannedStartFrom";
-            this.dateTimePickerOperatePlannedStartFrom.ShowCheckBox = true;
-            this.dateTimePickerOperatePlannedStartFrom.Size = new System.Drawing.Size(200, 21);
-            this.dateTimePickerOperatePlannedStartFrom.TabIndex = 7;
-            this.dateTimePickerOperatePlannedStartFrom.ValueChanged += new System.EventHandler(this.dateTimePickerOperatePlannedTime_ValueChanged);
+            this.dateTimePickerOperatePlannedStartTime.CustomFormat = "yyyy年MM月dd日 HH时mm分";
+            this.dateTimePickerOperatePlannedStartTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dateTimePickerOperatePlannedStartTime.Location = new System.Drawing.Point(95, 105);
+            this.dateTimePickerOperatePlannedStartTime.Name = "dateTimePickerOperatePlannedStartTime";
+            this.dateTimePickerOperatePlannedStartTime.ShowCheckBox = true;
+            this.dateTimePickerOperatePlannedStartTime.Size = new System.Drawing.Size(200, 21);
+            this.dateTimePickerOperatePlannedStartTime.TabIndex = 7;
+            this.dateTimePickerOperatePlannedStartTime.ValueChanged += new System.EventHandler(this.dateTimePickerOperatePlannedTime_ValueChanged);
             // 
             // label10
             // 
@@ -668,6 +700,15 @@
             this.label11.Size = new System.Drawing.Size(65, 12);
             this.label11.TabIndex = 0;
             this.label11.Text = "项    目：";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(57, 447);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(77, 12);
+            this.label21.TabIndex = 30;
+            this.label21.Text = "修改状态为：";
             // 
             // MainForm
             // 
@@ -699,7 +740,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ComboBox comboBoxSearchProject;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonSearch;
         private System.Windows.Forms.DateTimePicker dateTimePickerSearchPlannedEndTo;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.DateTimePicker dateTimePickerSearchPlannedEndFrom;
@@ -716,7 +757,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.GroupBox groupBoxDataOperation;
-        private System.Windows.Forms.DateTimePicker dateTimePickerOperatePlannedStartTo;
+        private System.Windows.Forms.DateTimePicker dateTimePickerOperatePlannedEndTime;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.ComboBox comboBoxOperateSeverity;
         private System.Windows.Forms.Label label13;
@@ -728,7 +769,7 @@
         private System.Windows.Forms.Button buttonAdd;
         private System.Windows.Forms.RichTextBox richTextBoxOperateContent;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.DateTimePicker dateTimePickerOperatePlannedStartFrom;
+        private System.Windows.Forms.DateTimePicker dateTimePickerOperatePlannedStartTime;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.ComboBox comboBoxOperateProject;
         private System.Windows.Forms.Label label11;
@@ -755,5 +796,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnTitle;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPriority;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnSeverity;
+        private System.Windows.Forms.Label label21;
     }
 }
