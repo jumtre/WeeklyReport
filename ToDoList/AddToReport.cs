@@ -61,8 +61,8 @@ namespace ToDoList
                 MessageBox.Show("内容不能为空", "提示");
                 return;
             }
-            string fields = "UserID, ProjectID, Content, Source";
-            string values = CommonData.CurrentUser.ID + ", " + project.ID + ", " + "'" + richTextBoxOperateContent.Text.Trim() + "', " + (int)EnumReportSource.Todo;
+            string fields = "UserID, ProjectID, Content, Source, ToDoID";
+            string values = CommonData.CurrentUser.ID + ", " + project.ID + ", " + "'" + richTextBoxOperateContent.Text.Trim() + "', " + (int)EnumReportSource.Todo + ", " + toDo.ID;
             if (dateTimePickerFinishTime.Checked && dateTimePickerFinishTime.Value > DateTime.MinValue)
             {
                 fields += ", FinishTime";
