@@ -36,8 +36,10 @@ namespace Model
         /// 月
         /// </summary>
         Month,
-
-        //Quarter,
+        /// <summary>
+        /// 季
+        /// </summary>
+        Quarter,
         /// <summary>
         /// 年
         /// </summary>

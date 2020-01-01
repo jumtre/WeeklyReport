@@ -912,19 +912,19 @@ namespace Common
                     dateDiffValue = TS.TotalHours;
                     break;
                 case DateInterval.Day:
-                    dateDiffValue = TS.Days;
+                    dateDiffValue = TS.TotalDays;
                     break;
                 case DateInterval.Week:
-                    dateDiffValue = TS.Days / 7;
+                    dateDiffValue = TS.TotalDays / 7;
                     break;
                 case DateInterval.Month:
-                    dateDiffValue = TS.Days / 30;
+                    dateDiffValue = TS.TotalDays / DateTime.DaysInMonth(StartDate.Year,StartDate.Month);
                     break;
-                //case DateInterval.Quarter:
-                //    lngDateDiffValue = (TS.Days / 30) / 3;
-                //    break;
+                case DateInterval.Quarter:
+                    dateDiffValue = (TS.TotalDays / DateTime.DaysInMonth(StartDate.Year, StartDate.Month)) / 3;
+                    break;
                 case DateInterval.Year:
-                    dateDiffValue = TS.Days / 365;
+                    dateDiffValue = TS.TotalDays / (DateTime.IsLeapYear(StartDate.Year) ? 366 : 365);
                     break;
             }
             return dateDiffValue;

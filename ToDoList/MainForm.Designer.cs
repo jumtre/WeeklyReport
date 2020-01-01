@@ -51,13 +51,8 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.dataGridViewToDoList = new System.Windows.Forms.DataGridView();
-            this.ColumnDone = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.ColumnOrderNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnProject = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnTitle = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnPriority = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnSeverity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBoxDataOperation = new System.Windows.Forms.GroupBox();
+            this.label21 = new System.Windows.Forms.Label();
             this.labelHideInfo = new System.Windows.Forms.Label();
             this.buttonWorking = new System.Windows.Forms.Button();
             this.buttonDone = new System.Windows.Forms.Button();
@@ -89,7 +84,12 @@
             this.comboBoxOperateProject = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
             this.toolTipInfo = new System.Windows.Forms.ToolTip(this.components);
-            this.label21 = new System.Windows.Forms.Label();
+            this.ColumnDone = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.ColumnOrderNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnProject = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnTitle = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnPriority = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnSeverity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -326,52 +326,6 @@
             this.dataGridViewToDoList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewToDoList_CellContentClick);
             this.dataGridViewToDoList.SelectionChanged += new System.EventHandler(this.dataGridViewToDoList_SelectionChanged);
             // 
-            // ColumnDone
-            // 
-            this.ColumnDone.FalseValue = "false";
-            this.ColumnDone.HeaderText = "完成";
-            this.ColumnDone.IndeterminateValue = "indeterminate";
-            this.ColumnDone.Name = "ColumnDone";
-            this.ColumnDone.ReadOnly = true;
-            this.ColumnDone.ThreeState = true;
-            this.ColumnDone.TrueValue = "true";
-            this.ColumnDone.Width = 40;
-            // 
-            // ColumnOrderNo
-            // 
-            this.ColumnOrderNo.HeaderText = "序号";
-            this.ColumnOrderNo.Name = "ColumnOrderNo";
-            this.ColumnOrderNo.ReadOnly = true;
-            this.ColumnOrderNo.Width = 60;
-            // 
-            // ColumnProject
-            // 
-            this.ColumnProject.HeaderText = "项目";
-            this.ColumnProject.Name = "ColumnProject";
-            this.ColumnProject.ReadOnly = true;
-            // 
-            // ColumnTitle
-            // 
-            this.ColumnTitle.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ColumnTitle.HeaderText = "标题";
-            this.ColumnTitle.MinimumWidth = 150;
-            this.ColumnTitle.Name = "ColumnTitle";
-            this.ColumnTitle.ReadOnly = true;
-            // 
-            // ColumnPriority
-            // 
-            this.ColumnPriority.HeaderText = "优先级";
-            this.ColumnPriority.Name = "ColumnPriority";
-            this.ColumnPriority.ReadOnly = true;
-            this.ColumnPriority.Width = 70;
-            // 
-            // ColumnSeverity
-            // 
-            this.ColumnSeverity.HeaderText = "严重度";
-            this.ColumnSeverity.Name = "ColumnSeverity";
-            this.ColumnSeverity.ReadOnly = true;
-            this.ColumnSeverity.Width = 70;
-            // 
             // groupBoxDataOperation
             // 
             this.groupBoxDataOperation.Controls.Add(this.label21);
@@ -412,6 +366,15 @@
             this.groupBoxDataOperation.TabIndex = 4;
             this.groupBoxDataOperation.TabStop = false;
             this.groupBoxDataOperation.Text = "数据/操作";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(57, 447);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(77, 12);
+            this.label21.TabIndex = 30;
+            this.label21.Text = "修改状态为：";
             // 
             // labelHideInfo
             // 
@@ -701,14 +664,51 @@
             this.label11.TabIndex = 0;
             this.label11.Text = "项    目：";
             // 
-            // label21
+            // ColumnDone
             // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(57, 447);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(77, 12);
-            this.label21.TabIndex = 30;
-            this.label21.Text = "修改状态为：";
+            this.ColumnDone.FalseValue = "false";
+            this.ColumnDone.HeaderText = "完成";
+            this.ColumnDone.IndeterminateValue = "indeterminate";
+            this.ColumnDone.Name = "ColumnDone";
+            this.ColumnDone.ReadOnly = true;
+            this.ColumnDone.ThreeState = true;
+            this.ColumnDone.TrueValue = "true";
+            this.ColumnDone.Width = 40;
+            // 
+            // ColumnOrderNo
+            // 
+            this.ColumnOrderNo.HeaderText = "序号";
+            this.ColumnOrderNo.Name = "ColumnOrderNo";
+            this.ColumnOrderNo.ReadOnly = true;
+            this.ColumnOrderNo.Width = 52;
+            // 
+            // ColumnProject
+            // 
+            this.ColumnProject.HeaderText = "项目";
+            this.ColumnProject.Name = "ColumnProject";
+            this.ColumnProject.ReadOnly = true;
+            // 
+            // ColumnTitle
+            // 
+            this.ColumnTitle.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ColumnTitle.HeaderText = "标题";
+            this.ColumnTitle.MinimumWidth = 150;
+            this.ColumnTitle.Name = "ColumnTitle";
+            this.ColumnTitle.ReadOnly = true;
+            // 
+            // ColumnPriority
+            // 
+            this.ColumnPriority.HeaderText = "优先级";
+            this.ColumnPriority.Name = "ColumnPriority";
+            this.ColumnPriority.ReadOnly = true;
+            this.ColumnPriority.Width = 70;
+            // 
+            // ColumnSeverity
+            // 
+            this.ColumnSeverity.HeaderText = "严重度";
+            this.ColumnSeverity.Name = "ColumnSeverity";
+            this.ColumnSeverity.ReadOnly = true;
+            this.ColumnSeverity.Width = 70;
             // 
             // MainForm
             // 
@@ -790,12 +790,12 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label labelHideInfo;
         private System.Windows.Forms.DataGridView dataGridViewToDoList;
+        private System.Windows.Forms.Label label21;
         private System.Windows.Forms.DataGridViewCheckBoxColumn ColumnDone;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnOrderNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnProject;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnTitle;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPriority;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnSeverity;
-        private System.Windows.Forms.Label label21;
     }
 }
