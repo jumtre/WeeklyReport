@@ -36,7 +36,7 @@ namespace Common
         /// <param name="dbPath">数据库地址</param>
         public void SetDbString(string dbPath = null)
         {
-            if(string.IsNullOrWhiteSpace(dbPath))
+            if (string.IsNullOrWhiteSpace(dbPath))
                 dbPath = Environment.CurrentDirectory + "\\DB\\DB.mdb";
             if (!File.Exists(dbPath))
             {
@@ -90,9 +90,10 @@ namespace Common
         /// 执行命令
         /// </summary>
         /// <param name="sql">查询语句</param>
+        /// <param name="paramDict">参数字典</param>
         /// <param name="conn">数据库连接</param>
         /// <returns></returns>
-        public int ExecuteNonQuery(string sql,OleDbConnection conn=null)
+        public int ExecuteNonQuery(string sql, Dictionary<string, object> paramDict = null, OleDbConnection conn = null)
         {
             if (string.IsNullOrWhiteSpace(sql))
                 return 0;
@@ -105,6 +106,47 @@ namespace Common
                 conn.Open();
                 OleDbCommand cmd = conn.CreateCommand();
                 cmd.CommandText = sql;
+                if (paramDict != null && paramDict.Count > 0)
+                {
+                    foreach (KeyValuePair<string, object> pair in paramDict)
+                        cmd.Parameters.AddWithValue(pair.Key, pair.Value ?? string.Empty);
+                }
+                i = cmd.ExecuteNonQuery();
+                cmd.Dispose();
+                conn.Close();
+                conn.Dispose();
+            }
+            return i;
+        }
+
+        /// <summary>
+        /// 插入
+        /// </summary>
+        /// <param name="tableName">表名</param>
+        /// <param name="paramDict">参数字典</param>
+        /// <param name="conn">数据库连接</param>
+        /// <returns></returns>
+        public int Insert(string tableName, Dictionary<string, object> paramDict, OleDbConnection conn = null)
+        {
+            if (string.IsNullOrWhiteSpace(tableName) || paramDict == null || paramDict.Count == 0)
+                throw new CommonInfoException("执行失败，信息不完整。");
+            if (conn == null)
+                conn = GetDbConnection();
+
+            int i = 0;
+            using (conn)
+            {
+                conn.Open();
+                OleDbCommand cmd = conn.CreateCommand();
+                StringBuilder field = new StringBuilder();
+                StringBuilder param = new StringBuilder();
+                foreach (KeyValuePair<string, object> pair in paramDict)
+                {
+                    field.Append(pair.Key + ",");
+                    param.Append("@" + pair.Key + ",");
+                    cmd.Parameters.AddWithValue(pair.Key, pair.Value ?? string.Empty);
+                }
+                cmd.CommandText = "insert into " + tableName + " (" + field.ToString().TrimEnd(',') + ") values (" + param.ToString().TrimEnd(',') + ")";
                 i = cmd.ExecuteNonQuery();
                 cmd.Dispose();
                 conn.Close();

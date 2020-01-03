@@ -326,7 +326,7 @@ namespace Common
         {
             if (CommonData.ProjectList != null && lazyLoad)
                 return CommonData.ProjectList;
-            List<Project> projectList = null;
+            List<Project> projectList = new List<Project>();
             DataTable dtProject = CommonData.AccessHelper.GetDataTable("select ID, Name from Project");
             if (dtProject != null && dtProject.Rows.Count > 0)
             {
@@ -393,8 +393,7 @@ namespace Common
         {
             if (CommonData.UserList != null && lazyLoad)
                 return CommonData.UserList;
-            List<User> userList = null;
-
+            List<User> userList = new List<User>();
             DataTable dtUser = CommonData.AccessHelper.GetDataTable("select ID, Name from [User]");
             if (dtUser != null && dtUser.Rows.Count > 0)
             {
