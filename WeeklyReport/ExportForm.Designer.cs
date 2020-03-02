@@ -33,17 +33,21 @@
             this.buttonSave = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.richTextBoxContent = new System.Windows.Forms.RichTextBox();
+            this.buttonReorder = new System.Windows.Forms.Button();
+            this.checkBoxAutoReorder = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.checkBoxAutoReorder);
+            this.panel1.Controls.Add(this.buttonReorder);
             this.panel1.Controls.Add(this.buttonSave);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel1.Location = new System.Drawing.Point(693, 0);
+            this.panel1.Location = new System.Drawing.Point(680, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(107, 450);
+            this.panel1.Size = new System.Drawing.Size(120, 450);
             this.panel1.TabIndex = 0;
             // 
             // buttonSave
@@ -62,7 +66,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(693, 450);
+            this.panel2.Size = new System.Drawing.Size(680, 450);
             this.panel2.TabIndex = 1;
             // 
             // richTextBoxContent
@@ -70,9 +74,30 @@
             this.richTextBoxContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBoxContent.Location = new System.Drawing.Point(0, 0);
             this.richTextBoxContent.Name = "richTextBoxContent";
-            this.richTextBoxContent.Size = new System.Drawing.Size(693, 450);
+            this.richTextBoxContent.Size = new System.Drawing.Size(680, 450);
             this.richTextBoxContent.TabIndex = 0;
             this.richTextBoxContent.Text = "";
+            this.richTextBoxContent.TextChanged += new System.EventHandler(this.richTextBoxContent_TextChanged);
+            // 
+            // buttonReorder
+            // 
+            this.buttonReorder.Location = new System.Drawing.Point(18, 50);
+            this.buttonReorder.Name = "buttonReorder";
+            this.buttonReorder.Size = new System.Drawing.Size(75, 23);
+            this.buttonReorder.TabIndex = 1;
+            this.buttonReorder.Text = "重新编号";
+            this.buttonReorder.UseVisualStyleBackColor = true;
+            this.buttonReorder.Click += new System.EventHandler(this.buttonReorder_Click);
+            // 
+            // checkBoxAutoReorder
+            // 
+            this.checkBoxAutoReorder.AutoSize = true;
+            this.checkBoxAutoReorder.Location = new System.Drawing.Point(18, 80);
+            this.checkBoxAutoReorder.Name = "checkBoxAutoReorder";
+            this.checkBoxAutoReorder.Size = new System.Drawing.Size(96, 16);
+            this.checkBoxAutoReorder.TabIndex = 2;
+            this.checkBoxAutoReorder.Text = "自动重新编号";
+            this.checkBoxAutoReorder.UseVisualStyleBackColor = true;
             // 
             // ExportForm
             // 
@@ -87,6 +112,7 @@
             this.Text = "导出";
             this.Load += new System.EventHandler(this.ExportForm_Load);
             this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -98,5 +124,7 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.RichTextBox richTextBoxContent;
         private System.Windows.Forms.Button buttonSave;
+        private System.Windows.Forms.CheckBox checkBoxAutoReorder;
+        private System.Windows.Forms.Button buttonReorder;
     }
 }

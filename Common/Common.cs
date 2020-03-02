@@ -878,6 +878,34 @@ namespace Common
             else
                 return "null";
         }
+
+        /// <summary>
+        /// 自动按类型转换成Access数据库中对应类型的值
+        /// </summary>
+        /// <param name="value">要转换的值</param>
+        /// <returns></returns>
+        public static string ToAccessValue(object value)
+        {
+            string aValue = string.Empty;
+            string typeName = value.GetType().FullName;
+            switch (typeName)
+            {
+                case "int":
+                    aValue = ToAccessIntValue((int)value);
+                    break;
+                case "decimal":
+                    aValue = ToAccessDecimalValue((decimal)value);
+                    break;
+                case "datetime":
+                    aValue = ToAccessDateTimeValue((DateTime)value);
+                    break;
+                case "String":
+                default:
+                    aValue = ToAccessStringValue((string)value);
+                    break;
+            }
+            return aValue;
+        }
     }
 
     /// <summary>

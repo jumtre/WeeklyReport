@@ -87,7 +87,9 @@ namespace WeeklyReport
             }
             sb.AppendLine();
             sb.AppendLine("下"+ reportType + "计划：");
+            richTextBoxContent.TextChanged -= richTextBoxContent_TextChanged;
             richTextBoxContent.Text = sb.ToString();
+            richTextBoxContent.TextChanged += richTextBoxContent_TextChanged;
         }
 
         private void buttonSave_Click(object sender, EventArgs e)
@@ -105,6 +107,59 @@ namespace WeeklyReport
                 }
                 this.Close();
             }
+        }
+
+        private void Reorder()
+        {
+            if (richTextBoxContent.Lines.Length <= 1)
+                return;
+            int integerLength = 1;
+            int orderNo = 1;
+            StringBuilder sb = new StringBuilder();
+            foreach (string str in richTextBoxContent.Lines)
+            {
+                if (str.Length == 0)
+                {
+                    sb.AppendLine();
+                    continue;
+                }
+                if (Common.Validator.IsInteger(str.Substring(0, 1)))
+                {
+                    integerLength++;
+                    if (str.Length >= integerLength)
+                    {
+                        while (Common.Validator.IsInteger(str.Substring(0, integerLength)))
+                        {
+                            integerLength++;
+                        }
+                        sb.AppendLine(orderNo.ToString() + str.Substring(integerLength - 1));
+                    }
+                    else
+                    {
+                        sb.AppendLine(orderNo.ToString());
+                    }
+                    integerLength = 1;
+                    orderNo++;
+                }
+                else
+                {
+                    integerLength = 1;
+                    orderNo = 1;
+                    sb.AppendLine(str);
+                }
+            }
+            richTextBoxContent.Text = sb.ToString();
+        }
+
+        private void buttonReorder_Click(object sender, EventArgs e)
+        {
+            Reorder();
+        }
+
+        private void richTextBoxContent_TextChanged(object sender, EventArgs e)
+        {
+            if (checkBoxAutoReorder.Checked)
+                Reorder();
         }
     }
 }
