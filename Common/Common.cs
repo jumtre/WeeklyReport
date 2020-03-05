@@ -170,6 +170,26 @@ namespace Common
             set { projectList = value; }
         }
 
+        private static int branchSearchTimes = 0;
+        private static List<Branch> branchList = null;
+        /// <summary>
+        /// 分支列表
+        /// </summary>
+        public static List<Branch> BranchList
+        {
+            get
+            {
+                if (branchList == null && branchSearchTimes == 0)
+                {
+                    branchSearchTimes++;
+                    return CommonFunc.GetBranchList();
+                }
+                else
+                    return branchList;
+            }
+            set { branchList = value; }
+        }
+
         private static int userSearchTimes = 0;
         private static List<User> userList = null;
         /// <summary>
@@ -379,6 +399,154 @@ namespace Common
             if (projectList != null && projectList.Count > 0)
             {
                 comboBox.DataSource = projectList;
+                comboBox.ValueMember = "ID";
+                comboBox.DisplayMember = "Name";
+            }
+        }
+
+        /// <summary>
+        /// 获取分支列表
+        /// </summary>
+        /// <param name="lazyLoad">是否懒加载。默认是</param>
+        /// <returns></returns>
+        public static List<Branch> GetBranchList(bool lazyLoad = true)
+        {
+            if (CommonData.BranchList != null && lazyLoad)
+                return CommonData.BranchList;
+            List<Branch> branchList = new List<Branch>();
+            DataTable dtBranch = CommonData.AccessHelper.GetDataTable("select b.ID, b.Name, b.[Memo], b.ProjectID, p.Name as ProjectName from Branch b left join Project p on b.ProjectID = p.ID");
+            if (dtBranch != null && dtBranch.Rows.Count > 0)
+            {
+                branchList = new List<Branch>();
+                foreach (DataRow row in dtBranch.Rows)
+                {
+                    Branch branch = new Branch()
+                    {
+                        ID = DataConvert.ToInt(row["ID"]),
+                        Name = DataConvert.ToString(row["Name"]),
+                        Memo = DataConvert.ToString(row["Memo"]),
+                        Project = new Project()
+                        {
+                            ID = DataConvert.ToInt(row["ProjectID"]),
+                            Name = DataConvert.ToString(row["ProjectName"])
+                        }
+                    };
+                    branchList.Add(branch);
+                }
+            }
+            CommonData.BranchList = branchList;
+            return CommonData.BranchList;
+        }
+
+        /// <summary>
+        /// 根据项目ID获取分支列表
+        /// </summary>
+        /// <param name="projectID">项目ID</param>
+        /// <param name="lazyLoad">是否懒加载。默认是</param>
+        /// <returns></returns>
+        public static List<Branch> GetBranchListByProjectID(int projectID, bool lazyLoad = true)
+        {
+            if (CommonData.BranchList != null && lazyLoad)
+                return CommonData.BranchList.FindAll(b => b.Project != null && b.Project.ID == projectID);
+            List<Branch> branchList = new List<Branch>();
+            DataTable dtBranch = CommonData.AccessHelper.GetDataTable("select b.ID, b.Name, b.[Memo], b.ProjectID, p.Name as ProjectName from Branch b left join Project p on b.ProjectID = p.ID where ProjectID = " + projectID);
+            if (dtBranch != null && dtBranch.Rows.Count > 0)
+            {
+                branchList = new List<Branch>();
+                foreach (DataRow row in dtBranch.Rows)
+                {
+                    Branch branch = new Branch()
+                    {
+                        ID = DataConvert.ToInt(row["ID"]),
+                        Name = DataConvert.ToString(row["Name"]),
+                        Memo = DataConvert.ToString(row["Memo"]),
+                        Project = new Project()
+                        {
+                            ID = DataConvert.ToInt(row["ProjectID"]),
+                            Name = DataConvert.ToString(row["ProjectName"])
+                        }
+                    };
+                    branchList.Add(branch);
+                }
+            }
+            return branchList;
+        }
+
+        /// <summary>
+        /// 为查询获取分支列表（首项为“全部”）
+        /// </summary>
+        /// <param name="lazyLoad">是否懒加载。默认是</param>
+        /// <returns></returns>
+        public static List<Branch> GetBranchListForSearch(bool lazyLoad = true)
+        {
+            Branch branchAll = new Branch
+            {
+                ID = CommonData.ItemAllValue,
+                Name = CommonData.ItemAllName
+            };
+            List<Branch> branchList = new List<Branch>();
+            branchList.Add(branchAll);
+            branchList.AddRange(GetBranchList(lazyLoad));
+            return branchList;
+        }
+
+        /// <summary>
+        /// 根据项目ID为查询获取分支列表（首项为“全部”）
+        /// </summary>
+        /// <param name="projectID">项目ID</param>
+        /// <param name="lazyLoad">是否懒加载。默认是</param>
+        /// <returns></returns>
+        public static List<Branch> GetBranchListForSearchByProjectID(int projectID, bool lazyLoad = true)
+        {
+            Branch branchAll = new Branch
+            {
+                ID = CommonData.ItemAllValue,
+                Name = CommonData.ItemAllName
+            };
+            List<Branch> branchList = new List<Branch>();
+            branchList.Add(branchAll);
+            branchList.AddRange(GetBranchListByProjectID(projectID, lazyLoad));
+            return branchList;
+        }
+
+        /// <summary>
+        /// 绑定分支列表到ComboBox控件
+        /// </summary>
+        /// <param name="comboBox">要绑定数据的ComboBox控件</param>
+        /// <param name="branchList">要绑定的分支列表</param>
+        /// <param name="forSearch">是否为查询。如果是，首项为“全部”。默认否</param>
+        /// <param name="lazyLoad">是否懒加载。默认是</param>
+        public static void BindBranchListToComboBox(ComboBox comboBox, List<Branch> branchList = null, bool forSearch = false, bool lazyLoad = true)
+        {
+            if (comboBox == null)
+                return;
+            if (branchList == null)
+                branchList = forSearch ? GetBranchListForSearch(lazyLoad) : GetBranchList(lazyLoad);
+            if (branchList != null && branchList.Count > 0)
+            {
+                comboBox.DataSource = branchList;
+                comboBox.ValueMember = "ID";
+                comboBox.DisplayMember = "Name";
+            }
+        }
+
+        /// <summary>
+        /// 绑定分支列表到ComboBox控件
+        /// </summary>
+        /// <param name="comboBox">要绑定数据的ComboBox控件</param>
+        /// <param name="projectID">项目ID</param>
+        /// <param name="branchList">要绑定的分支列表</param>
+        /// <param name="forSearch">是否为查询。如果是，首项为“全部”。默认否</param>
+        /// <param name="lazyLoad">是否懒加载。默认是</param>
+        public static void BindBranchListToComboBoxByProjectID(ComboBox comboBox, int projectID, List<Branch> branchList = null, bool forSearch = false, bool lazyLoad = true)
+        {
+            if (comboBox == null)
+                return;
+            if (branchList == null)
+                branchList = forSearch ? GetBranchListForSearchByProjectID(projectID, lazyLoad) : GetBranchListByProjectID(projectID, lazyLoad);
+            if (branchList != null && branchList.Count > 0)
+            {
+                comboBox.DataSource = branchList;
                 comboBox.ValueMember = "ID";
                 comboBox.DisplayMember = "Name";
             }

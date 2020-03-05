@@ -58,24 +58,36 @@ namespace WeeklyReport
             //List<Project> projectList = CommonFunc.GetProjectListForSearch();
             //CommonFunc.BindProjectListToComboBox(comboBoxSearchProject, projectList, true);
             //CommonFunc.BindProjectListToComboBox(comboBoxOperateProject, new List<Project>(projectList), true);
+            comboBoxSearchProject.SelectedIndexChanged -= comboBoxSearchProject_SelectedIndexChanged;
+            comboBoxOperateProject.SelectedIndexChanged -= comboBoxOperateProject_SelectedIndexChanged;
+            comboBoxSearchBranch.SelectedIndexChanged -= comboBoxSearchBranch_SelectedIndexChanged;
+            comboBoxOperateBranch.SelectedIndexChanged -= comboBoxOperateBranch_SelectedIndexChanged;
             CommonFunc.BindProjectListToComboBox(comboBoxSearchProject, null, true);
             CommonFunc.BindProjectListToComboBox(comboBoxOperateProject, null, true);
+            CommonFunc.BindBranchListToComboBox(comboBoxSearchBranch, null, true);
+            CommonFunc.BindBranchListToComboBox(comboBoxOperateBranch, null, true);
+            comboBoxSearchProject.SelectedIndexChanged += comboBoxSearchProject_SelectedIndexChanged;
+            comboBoxOperateProject.SelectedIndexChanged += comboBoxOperateProject_SelectedIndexChanged;
+            comboBoxSearchBranch.SelectedIndexChanged += comboBoxSearchBranch_SelectedIndexChanged;
+            comboBoxOperateBranch.SelectedIndexChanged += comboBoxOperateBranch_SelectedIndexChanged;
         }
 
         private void GetReport()
         {
             if (reportAll != null && reportAll.Count > 0)
                 reportAll.Clear();
-            StringBuilder sql = new StringBuilder("select r.ID, r.UserID, u.Name as UserName, r.ProjectID, p.Name as ProjectName, r.Content, r.FinishTime, r.Source from (Report r left join [User] u on r.UserID=u.ID) left join Project p on r.ProjectID=p.ID where 1=1");
+            StringBuilder sql = new StringBuilder("select r.ID, r.UserID, u.Name as UserName, r.ProjectID, p.Name as ProjectName, r.BranchID, b.Name as BranchName, r.Content, r.FinishTime, r.Source from ((Report r left join [User] u on r.UserID = u.ID) left join Project p on r.ProjectID = p.ID) left join Branch b on r.BranchID = b.ID where 1 = 1");
             if (dateTimePickerSearchFrom.Checked)
                 sql.Append(" and r.FinishTime >= #" + dateTimePickerSearchFrom.Value.ToString(CommonData.DateFormat + " 00:00:00") + "#");
             if (dateTimePickerSearchTo.Checked)
                 sql.Append(" and r.FinishTime <= #" + dateTimePickerSearchTo.Value.ToString(CommonData.DateFormat + " 23:59:59") + "#");
             if (comboBoxSearchProject.SelectedItem is Project project && project.ID != CommonData.ItemAllValue)
                 sql.Append(" and r.ProjectID = " + comboBoxSearchProject.SelectedValue);
+            if (comboBoxSearchBranch.SelectedItem is Branch branch && branch.ID != CommonData.ItemAllValue)
+                sql.Append(" and r.BranchID = " + comboBoxSearchBranch.SelectedValue);
             if (!string.IsNullOrWhiteSpace(textBoxKeyWord.Text.Trim()))
                 sql.Append(" and r.Content like '%" + textBoxKeyWord.Text.Trim() + "%'");
-            sql.Append(" order by r.FinishTime,r.ID");
+            sql.Append(" order by r.FinishTime, r.ID");
 
             if (reportAll == null)
                 reportAll = new List<Report>();
@@ -100,6 +112,11 @@ namespace WeeklyReport
                             ID = DataConvert.ToInt(row["ProjectID"]),
                             Name = DataConvert.ToString(row["ProjectName"])
                         },
+                        Branch = new Branch()
+                        {
+                            ID = DataConvert.ToInt(row["BranchID"]),
+                            Name = DataConvert.ToString(row["BranchName"])
+                        },
                         Content = DataConvert.ToString(row["Content"]),
                         FinishTime = DataConvert.ToDateTime(row["FinishTime"]),
                         Source = (EnumReportSource?)DataConvert.ToEnum<EnumReportSource>(row["Source"])
@@ -122,6 +139,11 @@ namespace WeeklyReport
                 row.Cells[ColumnSortNo.Index].Value = index + 1;
                 row.Cells[ColumnProject.Index].Value = report.Project.Name;
                 row.Cells[ColumnProject.Index].Tag = report.Project.ID;
+                if (report.Branch != null)
+                {
+                    row.Cells[ColumnBranch.Index].Value = report.Branch.Name;
+                    row.Cells[ColumnBranch.Index].Tag = report.Branch;
+                }
                 row.Cells[ColumnContent.Index].Value = report.Content;
                 row.Cells[ColumnFinishTime.Index].Value = report.FinishTime;
                 row.Tag = report;
@@ -145,6 +167,10 @@ namespace WeeklyReport
             if (!(row.Tag is Report report))
                 return;
             comboBoxOperateProject.SelectedValue = report.Project.ID;
+            if (report.Branch != null && report.Branch.ID > 0)
+                comboBoxOperateBranch.SelectedValue = report.Branch.ID;
+            else
+                comboBoxOperateBranch.SelectedValue = CommonData.ItemAllValue;
             if (report.FinishTime > DateTime.MinValue)
             {
                 dateTimePickerOperateFinishTime.Value = report.FinishTime;
@@ -186,6 +212,11 @@ namespace WeeklyReport
                 fields += ", FinishTime";
                 values += ", #" + dateTimePickerOperateFinishTime.Value.ToString(CommonData.DateTimeFormat) + "#";
             }
+            if (comboBoxOperateBranch.SelectedItem is Branch branch && branch.ID != CommonData.ItemAllValue)
+            {
+                fields += ", BranchID";
+                values += ", "+ comboBoxOperateBranch.SelectedValue.ToString();
+            }
             string sql = "insert into Report (" + fields + ") values (" + values + ")";
             CommonData.AccessHelper.ExecuteNonQuery(sql);
             richTextBoxOperateContent.Text = string.Empty;
@@ -219,6 +250,10 @@ namespace WeeklyReport
             if (dateTimePickerOperateFinishTime.Checked && dateTimePickerOperateFinishTime.Value > DateTime.MinValue)
             {
                 sql.AppendFormat(", FinishTime = #{0}#", dateTimePickerOperateFinishTime.Value.ToString(CommonData.DateTimeFormat));
+            }
+            if (comboBoxOperateBranch.SelectedItem is Branch branch && branch.ID != CommonData.ItemAllValue)
+            {
+                sql.AppendFormat(", BranchID = {0}", comboBoxOperateBranch.SelectedValue.ToString());
             }
             sql.AppendFormat(" where ID = {0}", report.ID);
             CommonData.AccessHelper.ExecuteNonQuery(sql.ToString());
@@ -265,6 +300,46 @@ namespace WeeklyReport
         {
             dateTimePickerOperateFinishTime.Value = DateTime.Now;
             dateTimePickerOperateFinishTime.Checked = true;
+        }
+
+        private void comboBoxSearchProject_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxSearchProject.SelectedItem is Project project && project.ID != CommonData.ItemAllValue)
+            {
+                comboBoxSearchBranch.SelectedIndexChanged -= comboBoxSearchBranch_SelectedIndexChanged;
+                CommonFunc.BindBranchListToComboBoxByProjectID(comboBoxSearchBranch, project.ID, null, true);
+                comboBoxSearchBranch.SelectedIndexChanged += comboBoxSearchBranch_SelectedIndexChanged;
+            }
+        }
+
+        private void comboBoxOperateProject_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxOperateProject.SelectedItem is Project project && project.ID != CommonData.ItemAllValue)
+            {
+                comboBoxOperateBranch.SelectedIndexChanged -= comboBoxOperateBranch_SelectedIndexChanged;
+                CommonFunc.BindBranchListToComboBoxByProjectID(comboBoxOperateBranch, project.ID, null, true);
+                comboBoxOperateBranch.SelectedIndexChanged += comboBoxOperateBranch_SelectedIndexChanged;
+            }
+        }
+
+        private void comboBoxSearchBranch_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxSearchBranch.SelectedItem is Branch branch && branch.Project != null && branch.Project.ID != CommonData.ItemAllValue)
+            {
+                comboBoxSearchProject.SelectedIndexChanged -= comboBoxSearchProject_SelectedIndexChanged;
+                comboBoxSearchProject.SelectedValue = branch.Project.ID;
+                comboBoxSearchProject.SelectedIndexChanged += comboBoxSearchProject_SelectedIndexChanged;
+            }
+        }
+
+        private void comboBoxOperateBranch_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxOperateBranch.SelectedItem is Branch branch && branch.Project != null && branch.Project.ID != CommonData.ItemAllValue)
+            {
+                comboBoxOperateProject.SelectedIndexChanged -= comboBoxOperateProject_SelectedIndexChanged;
+                comboBoxOperateProject.SelectedValue = branch.Project.ID;
+                comboBoxOperateProject.SelectedIndexChanged += comboBoxOperateProject_SelectedIndexChanged;
+            }
         }
     }
 }

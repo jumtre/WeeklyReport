@@ -27,6 +27,11 @@ namespace Model
         public Project Project { get; set; }
 
         /// <summary>
+        /// 分支
+        /// </summary>
+        public Branch Branch { get; set; }
+
+        /// <summary>
         /// 内容
         /// </summary>
         public string Content { get; set; }

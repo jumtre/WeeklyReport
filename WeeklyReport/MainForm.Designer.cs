@@ -30,6 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.comboBoxSearchBranch = new System.Windows.Forms.ComboBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.textBoxKeyWord = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.buttonSearch = new System.Windows.Forms.Button();
@@ -40,6 +42,8 @@
             this.dateTimePickerSearchFrom = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.comboBoxOperateBranch = new System.Windows.Forms.ComboBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.buttonDateTimeNow = new System.Windows.Forms.Button();
             this.buttonDelete = new System.Windows.Forms.Button();
             this.buttonExport = new System.Windows.Forms.Button();
@@ -55,6 +59,7 @@
             this.dataGridViewShow = new System.Windows.Forms.DataGridView();
             this.ColumnSortNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnProject = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnBranch = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnContent = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnFinishTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1.SuspendLayout();
@@ -65,6 +70,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.comboBoxSearchBranch);
+            this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Controls.Add(this.textBoxKeyWord);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.buttonSearch);
@@ -77,34 +84,53 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(5, 5);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(722, 99);
+            this.groupBox1.Size = new System.Drawing.Size(722, 120);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "查询";
             // 
+            // comboBoxSearchBranch
+            // 
+            this.comboBoxSearchBranch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSearchBranch.FormattingEnabled = true;
+            this.comboBoxSearchBranch.Location = new System.Drawing.Point(285, 55);
+            this.comboBoxSearchBranch.Name = "comboBoxSearchBranch";
+            this.comboBoxSearchBranch.Size = new System.Drawing.Size(140, 20);
+            this.comboBoxSearchBranch.TabIndex = 7;
+            this.comboBoxSearchBranch.SelectedIndexChanged += new System.EventHandler(this.comboBoxSearchBranch_SelectedIndexChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(226, 59);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(53, 12);
+            this.label9.TabIndex = 6;
+            this.label9.Text = "分  支：";
+            // 
             // textBoxKeyWord
             // 
-            this.textBoxKeyWord.Location = new System.Drawing.Point(264, 60);
+            this.textBoxKeyWord.Location = new System.Drawing.Point(71, 81);
             this.textBoxKeyWord.Name = "textBoxKeyWord";
-            this.textBoxKeyWord.Size = new System.Drawing.Size(104, 21);
-            this.textBoxKeyWord.TabIndex = 7;
+            this.textBoxKeyWord.Size = new System.Drawing.Size(354, 21);
+            this.textBoxKeyWord.TabIndex = 9;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(205, 65);
+            this.label7.Location = new System.Drawing.Point(12, 86);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(53, 12);
-            this.label7.TabIndex = 6;
+            this.label7.TabIndex = 8;
             this.label7.Text = "关键字：";
             // 
             // buttonSearch
             // 
-            this.buttonSearch.Location = new System.Drawing.Point(393, 25);
+            this.buttonSearch.Location = new System.Drawing.Point(456, 25);
             this.buttonSearch.Name = "buttonSearch";
-            this.buttonSearch.Size = new System.Drawing.Size(75, 55);
-            this.buttonSearch.TabIndex = 8;
-            this.buttonSearch.Text = "查询";
+            this.buttonSearch.Size = new System.Drawing.Size(93, 77);
+            this.buttonSearch.TabIndex = 10;
+            this.buttonSearch.Text = "查  询";
             this.buttonSearch.UseVisualStyleBackColor = true;
             this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
             // 
@@ -112,23 +138,24 @@
             // 
             this.comboBoxSearchProject.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSearchProject.FormattingEnabled = true;
-            this.comboBoxSearchProject.Location = new System.Drawing.Point(59, 60);
+            this.comboBoxSearchProject.Location = new System.Drawing.Point(71, 55);
             this.comboBoxSearchProject.Name = "comboBoxSearchProject";
             this.comboBoxSearchProject.Size = new System.Drawing.Size(140, 20);
             this.comboBoxSearchProject.TabIndex = 5;
+            this.comboBoxSearchProject.SelectedIndexChanged += new System.EventHandler(this.comboBoxSearchProject_SelectedIndexChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 65);
+            this.label3.Location = new System.Drawing.Point(12, 59);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(41, 12);
+            this.label3.Size = new System.Drawing.Size(53, 12);
             this.label3.TabIndex = 4;
-            this.label3.Text = "项目：";
+            this.label3.Text = "项  目：";
             // 
             // dateTimePickerSearchTo
             // 
-            this.dateTimePickerSearchTo.Location = new System.Drawing.Point(228, 25);
+            this.dateTimePickerSearchTo.Location = new System.Drawing.Point(285, 25);
             this.dateTimePickerSearchTo.Name = "dateTimePickerSearchTo";
             this.dateTimePickerSearchTo.ShowCheckBox = true;
             this.dateTimePickerSearchTo.Size = new System.Drawing.Size(140, 21);
@@ -137,7 +164,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(205, 31);
+            this.label2.Location = new System.Drawing.Point(240, 31);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(17, 12);
             this.label2.TabIndex = 2;
@@ -145,7 +172,7 @@
             // 
             // dateTimePickerSearchFrom
             // 
-            this.dateTimePickerSearchFrom.Location = new System.Drawing.Point(59, 25);
+            this.dateTimePickerSearchFrom.Location = new System.Drawing.Point(71, 25);
             this.dateTimePickerSearchFrom.Name = "dateTimePickerSearchFrom";
             this.dateTimePickerSearchFrom.ShowCheckBox = true;
             this.dateTimePickerSearchFrom.Size = new System.Drawing.Size(140, 21);
@@ -156,12 +183,14 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 30);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(41, 12);
+            this.label1.Size = new System.Drawing.Size(53, 12);
             this.label1.TabIndex = 0;
-            this.label1.Text = "日期：";
+            this.label1.Text = "日  期：";
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.comboBoxOperateBranch);
+            this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.buttonDateTimeNow);
             this.groupBox2.Controls.Add(this.buttonDelete);
             this.groupBox2.Controls.Add(this.buttonExport);
@@ -174,49 +203,68 @@
             this.groupBox2.Controls.Add(this.comboBoxOperateProject);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox2.Location = new System.Drawing.Point(5, 104);
+            this.groupBox2.Location = new System.Drawing.Point(5, 125);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(722, 180);
+            this.groupBox2.Size = new System.Drawing.Size(722, 195);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "数据/操作";
             // 
+            // comboBoxOperateBranch
+            // 
+            this.comboBoxOperateBranch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxOperateBranch.FormattingEnabled = true;
+            this.comboBoxOperateBranch.Location = new System.Drawing.Point(285, 27);
+            this.comboBoxOperateBranch.Name = "comboBoxOperateBranch";
+            this.comboBoxOperateBranch.Size = new System.Drawing.Size(140, 20);
+            this.comboBoxOperateBranch.TabIndex = 3;
+            this.comboBoxOperateBranch.SelectedIndexChanged += new System.EventHandler(this.comboBoxOperateBranch_SelectedIndexChanged);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(226, 30);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(53, 12);
+            this.label8.TabIndex = 2;
+            this.label8.Text = "分  支：";
+            // 
             // buttonDateTimeNow
             // 
-            this.buttonDateTimeNow.Location = new System.Drawing.Point(517, 25);
+            this.buttonDateTimeNow.Location = new System.Drawing.Point(285, 56);
             this.buttonDateTimeNow.Name = "buttonDateTimeNow";
             this.buttonDateTimeNow.Size = new System.Drawing.Size(75, 23);
-            this.buttonDateTimeNow.TabIndex = 10;
+            this.buttonDateTimeNow.TabIndex = 6;
             this.buttonDateTimeNow.Text = "当前时间";
             this.buttonDateTimeNow.UseVisualStyleBackColor = true;
             this.buttonDateTimeNow.Click += new System.EventHandler(this.buttonDateTimeNow_Click);
             // 
             // buttonDelete
             // 
-            this.buttonDelete.Location = new System.Drawing.Point(627, 104);
+            this.buttonDelete.Location = new System.Drawing.Point(627, 112);
             this.buttonDelete.Name = "buttonDelete";
-            this.buttonDelete.Size = new System.Drawing.Size(75, 23);
-            this.buttonDelete.TabIndex = 8;
+            this.buttonDelete.Size = new System.Drawing.Size(75, 33);
+            this.buttonDelete.TabIndex = 11;
             this.buttonDelete.Text = "删除";
             this.buttonDelete.UseVisualStyleBackColor = true;
             this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
             // 
             // buttonExport
             // 
-            this.buttonExport.Location = new System.Drawing.Point(627, 142);
+            this.buttonExport.Location = new System.Drawing.Point(627, 154);
             this.buttonExport.Name = "buttonExport";
-            this.buttonExport.Size = new System.Drawing.Size(75, 23);
-            this.buttonExport.TabIndex = 9;
+            this.buttonExport.Size = new System.Drawing.Size(75, 33);
+            this.buttonExport.TabIndex = 12;
             this.buttonExport.Text = "导出";
             this.buttonExport.UseVisualStyleBackColor = true;
             this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
             // 
             // buttonEdit
             // 
-            this.buttonEdit.Location = new System.Drawing.Point(627, 66);
+            this.buttonEdit.Location = new System.Drawing.Point(627, 70);
             this.buttonEdit.Name = "buttonEdit";
-            this.buttonEdit.Size = new System.Drawing.Size(75, 23);
-            this.buttonEdit.TabIndex = 7;
+            this.buttonEdit.Size = new System.Drawing.Size(75, 33);
+            this.buttonEdit.TabIndex = 10;
             this.buttonEdit.Text = "修改";
             this.buttonEdit.UseVisualStyleBackColor = true;
             this.buttonEdit.Click += new System.EventHandler(this.buttonEdit_Click);
@@ -225,73 +273,74 @@
             // 
             this.buttonAdd.Location = new System.Drawing.Point(627, 26);
             this.buttonAdd.Name = "buttonAdd";
-            this.buttonAdd.Size = new System.Drawing.Size(75, 23);
-            this.buttonAdd.TabIndex = 6;
+            this.buttonAdd.Size = new System.Drawing.Size(75, 33);
+            this.buttonAdd.TabIndex = 9;
             this.buttonAdd.Text = "新增";
             this.buttonAdd.UseVisualStyleBackColor = true;
             this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
             // 
             // richTextBoxOperateContent
             // 
-            this.richTextBoxOperateContent.Location = new System.Drawing.Point(59, 66);
+            this.richTextBoxOperateContent.Location = new System.Drawing.Point(71, 87);
             this.richTextBoxOperateContent.Name = "richTextBoxOperateContent";
-            this.richTextBoxOperateContent.Size = new System.Drawing.Size(533, 104);
-            this.richTextBoxOperateContent.TabIndex = 5;
+            this.richTextBoxOperateContent.Size = new System.Drawing.Size(521, 100);
+            this.richTextBoxOperateContent.TabIndex = 8;
             this.richTextBoxOperateContent.Text = "";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 66);
+            this.label6.Location = new System.Drawing.Point(12, 87);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(41, 12);
-            this.label6.TabIndex = 4;
-            this.label6.Text = "内容：";
+            this.label6.Size = new System.Drawing.Size(53, 12);
+            this.label6.TabIndex = 7;
+            this.label6.Text = "内  容：";
             // 
             // dateTimePickerOperateFinishTime
             // 
             this.dateTimePickerOperateFinishTime.CustomFormat = "yyyy年MM月dd日 HH时mm分";
             this.dateTimePickerOperateFinishTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePickerOperateFinishTime.Location = new System.Drawing.Point(311, 26);
+            this.dateTimePickerOperateFinishTime.Location = new System.Drawing.Point(71, 57);
             this.dateTimePickerOperateFinishTime.Name = "dateTimePickerOperateFinishTime";
             this.dateTimePickerOperateFinishTime.ShowCheckBox = true;
             this.dateTimePickerOperateFinishTime.Size = new System.Drawing.Size(200, 21);
-            this.dateTimePickerOperateFinishTime.TabIndex = 3;
+            this.dateTimePickerOperateFinishTime.TabIndex = 5;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(240, 30);
+            this.label5.Location = new System.Drawing.Point(12, 61);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(65, 12);
-            this.label5.TabIndex = 2;
-            this.label5.Text = "完成时间：";
+            this.label5.Size = new System.Drawing.Size(53, 12);
+            this.label5.TabIndex = 4;
+            this.label5.Text = "时  间：";
             // 
             // comboBoxOperateProject
             // 
             this.comboBoxOperateProject.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxOperateProject.FormattingEnabled = true;
-            this.comboBoxOperateProject.Location = new System.Drawing.Point(59, 27);
+            this.comboBoxOperateProject.Location = new System.Drawing.Point(71, 27);
             this.comboBoxOperateProject.Name = "comboBoxOperateProject";
             this.comboBoxOperateProject.Size = new System.Drawing.Size(140, 20);
             this.comboBoxOperateProject.TabIndex = 1;
+            this.comboBoxOperateProject.SelectedIndexChanged += new System.EventHandler(this.comboBoxOperateProject_SelectedIndexChanged);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(12, 30);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(41, 12);
+            this.label4.Size = new System.Drawing.Size(53, 12);
             this.label4.TabIndex = 0;
-            this.label4.Text = "项目：";
+            this.label4.Text = "项  目：";
             // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.dataGridViewShow);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox3.Location = new System.Drawing.Point(5, 284);
+            this.groupBox3.Location = new System.Drawing.Point(5, 320);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(722, 248);
+            this.groupBox3.Size = new System.Drawing.Size(722, 256);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "显示";
@@ -304,6 +353,7 @@
             this.dataGridViewShow.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ColumnSortNo,
             this.ColumnProject,
+            this.ColumnBranch,
             this.ColumnContent,
             this.ColumnFinishTime});
             this.dataGridViewShow.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -314,7 +364,7 @@
             this.dataGridViewShow.RowHeadersVisible = false;
             this.dataGridViewShow.RowTemplate.Height = 23;
             this.dataGridViewShow.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewShow.Size = new System.Drawing.Size(716, 228);
+            this.dataGridViewShow.Size = new System.Drawing.Size(716, 236);
             this.dataGridViewShow.TabIndex = 1;
             this.dataGridViewShow.SelectionChanged += new System.EventHandler(this.dataGridViewShow_SelectionChanged);
             // 
@@ -330,6 +380,12 @@
             this.ColumnProject.HeaderText = "项目";
             this.ColumnProject.Name = "ColumnProject";
             this.ColumnProject.ReadOnly = true;
+            // 
+            // ColumnBranch
+            // 
+            this.ColumnBranch.HeaderText = "分支";
+            this.ColumnBranch.Name = "ColumnBranch";
+            this.ColumnBranch.ReadOnly = true;
             // 
             // ColumnContent
             // 
@@ -349,7 +405,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(732, 537);
+            this.ClientSize = new System.Drawing.Size(732, 581);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -391,14 +447,19 @@
         private System.Windows.Forms.DataGridView dataGridViewShow;
         private System.Windows.Forms.Button buttonEdit;
         private System.Windows.Forms.Button buttonExport;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnSortNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnProject;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnContent;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnFinishTime;
         private System.Windows.Forms.Button buttonDelete;
         private System.Windows.Forms.Button buttonDateTimeNow;
         private System.Windows.Forms.TextBox textBoxKeyWord;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ComboBox comboBoxOperateBranch;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.ComboBox comboBoxSearchBranch;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnSortNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnProject;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnBranch;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnContent;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnFinishTime;
     }
 }
 

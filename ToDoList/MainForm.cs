@@ -57,7 +57,12 @@ namespace ToDoList
                 labelHideInfo.Text = infoShowingText;
             else
                 labelHideInfo.Text = infoHidingText;
+            comboBoxSearchProject.SelectedIndexChanged -= comboBoxSearchProject_SelectedIndexChanged;
+            comboBoxSearchBranch.SelectedIndexChanged -= comboBoxSearchBranch_SelectedIndexChanged;
             CommonFunc.BindProjectListToComboBox(comboBoxSearchProject, null, true);
+            CommonFunc.BindBranchListToComboBox(comboBoxSearchBranch, null, true);
+            comboBoxSearchProject.SelectedIndexChanged += comboBoxSearchProject_SelectedIndexChanged;
+            comboBoxSearchBranch.SelectedIndexChanged += comboBoxSearchBranch_SelectedIndexChanged;
             CommonFunc.BindToDoStatusListToComboBox(comboBoxSearchStatus, null, true);
             comboBoxSearchStatus.SelectedValue = EnumToDoStatus.Planning;
             CommonFunc.GetWeekDateTime(ref weekStartTime, ref weekEndTime);
@@ -69,7 +74,12 @@ namespace ToDoList
             dateTimePickerSearchPlannedStartTo.Checked = false;
             dateTimePickerSearchPlannedEndFrom.Checked = false;
             dateTimePickerSearchPlannedEndTo.Checked = false;
+            comboBoxOperateProject.SelectedIndexChanged -= comboBoxOperateProject_SelectedIndexChanged;
+            comboBoxOperateBranch.SelectedIndexChanged -= comboBoxOperateBranch_SelectedIndexChanged;
             CommonFunc.BindProjectListToComboBox(comboBoxOperateProject, null, true);
+            CommonFunc.BindBranchListToComboBox(comboBoxOperateBranch, null, true);
+            comboBoxOperateProject.SelectedIndexChanged += comboBoxOperateProject_SelectedIndexChanged;
+            comboBoxOperateBranch.SelectedIndexChanged += comboBoxOperateBranch_SelectedIndexChanged;
             CommonFunc.BindToDoPriorityListToComboBox(comboBoxOperatePriority, null, true);
             CommonFunc.BindToDoSeverityListToComboBox(comboBoxOperateSeverity, null, true);
             CommonFunc.BindToDoStatusListToComboBox(comboBoxOperateStatus, null, true);
@@ -142,9 +152,11 @@ namespace ToDoList
         {
             if (toDoListAll != null && toDoListAll.Count > 0)
                 toDoListAll.Clear();
-            StringBuilder sql = new StringBuilder("select t.ID, t.ProjectID, p.Name as ProjectName, t.Priority, t.Severity, t.Title, t.Content, t.Memo, t.UserID, u.Name as UserName, t.PlannedStartTime, t.PlannedEndTime, t.PlannedHours, t.PlannedDays, t.Status, t.FinishTime, t.FinishUserID, uf.Name as FinishUserName from ((ToDo t left join Project p on t.ProjectID = p.ID) left join [User] u on t.UserID = u.ID) left join [User] uf on t.FinishUserID = uf.ID where 1 = 1");
+            StringBuilder sql = new StringBuilder("select t.ID, t.ProjectID, p.Name as ProjectName, t.BranchID, b.Name as BranchName, t.Priority, t.Severity, t.Title, t.Content, t.[Memo], t.UserID, u.Name as UserName, t.PlannedStartTime, t.PlannedEndTime, t.PlannedHours, t.PlannedDays, t.Status, t.FinishTime, t.FinishUserID, uf.Name as FinishUserName from (((ToDo t left join Project p on t.ProjectID = p.ID) left join Branch b on t.BranchID = b.ID) left join [User] u on t.UserID = u.ID) left join [User] uf on t.FinishUserID = uf.ID where 1 = 1");
             if (comboBoxSearchProject.SelectedItem is Project project && project.ID != CommonData.ItemAllValue)
                 sql.Append(" and t.ProjectID = " + project.ID);
+            if (comboBoxSearchBranch.SelectedItem is Branch branch && branch.ID != CommonData.ItemAllValue)
+                sql.Append(" and t.BranchID = " + branch.ID);
             if (!string.IsNullOrWhiteSpace(textBoxSearchTitle.Text.Trim()))
                 sql.Append(" and t.Title like '%" + textBoxSearchTitle.Text.Trim() + "%'");
             if (!string.IsNullOrWhiteSpace(textBoxSearchContent.Text.Trim()))
@@ -205,6 +217,10 @@ namespace ToDoList
                     string projectName = DataConvert.ToString(row["ProjectName"]);
                     if (projectID > 0 || !string.IsNullOrWhiteSpace(projectName))
                         toDo.Project = new Project() { ID = projectID, Name = projectName };
+                    int branchID = DataConvert.ToInt(row["BranchID"]);
+                    string branchName = DataConvert.ToString(row["BranchName"]);
+                    if (branchID > 0 || !string.IsNullOrWhiteSpace(branchName))
+                        toDo.Branch = new Branch() { ID = branchID, Name = branchName };//, Project = toDo.Project
                     int userID = DataConvert.ToInt(row["UserID"]);
                     string userName = DataConvert.ToString(row["UserName"]);
                     if (userID > 0 || !string.IsNullOrWhiteSpace(userName))
@@ -249,15 +265,31 @@ namespace ToDoList
                 row.Cells[ColumnDone.Index].Tag = todo.Status;
                 row.Cells[ColumnOrderNo.Index].Value = index + 1;
                 if (todo.Project != null)
+                {
                     row.Cells[ColumnProject.Index].Value = todo.Project.Name;
-                row.Cells[ColumnProject.Index].Tag = todo.Project;
+                    row.Cells[ColumnProject.Index].Tag = todo.Project;
+                }
+                if (todo.Branch != null)
+                {
+                    row.Cells[ColumnBranch.Index].Value = todo.Branch.Name;
+                    row.Cells[ColumnBranch.Index].Tag = todo.Branch;
+                }
                 row.Cells[ColumnTitle.Index].Value = todo.Title;
                 if (todo.Priority.HasValue)
+                {
                     row.Cells[ColumnPriority.Index].Value = CommonFunc.GetDescription(todo.Priority);
-                row.Cells[ColumnPriority.Index].Tag = todo.Priority;
+                    row.Cells[ColumnPriority.Index].Tag = todo.Priority;
+                }
                 if (todo.Severity.HasValue)
+                {
                     row.Cells[ColumnSeverity.Index].Value = CommonFunc.GetDescription(todo.Severity);
-                row.Cells[ColumnSeverity.Index].Tag = todo.Severity;
+                    row.Cells[ColumnSeverity.Index].Tag = todo.Severity;
+                }
+                if (todo.PlannedEndTime.HasValue)
+                {
+                    row.Cells[ColumnPlannedEndTime.Index].Value = todo.PlannedEndTime.Value.ToString(CommonData.DateTimeMinuteFormat);
+                    row.Cells[ColumnPlannedEndTime.Index].Tag = todo.PlannedEndTime.Value;
+                }
                 row.Tag = todo;
             }
             dataGridViewToDoList.ClearSelection();
@@ -271,6 +303,7 @@ namespace ToDoList
         private void InitOperateControls()
         {
             comboBoxOperateProject.SelectedValue = CommonData.ItemAllValue;
+            comboBoxOperateBranch.SelectedValue = CommonData.ItemAllValue;
             comboBoxOperatePriority.SelectedValue = EnumToDoPriority.Normal;
             comboBoxOperateSeverity.SelectedValue = EnumToDoSeverity.Minor;
             dateTimePickerOperatePlannedStartTime.Checked = false;
@@ -305,6 +338,10 @@ namespace ToDoList
             //选中项目后，自动打开右侧信息栏并赋值
             ShowInfo();
             comboBoxOperateProject.SelectedValue = todo.Project.ID;
+            if (todo.Branch != null && todo.Branch.ID > 0)
+                comboBoxOperateBranch.SelectedValue = todo.Branch.ID;
+            else
+                comboBoxOperateBranch.SelectedValue = CommonData.ItemAllValue;
             comboBoxOperatePriority.SelectedValue = todo.Priority;
             comboBoxOperateSeverity.SelectedValue = todo.Severity;
             if (todo.PlannedStartTime.HasValue)
@@ -359,6 +396,8 @@ namespace ToDoList
             };
             if (comboBoxOperateProject.SelectedItem is Project && comboBoxOperateProject.SelectedValue is int && (int)comboBoxOperateProject.SelectedValue != CommonData.ItemAllValue)
                 toDo.Project = (Project)comboBoxOperateProject.SelectedItem;
+            if (comboBoxOperateProject.SelectedItem is Project && comboBoxOperateProject.SelectedValue is int && (int)comboBoxOperateProject.SelectedValue != CommonData.ItemAllValue)
+                toDo.Branch = (Branch)comboBoxOperateBranch.SelectedItem;
             if (comboBoxOperatePriority.SelectedItem is ToDoPriority && comboBoxOperatePriority.SelectedValue is EnumToDoPriority && ((ToDoPriority)comboBoxOperatePriority.SelectedItem).ID != CommonData.ItemAllValue)
                 toDo.Priority = (EnumToDoPriority)comboBoxOperatePriority.SelectedValue;
             if (comboBoxOperateSeverity.SelectedItem is ToDoSeverity && comboBoxOperateSeverity.SelectedValue is EnumToDoSeverity && ((ToDoSeverity)comboBoxOperateSeverity.SelectedItem).ID != CommonData.ItemAllValue)
@@ -394,50 +433,55 @@ namespace ToDoList
             StringBuilder values = new StringBuilder(DataConvert.ToAccessStringValue(textBoxOperateTitle));
             if (comboBoxOperateProject.SelectedItem is Project && comboBoxOperateProject.SelectedValue is int && (int)comboBoxOperateProject.SelectedValue != CommonData.ItemAllValue)
             {
-                fields.Append(",ProjectID");
-                values.Append("," + DataConvert.ToAccessIntValue(comboBoxOperateProject));
+                fields.Append(", ProjectID");
+                values.Append(", " + DataConvert.ToAccessIntValue(comboBoxOperateProject));
+            }
+            if (comboBoxOperateBranch.SelectedItem is Branch && comboBoxOperateBranch.SelectedValue is int && (int)comboBoxOperateBranch.SelectedValue != CommonData.ItemAllValue)
+            {
+                fields.Append(", BranchID");
+                values.Append(", " + DataConvert.ToAccessIntValue(comboBoxOperateBranch));
             }
             if (comboBoxOperatePriority.SelectedItem is ToDoPriority && comboBoxOperatePriority.SelectedValue is EnumToDoPriority && ((ToDoPriority)comboBoxOperatePriority.SelectedItem).ID != CommonData.ItemAllValue)
             {
-                fields.Append(",Priority");
+                fields.Append(", Priority");
                 //values.Append("," + (int)(EnumToDoPriority)comboBoxOperatePriority.SelectedValue);
-                values.Append("," + (int)comboBoxOperatePriority.SelectedValue);
+                values.Append(", " + (int)comboBoxOperatePriority.SelectedValue);
             }
             if (comboBoxOperateSeverity.SelectedItem is ToDoSeverity && comboBoxOperateSeverity.SelectedValue is EnumToDoSeverity && ((ToDoSeverity)comboBoxOperateSeverity.SelectedItem).ID != CommonData.ItemAllValue)
             {
-                fields.Append(",Severity");
-                values.Append("," + (int)comboBoxOperateSeverity.SelectedValue);
+                fields.Append(", Severity");
+                values.Append(", " + (int)comboBoxOperateSeverity.SelectedValue);
             }
             if (dateTimePickerOperatePlannedStartTime.Checked)
             {
-                fields.Append(",PlannedStartTime");
-                values.Append("," + DataConvert.ToAccessDateTimeValue(dateTimePickerOperatePlannedStartTime));
+                fields.Append(", PlannedStartTime");
+                values.Append(", " + DataConvert.ToAccessDateTimeValue(dateTimePickerOperatePlannedStartTime));
             }
             if (dateTimePickerOperatePlannedEndTime.Checked)
             {
-                fields.Append(",PlannedEndTime");
-                values.Append("," + DataConvert.ToAccessDateTimeValue(dateTimePickerOperatePlannedEndTime));
+                fields.Append(", PlannedEndTime");
+                values.Append(", " + DataConvert.ToAccessDateTimeValue(dateTimePickerOperatePlannedEndTime));
             }
-            fields.Append(",PlannedHours");
-            values.Append("," + DataConvert.ToAccessDecimalValue(numericUpDownOperatePlannedHours));
-            fields.Append(",PlannedDays");
-            values.Append("," + DataConvert.ToAccessDecimalValue(numericUpDownOperatePlannedDays));
+            fields.Append(", PlannedHours");
+            values.Append(", " + DataConvert.ToAccessDecimalValue(numericUpDownOperatePlannedHours));
+            fields.Append(", PlannedDays");
+            values.Append(", " + DataConvert.ToAccessDecimalValue(numericUpDownOperatePlannedDays));
             if (!string.IsNullOrWhiteSpace(richTextBoxOperateContent.Text))
             {
-                fields.Append(",Content");
-                values.Append("," + DataConvert.ToAccessStringValue(richTextBoxOperateContent));
+                fields.Append(", Content");
+                values.Append(", " + DataConvert.ToAccessStringValue(richTextBoxOperateContent));
             }
             if (!string.IsNullOrWhiteSpace(richTextBoxOperateMemo.Text))
             {
-                fields.Append(",[Memo]");
-                values.Append("," + DataConvert.ToAccessStringValue(richTextBoxOperateMemo));
+                fields.Append(", [Memo]");
+                values.Append(", " + DataConvert.ToAccessStringValue(richTextBoxOperateMemo));
             }
-            fields.Append(",UserID");
-            values.Append("," + CommonData.CurrentUser.ID);
+            fields.Append(", UserID");
+            values.Append(", " + CommonData.CurrentUser.ID);
             if (comboBoxOperateStatus.SelectedItem is ToDoStatus && comboBoxOperateStatus.SelectedValue is EnumToDoStatus && ((ToDoStatus)comboBoxOperateStatus.SelectedItem).ID != CommonData.ItemAllValue)
             {
-                fields.Append(",Status");
-                values.Append("," + (int)comboBoxOperateStatus.SelectedValue);
+                fields.Append(", Status");
+                values.Append(", " + (int)comboBoxOperateStatus.SelectedValue);
             }
             //fields.Append(",FinishTime");
             //fields.Append(",FinishUserID");
@@ -467,6 +511,7 @@ namespace ToDoList
             ToDo toDoOperate = GetToDoFromOperateControls();
             StringBuilder sets = new StringBuilder("Title = " + DataConvert.ToAccessStringValue(toDoOperate.Title));
             sets.Append(", ProjectID = " + (toDoOperate.Project.ID != CommonData.ItemAllValue ? toDoOperate.Project.ID.ToString() : "null"));
+            sets.Append(", BranchID = " + (toDoOperate.Branch != null && toDoOperate.Branch.ID != CommonData.ItemAllValue ? toDoOperate.Branch.ID.ToString() : "null"));
             sets.Append(", Priority = " + (toDoOperate.Priority.HasValue ? ((int)toDoOperate.Priority.Value).ToString() : "null"));
             sets.Append(", Severity = " + (toDoOperate.Severity.HasValue ? ((int)toDoOperate.Severity.Value).ToString() : "null"));
             sets.Append(", Content = " + DataConvert.ToAccessStringValue(toDoOperate.Content));
@@ -609,6 +654,46 @@ namespace ToDoList
                 {
                     ToDoDone(toDo);
                 }
+            }
+        }
+
+        private void comboBoxSearchProject_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxSearchProject.SelectedItem is Project project && project.ID != CommonData.ItemAllValue)
+            {
+                comboBoxSearchBranch.SelectedIndexChanged -= comboBoxSearchBranch_SelectedIndexChanged;
+                CommonFunc.BindBranchListToComboBoxByProjectID(comboBoxSearchBranch, project.ID, null, true);
+                comboBoxSearchBranch.SelectedIndexChanged += comboBoxSearchBranch_SelectedIndexChanged;
+            }
+        }
+
+        private void comboBoxOperateProject_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxOperateProject.SelectedItem is Project project && project.ID != CommonData.ItemAllValue)
+            {
+                comboBoxOperateBranch.SelectedIndexChanged -= comboBoxOperateBranch_SelectedIndexChanged;
+                CommonFunc.BindBranchListToComboBoxByProjectID(comboBoxOperateBranch, project.ID, null, true);
+                comboBoxOperateBranch.SelectedIndexChanged += comboBoxOperateBranch_SelectedIndexChanged;
+            }
+        }
+
+        private void comboBoxSearchBranch_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxSearchBranch.SelectedItem is Branch branch && branch.Project != null && branch.Project.ID != CommonData.ItemAllValue)
+            {
+                comboBoxSearchProject.SelectedIndexChanged -= comboBoxSearchProject_SelectedIndexChanged;
+                comboBoxSearchProject.SelectedValue = branch.Project.ID;
+                comboBoxSearchProject.SelectedIndexChanged += comboBoxSearchProject_SelectedIndexChanged;
+            }
+        }
+
+        private void comboBoxOperateBranch_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxOperateBranch.SelectedItem is Branch branch && branch.Project != null && branch.Project.ID != CommonData.ItemAllValue)
+            {
+                comboBoxOperateProject.SelectedIndexChanged -= comboBoxOperateProject_SelectedIndexChanged;
+                comboBoxOperateProject.SelectedValue = branch.Project.ID;
+                comboBoxOperateProject.SelectedIndexChanged += comboBoxOperateProject_SelectedIndexChanged;
             }
         }
     }

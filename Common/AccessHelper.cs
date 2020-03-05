@@ -120,6 +120,39 @@ namespace Common
         }
 
         /// <summary>
+        /// 执行命令获取查询结果中第0行第0列的值
+        /// </summary>
+        /// <param name="sql">查询语句</param>
+        /// <param name="paramDict">参数字典</param>
+        /// <param name="conn">数据库连接</param>
+        /// <returns></returns>
+        public object ExecuteScalar(string sql, Dictionary<string, object> paramDict = null, OleDbConnection conn = null)
+        {
+            if (string.IsNullOrWhiteSpace(sql))
+                return null;
+            if (conn == null)
+                conn = GetDbConnection();
+
+            object o = null;
+            using (conn)
+            {
+                conn.Open();
+                OleDbCommand cmd = conn.CreateCommand();
+                cmd.CommandText = sql;
+                if (paramDict != null && paramDict.Count > 0)
+                {
+                    foreach (KeyValuePair<string, object> pair in paramDict)
+                        cmd.Parameters.AddWithValue(pair.Key, pair.Value ?? string.Empty);
+                }
+                o = cmd.ExecuteScalar();
+                cmd.Dispose();
+                conn.Close();
+                conn.Dispose();
+            }
+            return o;
+        }
+
+        /// <summary>
         /// 插入
         /// </summary>
         /// <param name="tableName">表名</param>

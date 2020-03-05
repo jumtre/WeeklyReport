@@ -22,6 +22,11 @@ namespace Model
         public Project Project { get; set; }
 
         /// <summary>
+        /// 分支
+        /// </summary>
+        public Branch Branch { get; set; }
+
+        /// <summary>
         /// 优先级
         /// </summary>
         public EnumToDoPriority? Priority { get; set; }

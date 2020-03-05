@@ -19,7 +19,8 @@ namespace WRManagement
         {
             None,
             User,
-            Project
+            Project,
+            Branch
         }
         /// <summary>
         /// 数据库帮助类
@@ -30,7 +31,7 @@ namespace WRManagement
         /// </summary>
         private CurrentDataType currentDataType;
         /// <summary>
-        /// 是否触发DataGridView的SelectionChanged时间
+        /// 是否触发DataGridView的SelectionChanged事件
         /// </summary>
         private bool fireSelectionChanged = true;
         /// <summary>
@@ -56,10 +57,11 @@ namespace WRManagement
 
         private void BindDict()
         {
-            List<string> dictList = new List<string>() { "", "用户", "项目" };
+            List<string> dictList = new List<string>() { "", "用户", "项目", "分支" };
             comboBoxDict.DataSource = dictList;
 
             BindUserDict();
+            BindProjectDict();
         }
 
         private void BindUserDict(bool lazyLoad = true)
@@ -67,10 +69,19 @@ namespace WRManagement
             CommonFunc.BindUserListToComboBox(comboBoxCurrentUser, null, false, lazyLoad);
         }
 
+        private void BindProjectDict(bool lazyLoad = true)
+        {
+            comboBoxProject.SelectedIndexChanged -= comboBoxProject_SelectedIndexChanged;
+            CommonFunc.BindProjectListToComboBox(comboBoxProject, null, false, lazyLoad);
+            comboBoxProject.SelectedIndexChanged += comboBoxProject_SelectedIndexChanged;
+        }
+
         private void BindUserList(List<User> list = null)
         {
             fireSelectionChanged = false;
             dataGridViewShow.Rows.Clear();
+            ColumnProjectName.Visible = false;
+            ColumnMemo.Visible = false;
             if (list == null)
                 list = CommonFunc.GetUserList(false);
             if (list == null || list.Count == 0)
@@ -92,6 +103,8 @@ namespace WRManagement
         {
             fireSelectionChanged = false;
             dataGridViewShow.Rows.Clear();
+            ColumnProjectName.Visible = false;
+            ColumnMemo.Visible = false;
             if (list == null)
                 list = CommonFunc.GetProjectList(false);
             if (list == null || list.Count == 0)
@@ -109,6 +122,37 @@ namespace WRManagement
             fireSelectionChanged = true;
         }
 
+        private void BindBranchList(List<Branch> list = null)
+        {
+            fireSelectionChanged = false;
+            dataGridViewShow.Rows.Clear();
+            ColumnProjectName.Visible = true;
+            ColumnMemo.Visible = true;
+            if (list == null)
+            {
+                //if (comboBoxProject.SelectedItem is Project project && project.ID != CommonData.ItemAllValue)
+                //    list = CommonFunc.GetBranchListByProjectID(project.ID, false);
+                //else
+                    list = CommonFunc.GetBranchList(false);
+            }
+            if (list == null || list.Count == 0)
+                return;
+            foreach (Branch branch in list)
+            {
+                int index = dataGridViewShow.Rows.Add();
+                DataGridViewRow row = dataGridViewShow.Rows[index];
+                row.Cells[ColumnSortNo.Index].Value = index + 1;
+                row.Cells[ColumnID.Index].Value = branch.ID;
+                row.Cells[ColumnName.Index].Value = branch.Name;
+                row.Cells[ColumnProjectName.Index].Value = branch.Project?.Name;
+                row.Cells[ColumnProjectName.Index].Tag = branch.Project;
+                row.Cells[ColumnMemo.Index].Value = branch.Memo;
+                row.Tag = branch;
+            }
+            dataGridViewShow.ClearSelection();
+            fireSelectionChanged = true;
+        }
+
         private void RefreshData()
         {
             if (currentDataType == CurrentDataType.User)
@@ -117,7 +161,12 @@ namespace WRManagement
                 BindUserDict(false);
             }
             else if (currentDataType == CurrentDataType.Project)
+            {
                 BindProjectList();
+                BindProjectDict(false);
+            }
+            else if (currentDataType == CurrentDataType.Branch)
+                BindBranchList();
         }
 
         private void comboBoxDict_SelectedIndexChanged(object sender, EventArgs e)
@@ -132,6 +181,8 @@ namespace WRManagement
                 currentDataType = CurrentDataType.User;
             else if (comboBoxDict.SelectedValue?.ToString() == "项目")
                 currentDataType = CurrentDataType.Project;
+            else if (comboBoxDict.SelectedValue?.ToString() == "分支")
+                currentDataType = CurrentDataType.Branch;
             RefreshData();
             //dataGridViewShow.SelectionChanged += dataGridViewShow_SelectionChanged;
             fireSelectionChanged = true;
@@ -165,6 +216,20 @@ namespace WRManagement
                         textBoxItemName.Tag = project.ID;
                     }
                     break;
+                case "Branch":
+                    currentDataType = CurrentDataType.Branch;
+                    Branch branch = dataGridViewShow.SelectedRows[0].Tag as Branch;
+                    if (branch != null)
+                    {
+                        textBoxItemName.Text = branch.Name;
+                        textBoxItemName.Tag = branch.ID;
+                        textBoxMemo.Text = branch.Memo;
+                        if (branch.Project != null)
+                            comboBoxProject.SelectedValue = branch.Project.ID;
+                        else
+                            comboBoxProject.SelectedIndex = -1;
+                    }
+                    break;
                 default:
                     currentDataType = CurrentDataType.None;
                     break;
@@ -179,6 +244,8 @@ namespace WRManagement
                     currentDataType = CurrentDataType.User;
                 else if (comboBoxDict.SelectedValue?.ToString() == "项目")
                     currentDataType = CurrentDataType.Project;
+                else if (comboBoxDict.SelectedValue?.ToString() == "分支")
+                    currentDataType = CurrentDataType.Branch;
             }
             if (currentDataType == CurrentDataType.None)
             {
@@ -198,6 +265,16 @@ namespace WRManagement
             }
         }
 
+        private bool BranchExists(int projectID, string branchName)
+        {
+            string sql = "select count(*) from Branch where ProjectID = " + projectID + " and Name = '" + branchName + "'";
+            int i = -1;
+            if (int.TryParse(accessHelper.ExecuteScalar(sql).ToString(), out i) && i > 0)
+                return true;
+            else
+                return false;
+        }
+
         private void buttonAdd_Click(object sender, EventArgs e)
         {
             if (!CheckDataType())
@@ -215,6 +292,23 @@ namespace WRManagement
             else if (currentDataType == CurrentDataType.Project)
             {
                 sql = "insert into Project (Name) values ('" + textBoxItemName.Text.Trim() + "')";
+            }
+            else if (currentDataType == CurrentDataType.Branch)
+            {
+                int projectID;
+                if (comboBoxProject.SelectedItem is Project project && project.ID != CommonData.ItemAllValue)
+                    projectID = project.ID;
+                else
+                {
+                    MessageBox.Show("项目不能为空", "提示");
+                    return;
+                }
+                if(BranchExists(projectID, textBoxItemName.Text.Trim()))
+                {
+                    MessageBox.Show("项目中已存在同名分支", "提示");
+                    return;
+                }
+                sql = "insert into Branch (Name, [Memo], ProjectID) values ('" + textBoxItemName.Text.Trim() + "', '" + textBoxMemo.Text.Trim() + "', " + projectID + ")";
             }
             if (!string.IsNullOrWhiteSpace(sql))
                 accessHelper.ExecuteNonQuery(sql);
@@ -245,6 +339,23 @@ namespace WRManagement
             {
                 sql = string.Format("update Project set Name = '{0}' where ID = {1}", textBoxItemName.Text.Trim(), textBoxItemName.Tag.ToString());
             }
+            else if (currentDataType == CurrentDataType.Branch)
+            {
+                int projectID;
+                if (comboBoxProject.SelectedItem is Project project && project.ID != CommonData.ItemAllValue)
+                    projectID = project.ID;
+                else
+                {
+                    MessageBox.Show("项目不能为空", "提示");
+                    return;
+                }
+                if (BranchExists(projectID, textBoxItemName.Text.Trim()))
+                {
+                    MessageBox.Show("项目中已存在同名分支", "提示");
+                    return;
+                }
+                sql = string.Format("update Branch set Name = '{0}', [Memo] = '{1}', ProjectID = {2} where ID = {3}", textBoxItemName.Text.Trim(), textBoxMemo.Text.Trim(), projectID, textBoxItemName.Tag.ToString());
+            }
             if (!string.IsNullOrWhiteSpace(sql))
                 accessHelper.ExecuteNonQuery(sql);
             ShowMessageAskRefresh();
@@ -267,6 +378,10 @@ namespace WRManagement
             else if (currentDataType == CurrentDataType.Project)
             {
                 sql = "delete from Project where ID = " + textBoxItemName.Tag.ToString();
+            }
+            else if (currentDataType == CurrentDataType.Branch)
+            {
+                sql = "delete from Branch where ID = " + textBoxItemName.Tag.ToString();
             }
             if (!string.IsNullOrWhiteSpace(sql))
                 accessHelper.ExecuteNonQuery(sql);
@@ -317,6 +432,11 @@ namespace WRManagement
 
             buttonBackup.Enabled = true;
             this.Cursor = Cursors.Default;
+        }
+
+        private void comboBoxProject_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //BindBranchList();
         }
     }
 }
