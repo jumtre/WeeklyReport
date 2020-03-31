@@ -63,8 +63,11 @@ namespace ToDoList
             CommonFunc.BindBranchListToComboBox(comboBoxSearchBranch, null, true);
             comboBoxSearchProject.SelectedIndexChanged += comboBoxSearchProject_SelectedIndexChanged;
             comboBoxSearchBranch.SelectedIndexChanged += comboBoxSearchBranch_SelectedIndexChanged;
-            CommonFunc.BindToDoStatusListToComboBox(comboBoxSearchStatus, null, true);
-            comboBoxSearchStatus.SelectedValue = EnumToDoStatus.Planning;
+            List<ToDoStatus> toDoList = CommonFunc.GetToDoStatusListForSearch();
+            toDoList.Add(CommonData.toDoStatusNotDone);
+            CommonFunc.BindToDoStatusListToComboBox(comboBoxSearchStatus, toDoList, true);
+            //comboBoxSearchStatus.SelectedValue = EnumToDoStatus.Planning;
+            comboBoxSearchStatus.SelectedItem = CommonData.toDoStatusNotDone;
             CommonFunc.GetWeekDateTime(ref weekStartTime, ref weekEndTime);
             dateTimePickerSearchPlannedStartFrom.Value = weekStartTime;
             dateTimePickerSearchPlannedStartTo.Value = weekEndTime;
@@ -152,7 +155,7 @@ namespace ToDoList
         {
             if (toDoListAll != null && toDoListAll.Count > 0)
                 toDoListAll.Clear();
-            StringBuilder sql = new StringBuilder("select t.ID, t.ProjectID, p.Name as ProjectName, t.BranchID, b.Name as BranchName, t.Priority, t.Severity, t.Title, t.Content, t.[Memo], t.UserID, u.Name as UserName, t.PlannedStartTime, t.PlannedEndTime, t.PlannedHours, t.PlannedDays, t.Status, t.FinishTime, t.FinishUserID, uf.Name as FinishUserName from (((ToDo t left join Project p on t.ProjectID = p.ID) left join Branch b on t.BranchID = b.ID) left join [User] u on t.UserID = u.ID) left join [User] uf on t.FinishUserID = uf.ID where 1 = 1");
+            StringBuilder sql = new StringBuilder("select t.ID, t.ProjectID, p.Name as ProjectName, t.BranchID, b.Name as BranchName, t.RelatedID, t.Priority, t.Severity, t.Title, t.Content, t.[Memo], t.UserID, u.Name as UserName, t.PlannedStartTime, t.PlannedEndTime, t.PlannedHours, t.PlannedDays, t.Status, t.FinishTime, t.FinishUserID, uf.Name as FinishUserName from (((ToDo t left join Project p on t.ProjectID = p.ID) left join Branch b on t.BranchID = b.ID) left join [User] u on t.UserID = u.ID) left join [User] uf on t.FinishUserID = uf.ID where 1 = 1");
             if (comboBoxSearchProject.SelectedItem is Project project && project.ID != CommonData.ItemAllValue)
                 sql.Append(" and t.ProjectID = " + project.ID);
             if (comboBoxSearchBranch.SelectedItem is Branch branch && branch.ID != CommonData.ItemAllValue)
@@ -161,16 +164,23 @@ namespace ToDoList
                 sql.Append(" and t.Title like '%" + textBoxSearchTitle.Text.Trim() + "%'");
             if (!string.IsNullOrWhiteSpace(textBoxSearchContent.Text.Trim()))
                 sql.Append(" and t.Content like '%" + textBoxSearchContent.Text.Trim() + "%'");
+            if (textBoxSearchRelatedID.Text.NotNullOrWhiteSpace())
+                sql.Append(" and t.RelatedID = " + DataConvert.ToAccessStringValue(textBoxSearchRelatedID));
             if (comboBoxSearchStatus.SelectedItem is ToDoStatus status && status.ID != CommonData.ItemAllValue)
-                sql.Append(" and t.Status = " + (int)status.Status);
+            {
+                if (status.ID == CommonData.toDoStatusNotDoneID)
+                    sql.Append(" and (t.Status = " + (int)EnumToDoStatus.Planning + " or t.Status = " + (int)EnumToDoStatus.Working + ")");
+                else
+                    sql.Append(" and t.Status = " + (int)status.Status);
+            }
             if (dateTimePickerSearchPlannedStartFrom.Checked)
-                sql.Append(" and t.PlannedStartTime >= #" + dateTimePickerSearchPlannedStartFrom.Value.ToString(CommonData.DateTimeMinuteFormat + ":00") + "#");
+                sql.Append(" and t.PlannedStartTime >= " + DataConvert.ToAccessDateTimeValue(dateTimePickerSearchPlannedStartFrom, 0));//#" + dateTimePickerSearchPlannedStartFrom.Value.ToString(CommonData.DateTimeMinuteFormat + ":00") + "#
             if (dateTimePickerSearchPlannedStartTo.Checked)
-                sql.Append(" and t.PlannedStartTime <= #" + dateTimePickerSearchPlannedStartTo.Value.ToString(CommonData.DateTimeMinuteFormat + ":59") + "#");
+                sql.Append(" and t.PlannedStartTime <= " + DataConvert.ToAccessDateTimeValue(dateTimePickerSearchPlannedStartTo, 59));//#" + dateTimePickerSearchPlannedStartTo.Value.ToString(CommonData.DateTimeMinuteFormat + ":59") + "#
             if (dateTimePickerSearchPlannedEndFrom.Checked)
-                sql.Append(" and t.PlannedEndTime >= #" + dateTimePickerSearchPlannedEndFrom.Value.ToString(CommonData.DateTimeMinuteFormat + ":00") + "#");
+                sql.Append(" and t.PlannedEndTime >= " + DataConvert.ToAccessDateTimeValue(dateTimePickerSearchPlannedEndFrom, 0));//#" + dateTimePickerSearchPlannedEndFrom.Value.ToString(CommonData.DateTimeMinuteFormat + ":00") + "#
             if (dateTimePickerSearchPlannedEndTo.Checked)
-                sql.Append(" and t.PlannedEndTime <= #" + dateTimePickerSearchPlannedEndTo.Value.ToString(CommonData.DateTimeMinuteFormat + ":59") + "#");
+                sql.Append(" and t.PlannedEndTime <= " + DataConvert.ToAccessDateTimeValue(dateTimePickerSearchPlannedEndTo, 59));//#" + dateTimePickerSearchPlannedEndTo.Value.ToString(CommonData.DateTimeMinuteFormat + ":59") + "#
             sql.Append(" order by t.Priority, t.Severity, t.PlannedEndTime");
 
             if (toDoListAll == null)
@@ -191,6 +201,7 @@ namespace ToDoList
                         //    ID = DataConvert.ToInt(row["ProjectID"]),
                         //    Name = DataConvert.ToString(row["ProjectName"])
                         //},
+                        RelatedID = DataConvert.ToString(row["RelatedID"]),
                         Priority = (EnumToDoPriority?)DataConvert.ToEnum<EnumToDoPriority>(row["Priority"]),
                         Severity = (EnumToDoSeverity?)DataConvert.ToEnum<EnumToDoSeverity>(row["Severity"]),
                         Title = DataConvert.ToString(row["Title"]),
@@ -237,6 +248,7 @@ namespace ToDoList
 
         private void BindToDoList()
         {
+            dataGridViewToDoList.SelectionChanged -= dataGridViewToDoList_SelectionChanged;
             dataGridViewToDoList.Rows.Clear();
             if (toDoListAll == null || toDoListAll.Count == 0)
                 return;
@@ -293,6 +305,7 @@ namespace ToDoList
                 row.Tag = todo;
             }
             dataGridViewToDoList.ClearSelection();
+            dataGridViewToDoList.SelectionChanged += dataGridViewToDoList_SelectionChanged;
         }
 
         private void buttonSearch_Click(object sender, EventArgs e)
@@ -304,6 +317,7 @@ namespace ToDoList
         {
             comboBoxOperateProject.SelectedValue = CommonData.ItemAllValue;
             comboBoxOperateBranch.SelectedValue = CommonData.ItemAllValue;
+            textBoxOperateRelatedID.Text = string.Empty;
             comboBoxOperatePriority.SelectedValue = EnumToDoPriority.Normal;
             comboBoxOperateSeverity.SelectedValue = EnumToDoSeverity.Minor;
             dateTimePickerOperatePlannedStartTime.Checked = false;
@@ -342,6 +356,7 @@ namespace ToDoList
                 comboBoxOperateBranch.SelectedValue = todo.Branch.ID;
             else
                 comboBoxOperateBranch.SelectedValue = CommonData.ItemAllValue;
+            textBoxOperateRelatedID.Text = todo.RelatedID;
             comboBoxOperatePriority.SelectedValue = todo.Priority;
             comboBoxOperateSeverity.SelectedValue = todo.Severity;
             if (todo.PlannedStartTime.HasValue)
@@ -382,7 +397,7 @@ namespace ToDoList
 
         private ToDo GetToDoFromOperateControls()
         {
-            ToDo toDo= new ToDo()
+            ToDo toDo = new ToDo()
             {
                 //ID = 0,
                 Content = richTextBoxOperateContent.Text.Trim(),
@@ -391,6 +406,7 @@ namespace ToDoList
                 Memo = richTextBoxOperateMemo.Text.Trim(),
                 PlannedDays = numericUpDownOperatePlannedDays.Value,
                 PlannedHours = numericUpDownOperatePlannedHours.Value,
+                RelatedID = textBoxOperateRelatedID.Text.Trim(),
                 Title = textBoxOperateTitle.Text.Trim(),
                 //User = CommonData.CurrentUser
             };
@@ -440,6 +456,11 @@ namespace ToDoList
             {
                 fields.Append(", BranchID");
                 values.Append(", " + DataConvert.ToAccessIntValue(comboBoxOperateBranch));
+            }
+            if (textBoxOperateRelatedID.Text.NotNullOrWhiteSpace())
+            {
+                fields.Append(", RelatedID");
+                values.Append(", '" + textBoxOperateRelatedID.Text.Trim() + "'");
             }
             if (comboBoxOperatePriority.SelectedItem is ToDoPriority && comboBoxOperatePriority.SelectedValue is EnumToDoPriority && ((ToDoPriority)comboBoxOperatePriority.SelectedItem).ID != CommonData.ItemAllValue)
             {
@@ -512,6 +533,7 @@ namespace ToDoList
             StringBuilder sets = new StringBuilder("Title = " + DataConvert.ToAccessStringValue(toDoOperate.Title));
             sets.Append(", ProjectID = " + (toDoOperate.Project.ID != CommonData.ItemAllValue ? toDoOperate.Project.ID.ToString() : "null"));
             sets.Append(", BranchID = " + (toDoOperate.Branch != null && toDoOperate.Branch.ID != CommonData.ItemAllValue ? toDoOperate.Branch.ID.ToString() : "null"));
+            sets.Append(", RelatedID = " + (textBoxOperateRelatedID.Text.NotNullOrWhiteSpace() ? DataConvert.ToAccessStringValue(textBoxOperateRelatedID.Text.Trim()) : "null"));
             sets.Append(", Priority = " + (toDoOperate.Priority.HasValue ? ((int)toDoOperate.Priority.Value).ToString() : "null"));
             sets.Append(", Severity = " + (toDoOperate.Severity.HasValue ? ((int)toDoOperate.Severity.Value).ToString() : "null"));
             sets.Append(", Content = " + DataConvert.ToAccessStringValue(toDoOperate.Content));

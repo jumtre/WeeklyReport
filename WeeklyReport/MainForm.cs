@@ -76,7 +76,7 @@ namespace WeeklyReport
         {
             if (reportAll != null && reportAll.Count > 0)
                 reportAll.Clear();
-            StringBuilder sql = new StringBuilder("select r.ID, r.UserID, u.Name as UserName, r.ProjectID, p.Name as ProjectName, r.BranchID, b.Name as BranchName, r.Content, r.FinishTime, r.Source from ((Report r left join [User] u on r.UserID = u.ID) left join Project p on r.ProjectID = p.ID) left join Branch b on r.BranchID = b.ID where 1 = 1");
+            StringBuilder sql = new StringBuilder("select r.ID, r.UserID, u.Name as UserName, r.ProjectID, p.Name as ProjectName, r.BranchID, b.Name as BranchName, r.RelatedID, r.Content, r.FinishTime, r.Source from ((Report r left join [User] u on r.UserID = u.ID) left join Project p on r.ProjectID = p.ID) left join Branch b on r.BranchID = b.ID where 1 = 1");
             if (dateTimePickerSearchFrom.Checked)
                 sql.Append(" and r.FinishTime >= #" + dateTimePickerSearchFrom.Value.ToString(CommonData.DateFormat + " 00:00:00") + "#");
             if (dateTimePickerSearchTo.Checked)
@@ -85,7 +85,9 @@ namespace WeeklyReport
                 sql.Append(" and r.ProjectID = " + comboBoxSearchProject.SelectedValue);
             if (comboBoxSearchBranch.SelectedItem is Branch branch && branch.ID != CommonData.ItemAllValue)
                 sql.Append(" and r.BranchID = " + comboBoxSearchBranch.SelectedValue);
-            if (!string.IsNullOrWhiteSpace(textBoxKeyWord.Text.Trim()))
+            if (!string.IsNullOrWhiteSpace(textBoxSearchRelatedID.Text))
+                sql.Append(" and r.RelatedID = '" + textBoxSearchRelatedID.Text.Trim() + "'");
+            if (!string.IsNullOrWhiteSpace(textBoxKeyWord.Text))
                 sql.Append(" and r.Content like '%" + textBoxKeyWord.Text.Trim() + "%'");
             sql.Append(" order by r.FinishTime, r.ID");
 
@@ -117,6 +119,7 @@ namespace WeeklyReport
                             ID = DataConvert.ToInt(row["BranchID"]),
                             Name = DataConvert.ToString(row["BranchName"])
                         },
+                        RelatedID = DataConvert.ToString(row["RelatedID"]),
                         Content = DataConvert.ToString(row["Content"]),
                         FinishTime = DataConvert.ToDateTime(row["FinishTime"]),
                         Source = (EnumReportSource?)DataConvert.ToEnum<EnumReportSource>(row["Source"])
@@ -129,6 +132,7 @@ namespace WeeklyReport
 
         private void BindReport()
         {
+            dataGridViewShow.SelectionChanged -= dataGridViewShow_SelectionChanged;
             dataGridViewShow.Rows.Clear();
             if (reportAll == null || reportAll.Count == 0)
                 return;
@@ -149,12 +153,15 @@ namespace WeeklyReport
                 row.Tag = report;
             }
             dataGridViewShow.ClearSelection();
+            dataGridViewShow.SelectionChanged += dataGridViewShow_SelectionChanged;
         }
 
         private void ClearOperateControls()
         {
             comboBoxOperateProject.SelectedValue = CommonData.ItemAllValue;
+            comboBoxOperateBranch.SelectedValue = CommonData.ItemAllValue;
             dateTimePickerOperateFinishTime.Checked = false;
+            textBoxOperateRelatedID.Text = string.Empty;
             richTextBoxOperateContent.Text = string.Empty;
         }
 
@@ -176,6 +183,7 @@ namespace WeeklyReport
                 dateTimePickerOperateFinishTime.Value = report.FinishTime;
                 dateTimePickerOperateFinishTime.Checked = true;
             }
+            textBoxOperateRelatedID.Text = report.RelatedID;
             richTextBoxOperateContent.Text = report.Content;
         }
 
@@ -217,6 +225,11 @@ namespace WeeklyReport
                 fields += ", BranchID";
                 values += ", "+ comboBoxOperateBranch.SelectedValue.ToString();
             }
+            if (!string.IsNullOrWhiteSpace(textBoxOperateRelatedID.Text))
+            {
+                fields += ", RelatedID";
+                values += ", '" + textBoxOperateRelatedID.Text.Trim() + "'";
+            }
             string sql = "insert into Report (" + fields + ") values (" + values + ")";
             CommonData.AccessHelper.ExecuteNonQuery(sql);
             richTextBoxOperateContent.Text = string.Empty;
@@ -246,14 +259,17 @@ namespace WeeklyReport
                 return;
             }
             StringBuilder sql = new StringBuilder();
-            sql.AppendFormat("update Report set ProjectID = {0}, Content = '{1}'", project.ID, richTextBoxOperateContent.Text.Trim());
+            sql.AppendFormat("update Report set ProjectID = {0}, RelatedID = {1}, Content = '{2}'", project.ID, string.IsNullOrWhiteSpace(textBoxOperateRelatedID.Text) ? "null" : "'" + textBoxOperateRelatedID.Text.Trim() + "'", richTextBoxOperateContent.Text.Trim());
             if (dateTimePickerOperateFinishTime.Checked && dateTimePickerOperateFinishTime.Value > DateTime.MinValue)
             {
                 sql.AppendFormat(", FinishTime = #{0}#", dateTimePickerOperateFinishTime.Value.ToString(CommonData.DateTimeFormat));
             }
             if (comboBoxOperateBranch.SelectedItem is Branch branch && branch.ID != CommonData.ItemAllValue)
             {
-                sql.AppendFormat(", BranchID = {0}", comboBoxOperateBranch.SelectedValue.ToString());
+                if (branch.ID == CommonData.ItemAllValue)
+                    sql.Append(", BranchID = null");
+                else
+                    sql.AppendFormat(", BranchID = {0}", comboBoxOperateBranch.SelectedValue.ToString());
             }
             sql.AppendFormat(" where ID = {0}", report.ID);
             CommonData.AccessHelper.ExecuteNonQuery(sql.ToString());
@@ -340,6 +356,26 @@ namespace WeeklyReport
                 comboBoxOperateProject.SelectedValue = branch.Project.ID;
                 comboBoxOperateProject.SelectedIndexChanged += comboBoxOperateProject_SelectedIndexChanged;
             }
+        }
+
+        private void buttonLastWeek_Click(object sender, EventArgs e)
+        {
+            DateTime dtLastWeekStart = DateTime.Now;
+            DateTime dtLastWeekEnd = DateTime.Now;
+            CommonFunc.GetWeekDateTime(ref dtLastWeekStart, ref dtLastWeekEnd);
+            dtLastWeekStart = dtLastWeekStart.AddDays(-7);
+            dtLastWeekEnd = dtLastWeekEnd.AddDays(-7);
+            dateTimePickerSearchFrom.Value = dtLastWeekStart;
+            dateTimePickerSearchTo.Value = dtLastWeekEnd;
+        }
+
+        private void buttonThisWeek_Click(object sender, EventArgs e)
+        {
+            DateTime dtThisWeekStart = DateTime.Now;
+            DateTime dtThisWeekEnd = DateTime.Now;
+            CommonFunc.GetWeekDateTime(ref dtThisWeekStart, ref dtThisWeekEnd);
+            dateTimePickerSearchFrom.Value = dtThisWeekStart;
+            dateTimePickerSearchTo.Value = dtThisWeekEnd;
         }
     }
 }

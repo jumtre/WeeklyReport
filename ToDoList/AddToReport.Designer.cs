@@ -30,16 +30,18 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddToReport));
             this.buttonDateTimeNow = new System.Windows.Forms.Button();
-            this.richTextBoxOperateContent = new System.Windows.Forms.RichTextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.dateTimePickerFinishTime = new System.Windows.Forms.DateTimePicker();
+            this.richTextBoxContent = new System.Windows.Forms.RichTextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.comboBoxOperateProject = new System.Windows.Forms.ComboBox();
+            this.dateTimePickerFinishTime = new System.Windows.Forms.DateTimePicker();
             this.label4 = new System.Windows.Forms.Label();
+            this.comboBoxProject = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.buttonAdd = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.comboBoxOperateBranch = new System.Windows.Forms.ComboBox();
-            this.label22 = new System.Windows.Forms.Label();
+            this.comboBoxBranch = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.textBoxRelatedID = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // buttonDateTimeNow
@@ -47,27 +49,27 @@
             this.buttonDateTimeNow.Location = new System.Drawing.Point(289, 42);
             this.buttonDateTimeNow.Name = "buttonDateTimeNow";
             this.buttonDateTimeNow.Size = new System.Drawing.Size(75, 23);
-            this.buttonDateTimeNow.TabIndex = 17;
+            this.buttonDateTimeNow.TabIndex = 8;
             this.buttonDateTimeNow.Text = "当前时间";
             this.buttonDateTimeNow.UseVisualStyleBackColor = true;
             this.buttonDateTimeNow.Click += new System.EventHandler(this.buttonDateTimeNow_Click);
             // 
-            // richTextBoxOperateContent
+            // richTextBoxContent
             // 
-            this.richTextBoxOperateContent.Location = new System.Drawing.Point(83, 75);
-            this.richTextBoxOperateContent.Name = "richTextBoxOperateContent";
-            this.richTextBoxOperateContent.Size = new System.Drawing.Size(509, 104);
-            this.richTextBoxOperateContent.TabIndex = 16;
-            this.richTextBoxOperateContent.Text = "";
+            this.richTextBoxContent.Location = new System.Drawing.Point(83, 75);
+            this.richTextBoxContent.Name = "richTextBoxContent";
+            this.richTextBoxContent.Size = new System.Drawing.Size(509, 104);
+            this.richTextBoxContent.TabIndex = 10;
+            this.richTextBoxContent.Text = "";
             // 
-            // label6
+            // label5
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 75);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(65, 12);
-            this.label6.TabIndex = 15;
-            this.label6.Text = "内    容：";
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(12, 75);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(65, 12);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "内    容：";
             // 
             // dateTimePickerFinishTime
             // 
@@ -77,42 +79,42 @@
             this.dateTimePickerFinishTime.Name = "dateTimePickerFinishTime";
             this.dateTimePickerFinishTime.ShowCheckBox = true;
             this.dateTimePickerFinishTime.Size = new System.Drawing.Size(200, 21);
-            this.dateTimePickerFinishTime.TabIndex = 14;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 47);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(65, 12);
-            this.label5.TabIndex = 13;
-            this.label5.Text = "完成时间：";
-            // 
-            // comboBoxOperateProject
-            // 
-            this.comboBoxOperateProject.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxOperateProject.FormattingEnabled = true;
-            this.comboBoxOperateProject.Location = new System.Drawing.Point(83, 11);
-            this.comboBoxOperateProject.Name = "comboBoxOperateProject";
-            this.comboBoxOperateProject.Size = new System.Drawing.Size(140, 20);
-            this.comboBoxOperateProject.TabIndex = 12;
-            this.comboBoxOperateProject.SelectedIndexChanged += new System.EventHandler(this.comboBoxOperateProject_SelectedIndexChanged);
+            this.dateTimePickerFinishTime.TabIndex = 7;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 14);
+            this.label4.Location = new System.Drawing.Point(12, 47);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(65, 12);
-            this.label4.TabIndex = 11;
-            this.label4.Text = "项    目：";
+            this.label4.TabIndex = 6;
+            this.label4.Text = "完成时间：";
+            // 
+            // comboBoxProject
+            // 
+            this.comboBoxProject.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxProject.FormattingEnabled = true;
+            this.comboBoxProject.Location = new System.Drawing.Point(83, 11);
+            this.comboBoxProject.Name = "comboBoxProject";
+            this.comboBoxProject.Size = new System.Drawing.Size(140, 20);
+            this.comboBoxProject.TabIndex = 1;
+            this.comboBoxProject.SelectedIndexChanged += new System.EventHandler(this.comboBoxProject_SelectedIndexChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 14);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(65, 12);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "项    目：";
             // 
             // buttonAdd
             // 
             this.buttonAdd.Location = new System.Drawing.Point(172, 194);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(75, 23);
-            this.buttonAdd.TabIndex = 18;
+            this.buttonAdd.TabIndex = 11;
             this.buttonAdd.Text = "新增";
             this.buttonAdd.UseVisualStyleBackColor = true;
             this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
@@ -122,46 +124,64 @@
             this.buttonCancel.Location = new System.Drawing.Point(332, 194);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 19;
+            this.buttonCancel.TabIndex = 12;
             this.buttonCancel.Text = "取消";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
-            // comboBoxOperateBranch
+            // comboBoxBranch
             // 
-            this.comboBoxOperateBranch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxOperateBranch.FormattingEnabled = true;
-            this.comboBoxOperateBranch.Location = new System.Drawing.Point(313, 11);
-            this.comboBoxOperateBranch.Name = "comboBoxOperateBranch";
-            this.comboBoxOperateBranch.Size = new System.Drawing.Size(140, 20);
-            this.comboBoxOperateBranch.TabIndex = 21;
-            this.comboBoxOperateBranch.SelectedIndexChanged += new System.EventHandler(this.comboBoxOperateBranch_SelectedIndexChanged);
+            this.comboBoxBranch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxBranch.FormattingEnabled = true;
+            this.comboBoxBranch.Location = new System.Drawing.Point(307, 11);
+            this.comboBoxBranch.Name = "comboBoxBranch";
+            this.comboBoxBranch.Size = new System.Drawing.Size(140, 20);
+            this.comboBoxBranch.TabIndex = 3;
+            this.comboBoxBranch.SelectedIndexChanged += new System.EventHandler(this.comboBoxBranch_SelectedIndexChanged);
             // 
-            // label22
+            // label2
             // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(242, 14);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(65, 12);
-            this.label22.TabIndex = 20;
-            this.label22.Text = "分    支：";
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(236, 14);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(65, 12);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "分    支：";
+            // 
+            // textBoxRelatedID
+            // 
+            this.textBoxRelatedID.Location = new System.Drawing.Point(511, 10);
+            this.textBoxRelatedID.Name = "textBoxRelatedID";
+            this.textBoxRelatedID.Size = new System.Drawing.Size(81, 21);
+            this.textBoxRelatedID.TabIndex = 5;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(458, 14);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(53, 12);
+            this.label3.TabIndex = 4;
+            this.label3.Text = "关联ID：";
             // 
             // AddToReport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(606, 232);
-            this.Controls.Add(this.comboBoxOperateBranch);
-            this.Controls.Add(this.label22);
+            this.Controls.Add(this.textBoxRelatedID);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.comboBoxBranch);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonAdd);
             this.Controls.Add(this.buttonDateTimeNow);
-            this.Controls.Add(this.richTextBoxOperateContent);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.dateTimePickerFinishTime);
+            this.Controls.Add(this.richTextBoxContent);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.comboBoxOperateProject);
+            this.Controls.Add(this.dateTimePickerFinishTime);
             this.Controls.Add(this.label4);
+            this.Controls.Add(this.comboBoxProject);
+            this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "AddToReport";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -175,15 +195,17 @@
         #endregion
 
         private System.Windows.Forms.Button buttonDateTimeNow;
-        private System.Windows.Forms.RichTextBox richTextBoxOperateContent;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.DateTimePicker dateTimePickerFinishTime;
+        private System.Windows.Forms.RichTextBox richTextBoxContent;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ComboBox comboBoxOperateProject;
+        private System.Windows.Forms.DateTimePicker dateTimePickerFinishTime;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox comboBoxProject;
+        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button buttonAdd;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.ComboBox comboBoxOperateBranch;
-        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.ComboBox comboBoxBranch;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox textBoxRelatedID;
+        private System.Windows.Forms.Label label3;
     }
 }

@@ -32,6 +32,11 @@ namespace Model
         public Branch Branch { get; set; }
 
         /// <summary>
+        /// 关联ID。如需求ID或缺陷ID
+        /// </summary>
+        public string RelatedID { get; set; }
+
+        /// <summary>
         /// 内容
         /// </summary>
         public string Content { get; set; }

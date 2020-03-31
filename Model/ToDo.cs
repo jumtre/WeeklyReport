@@ -27,6 +27,11 @@ namespace Model
         public Branch Branch { get; set; }
 
         /// <summary>
+        /// 关联ID。如需求ID或缺陷ID
+        /// </summary>
+        public string RelatedID { get; set; }
+
+        /// <summary>
         /// 优先级
         /// </summary>
         public EnumToDoPriority? Priority { get; set; }

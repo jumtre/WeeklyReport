@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -229,6 +230,24 @@ namespace Common
             }
             set { toDoStatusList = value; }
         }
+
+        /// <summary>
+        /// 待办事项状态“未完成”的ID：-99
+        /// </summary>
+        public static readonly int toDoStatusNotDoneID = -99;
+        /// <summary>
+        /// 待办事项状态“未完成”的ID名称：未完成
+        /// </summary>
+        public static readonly string toDoStatusNotDoneName = "未完成";
+        /// <summary>
+        /// 待办事项状态“未完成”
+        /// </summary>
+        public static ToDoStatus toDoStatusNotDone = new ToDoStatus()
+        {
+            ID = toDoStatusNotDoneID,
+            Name = toDoStatusNotDoneName,
+            Status = EnumToDoStatus.Planning | EnumToDoStatus.Working
+        };
 
         private static int toDoPrioritySearchTimes = 0;
         private static List<ToDoPriority> toDoPriorityList = null;
@@ -1048,6 +1067,29 @@ namespace Common
         }
 
         /// <summary>
+        /// 转换成Access数据库DateTime类型对应的值
+        /// </summary>
+        /// <param name="dateTimePicker">要转换值的DateTimePicker控件</param>
+        /// <param name="secondsValue">DateTime中秒的值。小于等于0取0，大于等于59取59</param>
+        /// <returns></returns>
+        public static string ToAccessDateTimeValue(DateTimePicker dateTimePicker, int secondsValue)
+        {
+            if ((dateTimePicker.ShowCheckBox && dateTimePicker.Checked) || !dateTimePicker.ShowCheckBox)
+            {
+                string secondsValueStr = "00";
+                if (secondsValue <= 0)
+                    secondsValueStr = "00";
+                else if (secondsValue >= 59)
+                    secondsValueStr = "59";
+                else
+                    secondsValueStr = secondsValue.ToString("00");
+                return "#" + dateTimePicker.Value.ToString(CommonData.DateTimeMinuteFormat) + ":" + secondsValueStr + "#";
+            }
+            else
+                return "null";
+        }
+
+        /// <summary>
         /// 自动按类型转换成Access数据库中对应类型的值
         /// </summary>
         /// <param name="value">要转换的值</param>
@@ -1139,5 +1181,168 @@ namespace Common
         //当异常从远程服务器传播到客户端时，需要序列化构造函数。
         protected CommonInfoException(System.Runtime.Serialization.SerializationInfo info,
             System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    }
+
+    /// <summary>
+    /// 扩展方法
+    /// </summary>
+    public static class ExtensionMethods
+    {
+        /// <summary>
+        /// 指示指定的字符串是 null、空还是仅由空白字符组成。
+        /// </summary>
+        /// <param name="value">要测试的字符串。</param>
+        /// <returns>如果 value 参数为 null 或 System.String.Empty，或者如果 value 仅由空白字符组成，则为 true。</returns>
+        public static bool IsNullOrWhiteSpace(this string value)
+        {
+            return string.IsNullOrWhiteSpace(value);
+        }
+
+        /// <summary>
+        /// 字符串是否不为null或空字符串或只包含空字符
+        /// </summary>
+        /// <param name="value">要判断的字符串</param>
+        /// <returns></returns>
+        public static bool NotNullOrWhiteSpace(this string value)
+        {
+            return !string.IsNullOrWhiteSpace(value);
+        }
+
+        /// <summary>
+        /// 从当前 System.String 对象移除所有前导空白字符和尾部空白字符。
+        /// </summary>
+        /// <param name="input">当前字符串</param>
+        /// <returns>从当前字符串的开头和结尾删除所有空白字符后剩余的字符串。</returns>
+        public static string ToTrimmedString(this object input)
+        {
+            if (input == null)
+                return null;
+            else
+                return input.ToString().Trim();
+        }
+
+        /// <summary>
+        /// 将指定字符串中的格式项替换为指定数组中相应对象的字符串表示形式。指定的参数提供区域性特定的格式设置信息。
+        /// </summary>
+        /// <param name="provider">一个提供区域性特定的格式设置信息的对象。</param>
+        /// <param name="format">复合格式字符串。</param>
+        /// <param name="args">一个对象数组，其中包含零个或多个要设置格式的对象。</param>
+        /// <returns>format 的副本，其中的格式项已替换为 args 中相应对象的字符串表示形式。</returns>
+        /// <exception cref="T:System.ArgumentNullException">format 或 args 为 null。</exception>
+        /// <exception cref="T:System.FormatException">format 无效。- 或 -格式项的索引小于零或大于等于 args 数组的长度。</exception>
+        public static string Format(IFormatProvider provider, string format, params object[] args)
+        {
+            return string.Format(provider, format, args);
+        }
+
+        /// <summary>
+        /// 将指定字符串中的格式项替换为指定数组中相应对象的字符串表示形式。
+        /// </summary>
+        /// <param name="format">复合格式字符串。</param>
+        /// <param name="args">一个对象数组，其中包含零个或多个要设置格式的对象。</param>
+        /// <returns>format 的副本，其中的格式项已替换为 args 中相应对象的字符串表示形式。</returns>
+        /// <exception cref="T:System.ArgumentNullException">format 或 args 为 null。</exception>
+        /// <exception cref="T:System.FormatException">format 无效。- 或 -格式项的索引小于零或大于等于 args 数组的长度。</exception>
+        public static string Format(string format, params object[] args)
+        {
+            return string.Format(format, args);
+        }
+
+        /// <summary>
+        /// 将指定字符串中的格式项替换为三个指定对象的字符串表示形式。
+        /// </summary>
+        /// <param name="format">复合格式字符串。</param>
+        /// <param name="arg0">要设置格式的第一个对象。</param>
+        /// <param name="arg1">要设置格式的第二个对象。</param>
+        /// <param name="arg2">要设置格式的第三个对象。</param>
+        /// <returns>format 的副本，其中的格式项已替换为 arg0、arg1 和 arg2 的字符串表示形式。</returns>
+        /// <exception cref="T:System.ArgumentNullException">format 为 null。</exception>
+        /// <exception cref="T:System.FormatException">format 无效。- 或 -格式项的索引小于零或大于二。</exception>
+        public static string Format(string format, object arg0, object arg1, object arg2)
+        {
+            return string.Format(format, arg0, arg1, arg2);
+        }
+
+        /// <summary>
+        /// 将指定字符串中的一个或多个格式项替换为指定对象的字符串表示形式。
+        /// </summary>
+        /// <param name="format">复合格式字符串。</param>
+        /// <param name="arg0">要设置格式的对象。</param>
+        /// <returns>format 的副本，其中的任何格式项均替换为 arg0 的字符串表示形式。</returns>
+        /// <exception cref="T:System.ArgumentNullException">format 为 null。</exception>
+        /// <exception cref="T:System.FormatException">format 中的格式项无效。- 或 -格式项的索引大于或小于零。</exception>
+        public static string Format(string format, object arg0)
+        {
+            return string.Format(format, arg0);
+        }
+
+        /// <summary>
+        /// 将指定字符串中的格式项替换为两个指定对象的字符串表示形式。
+        /// </summary>
+        /// <param name="format">复合格式字符串。</param>
+        /// <param name="arg0">要设置格式的第一个对象。</param>
+        /// <param name="arg1">要设置格式的第二个对象。</param>
+        /// <returns>format 的副本，其中的格式项替换为 arg0 和 arg1 的字符串表示形式。</returns>
+        /// <exception cref="T:System.ArgumentNullException">format 为 null。</exception>
+        /// <exception cref="T:System.FormatException">format 无效。- 或 -格式项的索引小于零或大于一。</exception>
+        public static string Format(string format, object arg0, object arg1)
+        {
+            return string.Format(format, arg0, arg1);
+        }
+
+        /// <summary>
+        /// 指示所指定的正则表达式在指定的输入字符串中是否找到了匹配项。
+        /// </summary>
+        /// <param name="input">要搜索匹配项的字符串。</param>
+        /// <param name="pattern">要匹配的正则表达式模式。</param>
+        /// <returns>如果正则表达式找到匹配项，则为 true；否则，为 false。</returns>
+        /// <exception cref="T:System.ArgumentException">出现正则表达式分析错误。</exception>
+        /// <exception cref="T:System.ArgumentNullException">input 或 pattern 为 null。</exception>
+        public static bool IsMatch(this string input, string pattern)
+        {
+            if (input == null)
+                return false;
+            else
+                return Regex.IsMatch(input, pattern);
+        }
+
+        /// <summary>
+        /// 从输入字符串中获取指定的正则表达式的第一个匹配捕获的子字符串。
+        /// </summary>
+        /// <param name="input">要搜索匹配项的字符串。</param>
+        /// <param name="pattern">要匹配的正则表达式模式。</param>
+        /// <returns>通过匹配捕获的实际子字符串。</returns>
+        public static string Match(this string input, string pattern)
+        {
+            if (input == null)
+                return string.Empty;
+            else
+                return Regex.Match(input, pattern).Value;
+        }
+
+        /// <summary>
+        /// 使用指定的匹配选项在输入字符串中搜索指定的正则表达式的第一个匹配捕获的子字符串。
+        /// </summary>
+        /// <param name="input">对其匹配测试的字符串。</param>
+        /// <param name="pattern">要匹配的正则表达式模式。</param>
+        /// <param name="options">枚举值的一个按位组合，这些枚举值提供匹配选项。</param>
+        /// <returns>通过匹配捕获的实际子字符串。</returns>
+        /// <exception cref="T:System.ArgumentException">出现正则表达式分析错误。</exception>
+        /// <exception cref="T:System.ArgumentNullException">input 或 pattern 为 null。</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">options 不是 System.Text.RegularExpressions.RegexOptions 值的有效按位组合。</exception>
+        public static string Match(this string input, string pattern, RegexOptions options)
+        {
+            if (input == null)
+                return string.Empty;
+            else
+                return Regex.Match(input, pattern, options).Value;
+        }
+
+        public static string Match(this string input, string pattern, RegexOptions options, TimeSpan matchTimeout)
+        {
+            if (input == null)
+                return string.Empty;
+            return Regex.Match(input, pattern, options, matchTimeout).Value;
+        }
     }
 }
