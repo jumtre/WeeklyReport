@@ -377,5 +377,15 @@ namespace WeeklyReport
             dateTimePickerSearchFrom.Value = dtThisWeekStart;
             dateTimePickerSearchTo.Value = dtThisWeekEnd;
         }
+
+        private void dataGridViewShow_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.ColumnIndex == ColumnFinishTime.Index)
+            {
+                DateTime dt = DateTime.MinValue;
+                if (DateTime.TryParse(e.Value?.ToString(), out dt))
+                    e.Value = dt.ToString(CommonData.DateTimeFormat);
+            }
+        }
     }
 }

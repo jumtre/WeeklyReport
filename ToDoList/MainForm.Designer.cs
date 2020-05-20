@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBoxSearch = new System.Windows.Forms.GroupBox();
             this.textBoxSearchRelatedID = new System.Windows.Forms.TextBox();
             this.label25 = new System.Windows.Forms.Label();
             this.comboBoxSearchBranch = new System.Windows.Forms.ComboBox();
@@ -53,7 +53,9 @@
             this.comboBoxSearchProject = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.splitContainerMain = new System.Windows.Forms.SplitContainer();
+            this.groupBoxToDoList = new System.Windows.Forms.GroupBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.dataGridViewToDoList = new System.Windows.Forms.DataGridView();
             this.ColumnDone = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.ColumnOrderNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -63,19 +65,23 @@
             this.ColumnPriority = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnSeverity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnPlannedEndTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.labelHideInfo = new System.Windows.Forms.Label();
             this.groupBoxDataOperation = new System.Windows.Forms.GroupBox();
+            this.splitContainerContentAndMemo = new System.Windows.Forms.SplitContainer();
+            this.richTextBoxOperateContent = new System.Windows.Forms.RichTextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.richTextBoxOperateMemo = new System.Windows.Forms.RichTextBox();
+            this.label19 = new System.Windows.Forms.Label();
             this.textBoxOperateRelatedID = new System.Windows.Forms.TextBox();
             this.label24 = new System.Windows.Forms.Label();
             this.comboBoxOperateBranch = new System.Windows.Forms.ComboBox();
             this.label22 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
-            this.labelHideInfo = new System.Windows.Forms.Label();
             this.buttonWorking = new System.Windows.Forms.Button();
             this.buttonDone = new System.Windows.Forms.Button();
             this.comboBoxOperateStatus = new System.Windows.Forms.ComboBox();
             this.label20 = new System.Windows.Forms.Label();
-            this.richTextBoxOperateMemo = new System.Windows.Forms.RichTextBox();
-            this.label19 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.numericUpDownOperatePlannedDays = new System.Windows.Forms.NumericUpDown();
             this.label17 = new System.Windows.Forms.Label();
@@ -93,52 +99,62 @@
             this.buttonExport = new System.Windows.Forms.Button();
             this.buttonEdit = new System.Windows.Forms.Button();
             this.buttonAdd = new System.Windows.Forms.Button();
-            this.richTextBoxOperateContent = new System.Windows.Forms.RichTextBox();
-            this.label9 = new System.Windows.Forms.Label();
             this.dateTimePickerOperatePlannedStartTime = new System.Windows.Forms.DateTimePicker();
             this.label10 = new System.Windows.Forms.Label();
             this.comboBoxOperateProject = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
             this.toolTipInfo = new System.Windows.Forms.ToolTip(this.components);
-            this.groupBox1.SuspendLayout();
+            this.label26 = new System.Windows.Forms.Label();
+            this.groupBoxSearch.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
+            this.splitContainerMain.Panel1.SuspendLayout();
+            this.splitContainerMain.Panel2.SuspendLayout();
+            this.splitContainerMain.SuspendLayout();
+            this.groupBoxToDoList.SuspendLayout();
+            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewToDoList)).BeginInit();
+            this.panel3.SuspendLayout();
             this.groupBoxDataOperation.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerContentAndMemo)).BeginInit();
+            this.splitContainerContentAndMemo.Panel1.SuspendLayout();
+            this.splitContainerContentAndMemo.Panel2.SuspendLayout();
+            this.splitContainerContentAndMemo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOperatePlannedDays)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOperatePlannedHours)).BeginInit();
             this.SuspendLayout();
             // 
-            // groupBox1
+            // groupBoxSearch
             // 
-            this.groupBox1.Controls.Add(this.textBoxSearchRelatedID);
-            this.groupBox1.Controls.Add(this.label25);
-            this.groupBox1.Controls.Add(this.comboBoxSearchBranch);
-            this.groupBox1.Controls.Add(this.label23);
-            this.groupBox1.Controls.Add(this.buttonSearch);
-            this.groupBox1.Controls.Add(this.dateTimePickerSearchPlannedEndTo);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.dateTimePickerSearchPlannedEndFrom);
-            this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.dateTimePickerSearchPlannedStartTo);
-            this.groupBox1.Controls.Add(this.label7);
-            this.groupBox1.Controls.Add(this.dateTimePickerSearchPlannedStartFrom);
-            this.groupBox1.Controls.Add(this.label8);
-            this.groupBox1.Controls.Add(this.comboBoxSearchStatus);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.textBoxSearchContent);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.textBoxSearchTitle);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.comboBoxSearchProject);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(814, 154);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "查询";
+            this.groupBoxSearch.Controls.Add(this.label26);
+            this.groupBoxSearch.Controls.Add(this.textBoxSearchRelatedID);
+            this.groupBoxSearch.Controls.Add(this.label25);
+            this.groupBoxSearch.Controls.Add(this.comboBoxSearchBranch);
+            this.groupBoxSearch.Controls.Add(this.label23);
+            this.groupBoxSearch.Controls.Add(this.buttonSearch);
+            this.groupBoxSearch.Controls.Add(this.dateTimePickerSearchPlannedEndTo);
+            this.groupBoxSearch.Controls.Add(this.label5);
+            this.groupBoxSearch.Controls.Add(this.dateTimePickerSearchPlannedEndFrom);
+            this.groupBoxSearch.Controls.Add(this.label6);
+            this.groupBoxSearch.Controls.Add(this.dateTimePickerSearchPlannedStartTo);
+            this.groupBoxSearch.Controls.Add(this.label7);
+            this.groupBoxSearch.Controls.Add(this.dateTimePickerSearchPlannedStartFrom);
+            this.groupBoxSearch.Controls.Add(this.label8);
+            this.groupBoxSearch.Controls.Add(this.comboBoxSearchStatus);
+            this.groupBoxSearch.Controls.Add(this.label4);
+            this.groupBoxSearch.Controls.Add(this.textBoxSearchContent);
+            this.groupBoxSearch.Controls.Add(this.label3);
+            this.groupBoxSearch.Controls.Add(this.textBoxSearchTitle);
+            this.groupBoxSearch.Controls.Add(this.label2);
+            this.groupBoxSearch.Controls.Add(this.comboBoxSearchProject);
+            this.groupBoxSearch.Controls.Add(this.label1);
+            this.groupBoxSearch.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBoxSearch.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxSearch.Name = "groupBoxSearch";
+            this.groupBoxSearch.Size = new System.Drawing.Size(814, 154);
+            this.groupBoxSearch.TabIndex = 0;
+            this.groupBoxSearch.TabStop = false;
+            this.groupBoxSearch.Text = "查询";
             // 
             // textBoxSearchRelatedID
             // 
@@ -332,24 +348,55 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.groupBox3);
-            this.panel1.Controls.Add(this.groupBoxDataOperation);
+            this.panel1.Controls.Add(this.splitContainerMain);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 154);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(814, 540);
             this.panel1.TabIndex = 1;
             // 
-            // groupBox3
+            // splitContainerMain
             // 
-            this.groupBox3.Controls.Add(this.dataGridViewToDoList);
-            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox3.Location = new System.Drawing.Point(0, 0);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(509, 540);
-            this.groupBox3.TabIndex = 5;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "待办列表";
+            this.splitContainerMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerMain.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitContainerMain.Location = new System.Drawing.Point(0, 0);
+            this.splitContainerMain.Name = "splitContainerMain";
+            // 
+            // splitContainerMain.Panel1
+            // 
+            this.splitContainerMain.Panel1.Controls.Add(this.groupBoxToDoList);
+            this.splitContainerMain.Panel1.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.splitContainerMain.Panel1MinSize = 100;
+            // 
+            // splitContainerMain.Panel2
+            // 
+            this.splitContainerMain.Panel2.Controls.Add(this.groupBoxDataOperation);
+            this.splitContainerMain.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.splitContainerMain.Panel2MinSize = 296;
+            this.splitContainerMain.Size = new System.Drawing.Size(814, 540);
+            this.splitContainerMain.SplitterDistance = 514;
+            this.splitContainerMain.TabIndex = 6;
+            // 
+            // groupBoxToDoList
+            // 
+            this.groupBoxToDoList.Controls.Add(this.panel2);
+            this.groupBoxToDoList.Controls.Add(this.panel3);
+            this.groupBoxToDoList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxToDoList.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxToDoList.Name = "groupBoxToDoList";
+            this.groupBoxToDoList.Size = new System.Drawing.Size(514, 540);
+            this.groupBoxToDoList.TabIndex = 6;
+            this.groupBoxToDoList.TabStop = false;
+            this.groupBoxToDoList.Text = "待办列表";
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.dataGridViewToDoList);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(3, 17);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(493, 520);
+            this.panel2.TabIndex = 7;
             // 
             // dataGridViewToDoList
             // 
@@ -366,17 +413,15 @@
             this.ColumnSeverity,
             this.ColumnPlannedEndTime});
             this.dataGridViewToDoList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewToDoList.Location = new System.Drawing.Point(3, 17);
+            this.dataGridViewToDoList.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewToDoList.MultiSelect = false;
             this.dataGridViewToDoList.Name = "dataGridViewToDoList";
             this.dataGridViewToDoList.ReadOnly = true;
             this.dataGridViewToDoList.RowHeadersVisible = false;
             this.dataGridViewToDoList.RowTemplate.Height = 23;
             this.dataGridViewToDoList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewToDoList.Size = new System.Drawing.Size(503, 520);
+            this.dataGridViewToDoList.Size = new System.Drawing.Size(493, 520);
             this.dataGridViewToDoList.TabIndex = 0;
-            this.dataGridViewToDoList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewToDoList_CellContentClick);
-            this.dataGridViewToDoList.SelectionChanged += new System.EventHandler(this.dataGridViewToDoList_SelectionChanged);
             // 
             // ColumnDone
             // 
@@ -437,20 +482,38 @@
             this.ColumnPlannedEndTime.ReadOnly = true;
             this.ColumnPlannedEndTime.Width = 120;
             // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.labelHideInfo);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel3.Location = new System.Drawing.Point(496, 17);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(15, 520);
+            this.panel3.TabIndex = 6;
+            // 
+            // labelHideInfo
+            // 
+            this.labelHideInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelHideInfo.Location = new System.Drawing.Point(0, 0);
+            this.labelHideInfo.Name = "labelHideInfo";
+            this.labelHideInfo.Size = new System.Drawing.Size(15, 520);
+            this.labelHideInfo.TabIndex = 31;
+            this.labelHideInfo.Text = ">\r\n\r\n\r\n>\r\n\r\n\r\n>\r\n\r\n\r\n>\r\n\r\n\r\n>\r\n\r\n\r\n>\r\n\r\n\r\n>\r\n\r\n\r\n>\r\n\r\n\r\n>";
+            this.labelHideInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelHideInfo.Click += new System.EventHandler(this.labelHideInfo_Click);
+            // 
             // groupBoxDataOperation
             // 
+            this.groupBoxDataOperation.Controls.Add(this.splitContainerContentAndMemo);
             this.groupBoxDataOperation.Controls.Add(this.textBoxOperateRelatedID);
             this.groupBoxDataOperation.Controls.Add(this.label24);
             this.groupBoxDataOperation.Controls.Add(this.comboBoxOperateBranch);
             this.groupBoxDataOperation.Controls.Add(this.label22);
             this.groupBoxDataOperation.Controls.Add(this.label21);
-            this.groupBoxDataOperation.Controls.Add(this.labelHideInfo);
             this.groupBoxDataOperation.Controls.Add(this.buttonWorking);
             this.groupBoxDataOperation.Controls.Add(this.buttonDone);
             this.groupBoxDataOperation.Controls.Add(this.comboBoxOperateStatus);
             this.groupBoxDataOperation.Controls.Add(this.label20);
-            this.groupBoxDataOperation.Controls.Add(this.richTextBoxOperateMemo);
-            this.groupBoxDataOperation.Controls.Add(this.label19);
             this.groupBoxDataOperation.Controls.Add(this.label18);
             this.groupBoxDataOperation.Controls.Add(this.numericUpDownOperatePlannedDays);
             this.groupBoxDataOperation.Controls.Add(this.label17);
@@ -468,23 +531,84 @@
             this.groupBoxDataOperation.Controls.Add(this.buttonExport);
             this.groupBoxDataOperation.Controls.Add(this.buttonEdit);
             this.groupBoxDataOperation.Controls.Add(this.buttonAdd);
-            this.groupBoxDataOperation.Controls.Add(this.richTextBoxOperateContent);
-            this.groupBoxDataOperation.Controls.Add(this.label9);
             this.groupBoxDataOperation.Controls.Add(this.dateTimePickerOperatePlannedStartTime);
             this.groupBoxDataOperation.Controls.Add(this.label10);
             this.groupBoxDataOperation.Controls.Add(this.comboBoxOperateProject);
             this.groupBoxDataOperation.Controls.Add(this.label11);
-            this.groupBoxDataOperation.Dock = System.Windows.Forms.DockStyle.Right;
-            this.groupBoxDataOperation.Location = new System.Drawing.Point(509, 0);
+            this.groupBoxDataOperation.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxDataOperation.Location = new System.Drawing.Point(0, 0);
             this.groupBoxDataOperation.Name = "groupBoxDataOperation";
-            this.groupBoxDataOperation.Size = new System.Drawing.Size(305, 540);
+            this.groupBoxDataOperation.Size = new System.Drawing.Size(296, 540);
             this.groupBoxDataOperation.TabIndex = 4;
             this.groupBoxDataOperation.TabStop = false;
             this.groupBoxDataOperation.Text = "数据/操作";
             // 
+            // splitContainerContentAndMemo
+            // 
+            this.splitContainerContentAndMemo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainerContentAndMemo.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitContainerContentAndMemo.Location = new System.Drawing.Point(3, 267);
+            this.splitContainerContentAndMemo.Name = "splitContainerContentAndMemo";
+            this.splitContainerContentAndMemo.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainerContentAndMemo.Panel1
+            // 
+            this.splitContainerContentAndMemo.Panel1.Controls.Add(this.richTextBoxOperateContent);
+            this.splitContainerContentAndMemo.Panel1.Controls.Add(this.label9);
+            // 
+            // splitContainerContentAndMemo.Panel2
+            // 
+            this.splitContainerContentAndMemo.Panel2.Controls.Add(this.richTextBoxOperateMemo);
+            this.splitContainerContentAndMemo.Panel2.Controls.Add(this.label19);
+            this.splitContainerContentAndMemo.Size = new System.Drawing.Size(290, 152);
+            this.splitContainerContentAndMemo.SplitterDistance = 74;
+            this.splitContainerContentAndMemo.TabIndex = 34;
+            // 
+            // richTextBoxOperateContent
+            // 
+            this.richTextBoxOperateContent.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBoxOperateContent.Location = new System.Drawing.Point(80, 2);
+            this.richTextBoxOperateContent.Name = "richTextBoxOperateContent";
+            this.richTextBoxOperateContent.Size = new System.Drawing.Size(200, 70);
+            this.richTextBoxOperateContent.TabIndex = 28;
+            this.richTextBoxOperateContent.Text = "";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(9, 2);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(65, 12);
+            this.label9.TabIndex = 27;
+            this.label9.Text = "内    容：";
+            // 
+            // richTextBoxOperateMemo
+            // 
+            this.richTextBoxOperateMemo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBoxOperateMemo.Location = new System.Drawing.Point(80, 2);
+            this.richTextBoxOperateMemo.Name = "richTextBoxOperateMemo";
+            this.richTextBoxOperateMemo.Size = new System.Drawing.Size(200, 70);
+            this.richTextBoxOperateMemo.TabIndex = 30;
+            this.richTextBoxOperateMemo.Text = "";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(9, 2);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(65, 12);
+            this.label19.TabIndex = 29;
+            this.label19.Text = "备    注：";
+            // 
             // textBoxOperateRelatedID
             // 
-            this.textBoxOperateRelatedID.Location = new System.Drawing.Point(95, 80);
+            this.textBoxOperateRelatedID.Location = new System.Drawing.Point(83, 80);
             this.textBoxOperateRelatedID.Name = "textBoxOperateRelatedID";
             this.textBoxOperateRelatedID.Size = new System.Drawing.Size(91, 21);
             this.textBoxOperateRelatedID.TabIndex = 5;
@@ -492,7 +616,7 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(24, 84);
+            this.label24.Location = new System.Drawing.Point(12, 84);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(65, 12);
             this.label24.TabIndex = 4;
@@ -502,7 +626,7 @@
             // 
             this.comboBoxOperateBranch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxOperateBranch.FormattingEnabled = true;
-            this.comboBoxOperateBranch.Location = new System.Drawing.Point(95, 54);
+            this.comboBoxOperateBranch.Location = new System.Drawing.Point(83, 54);
             this.comboBoxOperateBranch.Name = "comboBoxOperateBranch";
             this.comboBoxOperateBranch.Size = new System.Drawing.Size(140, 20);
             this.comboBoxOperateBranch.TabIndex = 3;
@@ -511,7 +635,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(24, 57);
+            this.label22.Location = new System.Drawing.Point(12, 57);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(65, 12);
             this.label22.TabIndex = 2;
@@ -519,27 +643,18 @@
             // 
             // label21
             // 
+            this.label21.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(57, 501);
+            this.label21.Location = new System.Drawing.Point(45, 501);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(77, 12);
             this.label21.TabIndex = 30;
             this.label21.Text = "修改状态为：";
             // 
-            // labelHideInfo
-            // 
-            this.labelHideInfo.Dock = System.Windows.Forms.DockStyle.Left;
-            this.labelHideInfo.Location = new System.Drawing.Point(3, 17);
-            this.labelHideInfo.Name = "labelHideInfo";
-            this.labelHideInfo.Size = new System.Drawing.Size(15, 520);
-            this.labelHideInfo.TabIndex = 29;
-            this.labelHideInfo.Text = ">\r\n\r\n\r\n>\r\n\r\n\r\n>\r\n\r\n\r\n>\r\n\r\n\r\n>\r\n\r\n\r\n>\r\n\r\n\r\n>\r\n\r\n\r\n>\r\n\r\n\r\n>";
-            this.labelHideInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelHideInfo.Click += new System.EventHandler(this.labelHideInfo_Click);
-            // 
             // buttonWorking
             // 
-            this.buttonWorking.Location = new System.Drawing.Point(136, 496);
+            this.buttonWorking.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonWorking.Location = new System.Drawing.Point(124, 496);
             this.buttonWorking.Name = "buttonWorking";
             this.buttonWorking.Size = new System.Drawing.Size(75, 23);
             this.buttonWorking.TabIndex = 31;
@@ -549,7 +664,8 @@
             // 
             // buttonDone
             // 
-            this.buttonDone.Location = new System.Drawing.Point(217, 496);
+            this.buttonDone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonDone.Location = new System.Drawing.Point(205, 496);
             this.buttonDone.Name = "buttonDone";
             this.buttonDone.Size = new System.Drawing.Size(75, 23);
             this.buttonDone.TabIndex = 32;
@@ -559,43 +675,28 @@
             // 
             // comboBoxOperateStatus
             // 
+            this.comboBoxOperateStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.comboBoxOperateStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxOperateStatus.FormattingEnabled = true;
-            this.comboBoxOperateStatus.Location = new System.Drawing.Point(95, 425);
+            this.comboBoxOperateStatus.Location = new System.Drawing.Point(83, 425);
             this.comboBoxOperateStatus.Name = "comboBoxOperateStatus";
             this.comboBoxOperateStatus.Size = new System.Drawing.Size(91, 20);
             this.comboBoxOperateStatus.TabIndex = 26;
             // 
             // label20
             // 
+            this.label20.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(24, 428);
+            this.label20.Location = new System.Drawing.Point(12, 428);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(65, 12);
             this.label20.TabIndex = 25;
             this.label20.Text = "状    态：";
             // 
-            // richTextBoxOperateMemo
-            // 
-            this.richTextBoxOperateMemo.Location = new System.Drawing.Point(95, 346);
-            this.richTextBoxOperateMemo.Name = "richTextBoxOperateMemo";
-            this.richTextBoxOperateMemo.Size = new System.Drawing.Size(200, 73);
-            this.richTextBoxOperateMemo.TabIndex = 24;
-            this.richTextBoxOperateMemo.Text = "";
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(24, 346);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(65, 12);
-            this.label19.TabIndex = 23;
-            this.label19.Text = "备    注：";
-            // 
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(278, 217);
+            this.label18.Location = new System.Drawing.Point(266, 217);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(17, 12);
             this.label18.TabIndex = 18;
@@ -604,7 +705,7 @@
             // numericUpDownOperatePlannedDays
             // 
             this.numericUpDownOperatePlannedDays.DecimalPlaces = 2;
-            this.numericUpDownOperatePlannedDays.Location = new System.Drawing.Point(211, 213);
+            this.numericUpDownOperatePlannedDays.Location = new System.Drawing.Point(199, 213);
             this.numericUpDownOperatePlannedDays.Maximum = new decimal(new int[] {
             -1486618625,
             232830643,
@@ -618,7 +719,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(161, 217);
+            this.label17.Location = new System.Drawing.Point(149, 217);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(47, 12);
             this.label17.TabIndex = 16;
@@ -627,7 +728,7 @@
             // numericUpDownOperatePlannedHours
             // 
             this.numericUpDownOperatePlannedHours.DecimalPlaces = 2;
-            this.numericUpDownOperatePlannedHours.Location = new System.Drawing.Point(95, 213);
+            this.numericUpDownOperatePlannedHours.Location = new System.Drawing.Point(83, 213);
             this.numericUpDownOperatePlannedHours.Maximum = new decimal(new int[] {
             -1486618625,
             232830643,
@@ -641,7 +742,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(24, 217);
+            this.label16.Location = new System.Drawing.Point(12, 217);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(65, 12);
             this.label16.TabIndex = 14;
@@ -649,7 +750,7 @@
             // 
             // textBoxOperateTitle
             // 
-            this.textBoxOperateTitle.Location = new System.Drawing.Point(95, 240);
+            this.textBoxOperateTitle.Location = new System.Drawing.Point(83, 240);
             this.textBoxOperateTitle.Name = "textBoxOperateTitle";
             this.textBoxOperateTitle.Size = new System.Drawing.Size(200, 21);
             this.textBoxOperateTitle.TabIndex = 20;
@@ -657,7 +758,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(24, 243);
+            this.label15.Location = new System.Drawing.Point(12, 243);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(65, 12);
             this.label15.TabIndex = 19;
@@ -667,7 +768,7 @@
             // 
             this.dateTimePickerOperatePlannedEndTime.CustomFormat = "yyyy年MM月dd日 HH时mm分";
             this.dateTimePickerOperatePlannedEndTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePickerOperatePlannedEndTime.Location = new System.Drawing.Point(95, 186);
+            this.dateTimePickerOperatePlannedEndTime.Location = new System.Drawing.Point(83, 186);
             this.dateTimePickerOperatePlannedEndTime.Name = "dateTimePickerOperatePlannedEndTime";
             this.dateTimePickerOperatePlannedEndTime.ShowCheckBox = true;
             this.dateTimePickerOperatePlannedEndTime.Size = new System.Drawing.Size(200, 21);
@@ -677,7 +778,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(74, 192);
+            this.label14.Location = new System.Drawing.Point(62, 192);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(17, 12);
             this.label14.TabIndex = 12;
@@ -687,7 +788,7 @@
             // 
             this.comboBoxOperateSeverity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxOperateSeverity.FormattingEnabled = true;
-            this.comboBoxOperateSeverity.Location = new System.Drawing.Point(95, 133);
+            this.comboBoxOperateSeverity.Location = new System.Drawing.Point(83, 133);
             this.comboBoxOperateSeverity.Name = "comboBoxOperateSeverity";
             this.comboBoxOperateSeverity.Size = new System.Drawing.Size(91, 20);
             this.comboBoxOperateSeverity.TabIndex = 9;
@@ -695,7 +796,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(24, 136);
+            this.label13.Location = new System.Drawing.Point(12, 136);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(65, 12);
             this.label13.TabIndex = 8;
@@ -705,7 +806,7 @@
             // 
             this.comboBoxOperatePriority.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxOperatePriority.FormattingEnabled = true;
-            this.comboBoxOperatePriority.Location = new System.Drawing.Point(95, 107);
+            this.comboBoxOperatePriority.Location = new System.Drawing.Point(83, 107);
             this.comboBoxOperatePriority.Name = "comboBoxOperatePriority";
             this.comboBoxOperatePriority.Size = new System.Drawing.Size(91, 20);
             this.comboBoxOperatePriority.TabIndex = 7;
@@ -713,7 +814,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(24, 110);
+            this.label12.Location = new System.Drawing.Point(12, 110);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(65, 12);
             this.label12.TabIndex = 6;
@@ -721,7 +822,8 @@
             // 
             // buttonDelete
             // 
-            this.buttonDelete.Location = new System.Drawing.Point(217, 467);
+            this.buttonDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonDelete.Location = new System.Drawing.Point(205, 467);
             this.buttonDelete.Name = "buttonDelete";
             this.buttonDelete.Size = new System.Drawing.Size(75, 23);
             this.buttonDelete.TabIndex = 29;
@@ -731,7 +833,8 @@
             // 
             // buttonExport
             // 
-            this.buttonExport.Location = new System.Drawing.Point(163, 509);
+            this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonExport.Location = new System.Drawing.Point(151, 509);
             this.buttonExport.Name = "buttonExport";
             this.buttonExport.Size = new System.Drawing.Size(75, 23);
             this.buttonExport.TabIndex = 33;
@@ -741,7 +844,8 @@
             // 
             // buttonEdit
             // 
-            this.buttonEdit.Location = new System.Drawing.Point(136, 467);
+            this.buttonEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonEdit.Location = new System.Drawing.Point(124, 467);
             this.buttonEdit.Name = "buttonEdit";
             this.buttonEdit.Size = new System.Drawing.Size(75, 23);
             this.buttonEdit.TabIndex = 28;
@@ -751,7 +855,8 @@
             // 
             // buttonAdd
             // 
-            this.buttonAdd.Location = new System.Drawing.Point(55, 467);
+            this.buttonAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonAdd.Location = new System.Drawing.Point(43, 467);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(75, 23);
             this.buttonAdd.TabIndex = 27;
@@ -759,28 +864,11 @@
             this.buttonAdd.UseVisualStyleBackColor = true;
             this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
             // 
-            // richTextBoxOperateContent
-            // 
-            this.richTextBoxOperateContent.Location = new System.Drawing.Point(95, 267);
-            this.richTextBoxOperateContent.Name = "richTextBoxOperateContent";
-            this.richTextBoxOperateContent.Size = new System.Drawing.Size(200, 73);
-            this.richTextBoxOperateContent.TabIndex = 22;
-            this.richTextBoxOperateContent.Text = "";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(24, 267);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(65, 12);
-            this.label9.TabIndex = 21;
-            this.label9.Text = "内    容：";
-            // 
             // dateTimePickerOperatePlannedStartTime
             // 
             this.dateTimePickerOperatePlannedStartTime.CustomFormat = "yyyy年MM月dd日 HH时mm分";
             this.dateTimePickerOperatePlannedStartTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePickerOperatePlannedStartTime.Location = new System.Drawing.Point(95, 159);
+            this.dateTimePickerOperatePlannedStartTime.Location = new System.Drawing.Point(83, 159);
             this.dateTimePickerOperatePlannedStartTime.Name = "dateTimePickerOperatePlannedStartTime";
             this.dateTimePickerOperatePlannedStartTime.ShowCheckBox = true;
             this.dateTimePickerOperatePlannedStartTime.Size = new System.Drawing.Size(200, 21);
@@ -790,7 +878,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(26, 163);
+            this.label10.Location = new System.Drawing.Point(14, 163);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(65, 12);
             this.label10.TabIndex = 10;
@@ -800,7 +888,7 @@
             // 
             this.comboBoxOperateProject.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxOperateProject.FormattingEnabled = true;
-            this.comboBoxOperateProject.Location = new System.Drawing.Point(95, 27);
+            this.comboBoxOperateProject.Location = new System.Drawing.Point(83, 27);
             this.comboBoxOperateProject.Name = "comboBoxOperateProject";
             this.comboBoxOperateProject.Size = new System.Drawing.Size(140, 20);
             this.comboBoxOperateProject.TabIndex = 1;
@@ -809,11 +897,21 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(24, 30);
+            this.label11.Location = new System.Drawing.Point(12, 30);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(65, 12);
             this.label11.TabIndex = 0;
             this.label11.Text = "项    目：";
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.ForeColor = System.Drawing.Color.Red;
+            this.label26.Location = new System.Drawing.Point(28, 129);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(689, 12);
+            this.label26.TabIndex = 21;
+            this.label26.Text = "下方“待办列表”和“数据/操作”可以拖动中间调节宽度；“数据/操作”中的“内容”和“备注”中间可以上下拖动调节高度。";
             // 
             // MainForm
             // 
@@ -821,19 +919,31 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(814, 694);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.groupBoxSearch);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "待办事项";
             this.Load += new System.EventHandler(this.MainForm_Load);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.groupBoxSearch.ResumeLayout(false);
+            this.groupBoxSearch.PerformLayout();
             this.panel1.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
+            this.splitContainerMain.Panel1.ResumeLayout(false);
+            this.splitContainerMain.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).EndInit();
+            this.splitContainerMain.ResumeLayout(false);
+            this.groupBoxToDoList.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewToDoList)).EndInit();
+            this.panel3.ResumeLayout(false);
             this.groupBoxDataOperation.ResumeLayout(false);
             this.groupBoxDataOperation.PerformLayout();
+            this.splitContainerContentAndMemo.Panel1.ResumeLayout(false);
+            this.splitContainerContentAndMemo.Panel1.PerformLayout();
+            this.splitContainerContentAndMemo.Panel2.ResumeLayout(false);
+            this.splitContainerContentAndMemo.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerContentAndMemo)).EndInit();
+            this.splitContainerContentAndMemo.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOperatePlannedDays)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOperatePlannedHours)).EndInit();
             this.ResumeLayout(false);
@@ -842,7 +952,7 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBoxSearch;
         private System.Windows.Forms.ComboBox comboBoxSearchProject;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button buttonSearch;
@@ -872,8 +982,6 @@
         private System.Windows.Forms.Button buttonExport;
         private System.Windows.Forms.Button buttonEdit;
         private System.Windows.Forms.Button buttonAdd;
-        private System.Windows.Forms.RichTextBox richTextBoxOperateContent;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.DateTimePicker dateTimePickerOperatePlannedStartTime;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.ComboBox comboBoxOperateProject;
@@ -885,16 +993,11 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.TextBox textBoxOperateTitle;
         private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.RichTextBox richTextBoxOperateMemo;
-        private System.Windows.Forms.Label label19;
         private System.Windows.Forms.ComboBox comboBoxOperateStatus;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Button buttonWorking;
         private System.Windows.Forms.Button buttonDone;
         private System.Windows.Forms.ToolTip toolTipInfo;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Label labelHideInfo;
-        private System.Windows.Forms.DataGridView dataGridViewToDoList;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.ComboBox comboBoxOperateBranch;
         private System.Windows.Forms.Label label22;
@@ -904,6 +1007,9 @@
         private System.Windows.Forms.TextBox textBoxOperateRelatedID;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.TextBox textBoxSearchRelatedID;
+        private System.Windows.Forms.SplitContainer splitContainerMain;
+        private System.Windows.Forms.GroupBox groupBoxToDoList;
+        private System.Windows.Forms.DataGridView dataGridViewToDoList;
         private System.Windows.Forms.DataGridViewCheckBoxColumn ColumnDone;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnOrderNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnProject;
@@ -912,5 +1018,14 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPriority;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnSeverity;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPlannedEndTime;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label labelHideInfo;
+        private System.Windows.Forms.SplitContainer splitContainerContentAndMemo;
+        private System.Windows.Forms.RichTextBox richTextBoxOperateContent;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.RichTextBox richTextBoxOperateMemo;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label26;
     }
 }

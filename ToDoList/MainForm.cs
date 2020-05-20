@@ -95,16 +95,22 @@ namespace ToDoList
                 return;
             if (show)
             {
-                groupBoxDataOperation.Text = "数据/操作";
-                groupBoxDataOperation.Width = 305;
+                //splitContainer1.Panel2MinSize = 320;
+                //panel3.Visible = true;
+                splitContainerMain.Panel2Collapsed = false;
+                //groupBoxDataOperation.Text = "数据/操作";
+                //groupBoxDataOperation.Width = 305;
                 labelHideInfo.Text = infoShowingText;
                 infoShowing = true;
                 dataGridViewToDoList_SelectionChanged(null, null);
             }
             else
             {
-                groupBoxDataOperation.Text = string.Empty;
-                groupBoxDataOperation.Width = labelHideInfo.Left + labelHideInfo.Width;
+                //splitContainer1.Panel2MinSize = 15;
+                //panel3.Visible = false;
+                splitContainerMain.Panel2Collapsed = true;
+                //groupBoxDataOperation.Text = string.Empty;
+                //groupBoxDataOperation.Width = labelHideInfo.Left + labelHideInfo.Width;
                 labelHideInfo.Text = infoHidingText;
                 infoShowing = false;
             }

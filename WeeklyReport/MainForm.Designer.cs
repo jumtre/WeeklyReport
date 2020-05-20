@@ -30,6 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.textBoxSearchRelatedID = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.buttonThisWeek = new System.Windows.Forms.Button();
             this.buttonLastWeek = new System.Windows.Forms.Button();
             this.comboBoxSearchBranch = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -43,6 +46,8 @@
             this.dateTimePickerSearchFrom = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.textBoxOperateRelatedID = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.comboBoxOperateBranch = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.buttonDateTimeNow = new System.Windows.Forms.Button();
@@ -63,11 +68,6 @@
             this.ColumnBranch = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnContent = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnFinishTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label10 = new System.Windows.Forms.Label();
-            this.buttonThisWeek = new System.Windows.Forms.Button();
-            this.textBoxOperateRelatedID = new System.Windows.Forms.TextBox();
-            this.textBoxSearchRelatedID = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -98,6 +98,32 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "查询";
+            // 
+            // textBoxSearchRelatedID
+            // 
+            this.textBoxSearchRelatedID.Location = new System.Drawing.Point(413, 81);
+            this.textBoxSearchRelatedID.Name = "textBoxSearchRelatedID";
+            this.textBoxSearchRelatedID.Size = new System.Drawing.Size(60, 21);
+            this.textBoxSearchRelatedID.TabIndex = 13;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(362, 86);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(53, 12);
+            this.label11.TabIndex = 12;
+            this.label11.Text = "关联ID：";
+            // 
+            // buttonThisWeek
+            // 
+            this.buttonThisWeek.Location = new System.Drawing.Point(431, 24);
+            this.buttonThisWeek.Name = "buttonThisWeek";
+            this.buttonThisWeek.Size = new System.Drawing.Size(43, 23);
+            this.buttonThisWeek.TabIndex = 5;
+            this.buttonThisWeek.Text = "本周";
+            this.buttonThisWeek.UseVisualStyleBackColor = true;
+            this.buttonThisWeek.Click += new System.EventHandler(this.buttonThisWeek_Click);
             // 
             // buttonLastWeek
             // 
@@ -231,6 +257,22 @@
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "数据/操作";
+            // 
+            // textBoxOperateRelatedID
+            // 
+            this.textBoxOperateRelatedID.Location = new System.Drawing.Point(413, 57);
+            this.textBoxOperateRelatedID.Name = "textBoxOperateRelatedID";
+            this.textBoxOperateRelatedID.Size = new System.Drawing.Size(60, 21);
+            this.textBoxOperateRelatedID.TabIndex = 14;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(362, 61);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(53, 12);
+            this.label10.TabIndex = 13;
+            this.label10.Text = "关联ID：";
             // 
             // comboBoxOperateBranch
             // 
@@ -388,6 +430,7 @@
             this.dataGridViewShow.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewShow.Size = new System.Drawing.Size(716, 236);
             this.dataGridViewShow.TabIndex = 1;
+            this.dataGridViewShow.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridViewShow_CellFormatting);
             this.dataGridViewShow.SelectionChanged += new System.EventHandler(this.dataGridViewShow_SelectionChanged);
             // 
             // ColumnSortNo
@@ -422,48 +465,6 @@
             this.ColumnFinishTime.Name = "ColumnFinishTime";
             this.ColumnFinishTime.ReadOnly = true;
             this.ColumnFinishTime.Width = 120;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(362, 61);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(53, 12);
-            this.label10.TabIndex = 13;
-            this.label10.Text = "关联ID：";
-            // 
-            // buttonThisWeek
-            // 
-            this.buttonThisWeek.Location = new System.Drawing.Point(431, 24);
-            this.buttonThisWeek.Name = "buttonThisWeek";
-            this.buttonThisWeek.Size = new System.Drawing.Size(43, 23);
-            this.buttonThisWeek.TabIndex = 5;
-            this.buttonThisWeek.Text = "本周";
-            this.buttonThisWeek.UseVisualStyleBackColor = true;
-            this.buttonThisWeek.Click += new System.EventHandler(this.buttonThisWeek_Click);
-            // 
-            // textBoxOperateRelatedID
-            // 
-            this.textBoxOperateRelatedID.Location = new System.Drawing.Point(413, 57);
-            this.textBoxOperateRelatedID.Name = "textBoxOperateRelatedID";
-            this.textBoxOperateRelatedID.Size = new System.Drawing.Size(60, 21);
-            this.textBoxOperateRelatedID.TabIndex = 14;
-            // 
-            // textBoxSearchRelatedID
-            // 
-            this.textBoxSearchRelatedID.Location = new System.Drawing.Point(413, 81);
-            this.textBoxSearchRelatedID.Name = "textBoxSearchRelatedID";
-            this.textBoxSearchRelatedID.Size = new System.Drawing.Size(60, 21);
-            this.textBoxSearchRelatedID.TabIndex = 13;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(362, 86);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(53, 12);
-            this.label11.TabIndex = 12;
-            this.label11.Text = "关联ID：";
             // 
             // MainForm
             // 
