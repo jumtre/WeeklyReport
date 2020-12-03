@@ -31,6 +31,16 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupBoxSearch = new System.Windows.Forms.GroupBox();
+            this.comboBoxSearchAssignedTo = new System.Windows.Forms.ComboBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.buttonSearchNextWeek = new System.Windows.Forms.Button();
+            this.buttonSearchLastWeek = new System.Windows.Forms.Button();
+            this.buttonSearchThisWeek = new System.Windows.Forms.Button();
+            this.buttonSearchTomorrow = new System.Windows.Forms.Button();
+            this.buttonSearchYesterday = new System.Windows.Forms.Button();
+            this.buttonSearchToday = new System.Windows.Forms.Button();
+            this.buttonExport = new System.Windows.Forms.Button();
+            this.label26 = new System.Windows.Forms.Label();
             this.textBoxSearchRelatedID = new System.Windows.Forms.TextBox();
             this.label25 = new System.Windows.Forms.Label();
             this.comboBoxSearchBranch = new System.Windows.Forms.ComboBox();
@@ -62,12 +72,21 @@
             this.ColumnProject = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnBranch = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnTitle = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnAssignedTo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnPriority = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnSeverity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnPlannedEndTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel3 = new System.Windows.Forms.Panel();
             this.labelHideInfo = new System.Windows.Forms.Label();
             this.groupBoxDataOperation = new System.Windows.Forms.GroupBox();
+            this.buttonOperateNextWeek = new System.Windows.Forms.Button();
+            this.buttonOperateLastWeek = new System.Windows.Forms.Button();
+            this.buttonOperateThisWeek = new System.Windows.Forms.Button();
+            this.buttonOperateTomorrow = new System.Windows.Forms.Button();
+            this.buttonOperateYesterday = new System.Windows.Forms.Button();
+            this.buttonOperateToday = new System.Windows.Forms.Button();
+            this.comboBoxOperateAssignedTo = new System.Windows.Forms.ComboBox();
+            this.label27 = new System.Windows.Forms.Label();
             this.splitContainerContentAndMemo = new System.Windows.Forms.SplitContainer();
             this.richTextBoxOperateContent = new System.Windows.Forms.RichTextBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -96,7 +115,6 @@
             this.comboBoxOperatePriority = new System.Windows.Forms.ComboBox();
             this.label12 = new System.Windows.Forms.Label();
             this.buttonDelete = new System.Windows.Forms.Button();
-            this.buttonExport = new System.Windows.Forms.Button();
             this.buttonEdit = new System.Windows.Forms.Button();
             this.buttonAdd = new System.Windows.Forms.Button();
             this.dateTimePickerOperatePlannedStartTime = new System.Windows.Forms.DateTimePicker();
@@ -104,7 +122,6 @@
             this.comboBoxOperateProject = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
             this.toolTipInfo = new System.Windows.Forms.ToolTip(this.components);
-            this.label26 = new System.Windows.Forms.Label();
             this.groupBoxSearch.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
@@ -126,6 +143,15 @@
             // 
             // groupBoxSearch
             // 
+            this.groupBoxSearch.Controls.Add(this.comboBoxSearchAssignedTo);
+            this.groupBoxSearch.Controls.Add(this.label28);
+            this.groupBoxSearch.Controls.Add(this.buttonSearchNextWeek);
+            this.groupBoxSearch.Controls.Add(this.buttonSearchLastWeek);
+            this.groupBoxSearch.Controls.Add(this.buttonSearchThisWeek);
+            this.groupBoxSearch.Controls.Add(this.buttonSearchTomorrow);
+            this.groupBoxSearch.Controls.Add(this.buttonSearchYesterday);
+            this.groupBoxSearch.Controls.Add(this.buttonSearchToday);
+            this.groupBoxSearch.Controls.Add(this.buttonExport);
             this.groupBoxSearch.Controls.Add(this.label26);
             this.groupBoxSearch.Controls.Add(this.textBoxSearchRelatedID);
             this.groupBoxSearch.Controls.Add(this.label25);
@@ -151,22 +177,121 @@
             this.groupBoxSearch.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBoxSearch.Location = new System.Drawing.Point(0, 0);
             this.groupBoxSearch.Name = "groupBoxSearch";
-            this.groupBoxSearch.Size = new System.Drawing.Size(814, 154);
+            this.groupBoxSearch.Size = new System.Drawing.Size(852, 154);
             this.groupBoxSearch.TabIndex = 0;
             this.groupBoxSearch.TabStop = false;
             this.groupBoxSearch.Text = "查询";
             // 
+            // comboBoxSearchAssignedTo
+            // 
+            this.comboBoxSearchAssignedTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSearchAssignedTo.FormattingEnabled = true;
+            this.comboBoxSearchAssignedTo.Location = new System.Drawing.Point(750, 20);
+            this.comboBoxSearchAssignedTo.Name = "comboBoxSearchAssignedTo";
+            this.comboBoxSearchAssignedTo.Size = new System.Drawing.Size(91, 20);
+            this.comboBoxSearchAssignedTo.TabIndex = 21;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(697, 23);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(53, 12);
+            this.label28.TabIndex = 20;
+            this.label28.Text = "指派给：";
+            // 
+            // buttonSearchNextWeek
+            // 
+            this.buttonSearchNextWeek.Location = new System.Drawing.Point(648, 99);
+            this.buttonSearchNextWeek.Name = "buttonSearchNextWeek";
+            this.buttonSearchNextWeek.Size = new System.Drawing.Size(41, 23);
+            this.buttonSearchNextWeek.TabIndex = 27;
+            this.buttonSearchNextWeek.Text = "下周";
+            this.buttonSearchNextWeek.UseVisualStyleBackColor = true;
+            this.buttonSearchNextWeek.Click += new System.EventHandler(this.buttonSearchNextWeek_Click);
+            // 
+            // buttonSearchLastWeek
+            // 
+            this.buttonSearchLastWeek.Location = new System.Drawing.Point(608, 99);
+            this.buttonSearchLastWeek.Name = "buttonSearchLastWeek";
+            this.buttonSearchLastWeek.Size = new System.Drawing.Size(41, 23);
+            this.buttonSearchLastWeek.TabIndex = 26;
+            this.buttonSearchLastWeek.Text = "上周";
+            this.buttonSearchLastWeek.UseVisualStyleBackColor = true;
+            this.buttonSearchLastWeek.Click += new System.EventHandler(this.buttonSearchLastWeek_Click);
+            // 
+            // buttonSearchThisWeek
+            // 
+            this.buttonSearchThisWeek.Location = new System.Drawing.Point(568, 99);
+            this.buttonSearchThisWeek.Name = "buttonSearchThisWeek";
+            this.buttonSearchThisWeek.Size = new System.Drawing.Size(41, 23);
+            this.buttonSearchThisWeek.TabIndex = 25;
+            this.buttonSearchThisWeek.Text = "本周";
+            this.buttonSearchThisWeek.UseVisualStyleBackColor = true;
+            this.buttonSearchThisWeek.Click += new System.EventHandler(this.buttonSearchThisWeek_Click);
+            // 
+            // buttonSearchTomorrow
+            // 
+            this.buttonSearchTomorrow.Location = new System.Drawing.Point(648, 72);
+            this.buttonSearchTomorrow.Name = "buttonSearchTomorrow";
+            this.buttonSearchTomorrow.Size = new System.Drawing.Size(41, 23);
+            this.buttonSearchTomorrow.TabIndex = 24;
+            this.buttonSearchTomorrow.Text = "明日";
+            this.buttonSearchTomorrow.UseVisualStyleBackColor = true;
+            this.buttonSearchTomorrow.Click += new System.EventHandler(this.buttonSearchTomorrow_Click);
+            // 
+            // buttonSearchYesterday
+            // 
+            this.buttonSearchYesterday.Location = new System.Drawing.Point(608, 72);
+            this.buttonSearchYesterday.Name = "buttonSearchYesterday";
+            this.buttonSearchYesterday.Size = new System.Drawing.Size(41, 23);
+            this.buttonSearchYesterday.TabIndex = 23;
+            this.buttonSearchYesterday.Text = "昨日";
+            this.buttonSearchYesterday.UseVisualStyleBackColor = true;
+            this.buttonSearchYesterday.Click += new System.EventHandler(this.buttonSearchYesterday_Click);
+            // 
+            // buttonSearchToday
+            // 
+            this.buttonSearchToday.Location = new System.Drawing.Point(568, 72);
+            this.buttonSearchToday.Name = "buttonSearchToday";
+            this.buttonSearchToday.Size = new System.Drawing.Size(41, 23);
+            this.buttonSearchToday.TabIndex = 22;
+            this.buttonSearchToday.Text = "今日";
+            this.buttonSearchToday.UseVisualStyleBackColor = true;
+            this.buttonSearchToday.Click += new System.EventHandler(this.buttonSearchToday_Click);
+            // 
+            // buttonExport
+            // 
+            this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonExport.Location = new System.Drawing.Point(770, 45);
+            this.buttonExport.Name = "buttonExport";
+            this.buttonExport.Size = new System.Drawing.Size(72, 77);
+            this.buttonExport.TabIndex = 29;
+            this.buttonExport.Text = "导 出";
+            this.buttonExport.UseVisualStyleBackColor = true;
+            this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.ForeColor = System.Drawing.Color.Red;
+            this.label26.Location = new System.Drawing.Point(28, 129);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(689, 12);
+            this.label26.TabIndex = 21;
+            this.label26.Text = "下方“待办列表”和“数据/操作”可以拖动中间调节宽度；“数据/操作”中的“内容”和“备注”中间可以上下拖动调节高度。";
+            // 
             // textBoxSearchRelatedID
             // 
-            this.textBoxSearchRelatedID.Location = new System.Drawing.Point(568, 46);
+            this.textBoxSearchRelatedID.Location = new System.Drawing.Point(582, 46);
             this.textBoxSearchRelatedID.Name = "textBoxSearchRelatedID";
-            this.textBoxSearchRelatedID.Size = new System.Drawing.Size(81, 21);
+            this.textBoxSearchRelatedID.Size = new System.Drawing.Size(106, 21);
             this.textBoxSearchRelatedID.TabIndex = 11;
             // 
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(515, 50);
+            this.label25.Location = new System.Drawing.Point(529, 50);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(53, 12);
             this.label25.TabIndex = 10;
@@ -178,7 +303,7 @@
             this.comboBoxSearchBranch.FormattingEnabled = true;
             this.comboBoxSearchBranch.Location = new System.Drawing.Point(356, 20);
             this.comboBoxSearchBranch.Name = "comboBoxSearchBranch";
-            this.comboBoxSearchBranch.Size = new System.Drawing.Size(140, 20);
+            this.comboBoxSearchBranch.Size = new System.Drawing.Size(165, 20);
             this.comboBoxSearchBranch.TabIndex = 3;
             this.comboBoxSearchBranch.SelectedIndexChanged += new System.EventHandler(this.comboBoxSearchBranch_SelectedIndexChanged);
             // 
@@ -193,11 +318,11 @@
             // 
             // buttonSearch
             // 
-            this.buttonSearch.Location = new System.Drawing.Point(568, 73);
+            this.buttonSearch.Location = new System.Drawing.Point(697, 45);
             this.buttonSearch.Name = "buttonSearch";
-            this.buttonSearch.Size = new System.Drawing.Size(81, 48);
-            this.buttonSearch.TabIndex = 20;
-            this.buttonSearch.Text = "查询";
+            this.buttonSearch.Size = new System.Drawing.Size(72, 77);
+            this.buttonSearch.TabIndex = 28;
+            this.buttonSearch.Text = "查 询";
             this.buttonSearch.UseVisualStyleBackColor = true;
             this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
             // 
@@ -281,15 +406,15 @@
             // 
             this.comboBoxSearchStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSearchStatus.FormattingEnabled = true;
-            this.comboBoxSearchStatus.Location = new System.Drawing.Point(568, 20);
+            this.comboBoxSearchStatus.Location = new System.Drawing.Point(582, 20);
             this.comboBoxSearchStatus.Name = "comboBoxSearchStatus";
-            this.comboBoxSearchStatus.Size = new System.Drawing.Size(81, 20);
+            this.comboBoxSearchStatus.Size = new System.Drawing.Size(106, 20);
             this.comboBoxSearchStatus.TabIndex = 5;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(515, 23);
+            this.label4.Location = new System.Drawing.Point(529, 23);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(53, 12);
             this.label4.TabIndex = 4;
@@ -299,7 +424,7 @@
             // 
             this.textBoxSearchContent.Location = new System.Drawing.Point(356, 46);
             this.textBoxSearchContent.Name = "textBoxSearchContent";
-            this.textBoxSearchContent.Size = new System.Drawing.Size(140, 21);
+            this.textBoxSearchContent.Size = new System.Drawing.Size(165, 21);
             this.textBoxSearchContent.TabIndex = 9;
             // 
             // label3
@@ -352,7 +477,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 154);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(814, 540);
+            this.panel1.Size = new System.Drawing.Size(852, 540);
             this.panel1.TabIndex = 1;
             // 
             // splitContainerMain
@@ -372,9 +497,9 @@
             // 
             this.splitContainerMain.Panel2.Controls.Add(this.groupBoxDataOperation);
             this.splitContainerMain.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.splitContainerMain.Panel2MinSize = 296;
-            this.splitContainerMain.Size = new System.Drawing.Size(814, 540);
-            this.splitContainerMain.SplitterDistance = 514;
+            this.splitContainerMain.Panel2MinSize = 308;
+            this.splitContainerMain.Size = new System.Drawing.Size(852, 540);
+            this.splitContainerMain.SplitterDistance = 540;
             this.splitContainerMain.TabIndex = 6;
             // 
             // groupBoxToDoList
@@ -384,7 +509,7 @@
             this.groupBoxToDoList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxToDoList.Location = new System.Drawing.Point(0, 0);
             this.groupBoxToDoList.Name = "groupBoxToDoList";
-            this.groupBoxToDoList.Size = new System.Drawing.Size(514, 540);
+            this.groupBoxToDoList.Size = new System.Drawing.Size(540, 540);
             this.groupBoxToDoList.TabIndex = 6;
             this.groupBoxToDoList.TabStop = false;
             this.groupBoxToDoList.Text = "待办列表";
@@ -395,7 +520,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(3, 17);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(493, 520);
+            this.panel2.Size = new System.Drawing.Size(519, 520);
             this.panel2.TabIndex = 7;
             // 
             // dataGridViewToDoList
@@ -409,6 +534,7 @@
             this.ColumnProject,
             this.ColumnBranch,
             this.ColumnTitle,
+            this.ColumnAssignedTo,
             this.ColumnPriority,
             this.ColumnSeverity,
             this.ColumnPlannedEndTime});
@@ -420,8 +546,9 @@
             this.dataGridViewToDoList.RowHeadersVisible = false;
             this.dataGridViewToDoList.RowTemplate.Height = 23;
             this.dataGridViewToDoList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewToDoList.Size = new System.Drawing.Size(493, 520);
+            this.dataGridViewToDoList.Size = new System.Drawing.Size(519, 520);
             this.dataGridViewToDoList.TabIndex = 0;
+            this.dataGridViewToDoList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewToDoList_CellContentClick);
             // 
             // ColumnDone
             // 
@@ -461,6 +588,13 @@
             this.ColumnTitle.Name = "ColumnTitle";
             this.ColumnTitle.ReadOnly = true;
             // 
+            // ColumnAssignedTo
+            // 
+            this.ColumnAssignedTo.HeaderText = "指派给";
+            this.ColumnAssignedTo.Name = "ColumnAssignedTo";
+            this.ColumnAssignedTo.ReadOnly = true;
+            this.ColumnAssignedTo.Width = 75;
+            // 
             // ColumnPriority
             // 
             this.ColumnPriority.HeaderText = "优先级";
@@ -486,7 +620,7 @@
             // 
             this.panel3.Controls.Add(this.labelHideInfo);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel3.Location = new System.Drawing.Point(496, 17);
+            this.panel3.Location = new System.Drawing.Point(522, 17);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(15, 520);
             this.panel3.TabIndex = 6;
@@ -504,6 +638,14 @@
             // 
             // groupBoxDataOperation
             // 
+            this.groupBoxDataOperation.Controls.Add(this.buttonOperateNextWeek);
+            this.groupBoxDataOperation.Controls.Add(this.buttonOperateLastWeek);
+            this.groupBoxDataOperation.Controls.Add(this.buttonOperateThisWeek);
+            this.groupBoxDataOperation.Controls.Add(this.buttonOperateTomorrow);
+            this.groupBoxDataOperation.Controls.Add(this.buttonOperateYesterday);
+            this.groupBoxDataOperation.Controls.Add(this.buttonOperateToday);
+            this.groupBoxDataOperation.Controls.Add(this.comboBoxOperateAssignedTo);
+            this.groupBoxDataOperation.Controls.Add(this.label27);
             this.groupBoxDataOperation.Controls.Add(this.splitContainerContentAndMemo);
             this.groupBoxDataOperation.Controls.Add(this.textBoxOperateRelatedID);
             this.groupBoxDataOperation.Controls.Add(this.label24);
@@ -528,7 +670,6 @@
             this.groupBoxDataOperation.Controls.Add(this.comboBoxOperatePriority);
             this.groupBoxDataOperation.Controls.Add(this.label12);
             this.groupBoxDataOperation.Controls.Add(this.buttonDelete);
-            this.groupBoxDataOperation.Controls.Add(this.buttonExport);
             this.groupBoxDataOperation.Controls.Add(this.buttonEdit);
             this.groupBoxDataOperation.Controls.Add(this.buttonAdd);
             this.groupBoxDataOperation.Controls.Add(this.dateTimePickerOperatePlannedStartTime);
@@ -538,10 +679,88 @@
             this.groupBoxDataOperation.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxDataOperation.Location = new System.Drawing.Point(0, 0);
             this.groupBoxDataOperation.Name = "groupBoxDataOperation";
-            this.groupBoxDataOperation.Size = new System.Drawing.Size(296, 540);
+            this.groupBoxDataOperation.Size = new System.Drawing.Size(308, 540);
             this.groupBoxDataOperation.TabIndex = 4;
             this.groupBoxDataOperation.TabStop = false;
             this.groupBoxDataOperation.Text = "数据/操作";
+            // 
+            // buttonOperateNextWeek
+            // 
+            this.buttonOperateNextWeek.Location = new System.Drawing.Point(257, 154);
+            this.buttonOperateNextWeek.Name = "buttonOperateNextWeek";
+            this.buttonOperateNextWeek.Size = new System.Drawing.Size(41, 23);
+            this.buttonOperateNextWeek.TabIndex = 46;
+            this.buttonOperateNextWeek.Text = "下周";
+            this.buttonOperateNextWeek.UseVisualStyleBackColor = true;
+            this.buttonOperateNextWeek.Click += new System.EventHandler(this.buttonOperateNextWeek_Click);
+            // 
+            // buttonOperateLastWeek
+            // 
+            this.buttonOperateLastWeek.Location = new System.Drawing.Point(217, 154);
+            this.buttonOperateLastWeek.Name = "buttonOperateLastWeek";
+            this.buttonOperateLastWeek.Size = new System.Drawing.Size(41, 23);
+            this.buttonOperateLastWeek.TabIndex = 45;
+            this.buttonOperateLastWeek.Text = "上周";
+            this.buttonOperateLastWeek.UseVisualStyleBackColor = true;
+            this.buttonOperateLastWeek.Click += new System.EventHandler(this.buttonOperateLastWeek_Click);
+            // 
+            // buttonOperateThisWeek
+            // 
+            this.buttonOperateThisWeek.Location = new System.Drawing.Point(177, 154);
+            this.buttonOperateThisWeek.Name = "buttonOperateThisWeek";
+            this.buttonOperateThisWeek.Size = new System.Drawing.Size(41, 23);
+            this.buttonOperateThisWeek.TabIndex = 44;
+            this.buttonOperateThisWeek.Text = "本周";
+            this.buttonOperateThisWeek.UseVisualStyleBackColor = true;
+            this.buttonOperateThisWeek.Click += new System.EventHandler(this.buttonOperateThisWeek_Click);
+            // 
+            // buttonOperateTomorrow
+            // 
+            this.buttonOperateTomorrow.Location = new System.Drawing.Point(257, 127);
+            this.buttonOperateTomorrow.Name = "buttonOperateTomorrow";
+            this.buttonOperateTomorrow.Size = new System.Drawing.Size(41, 23);
+            this.buttonOperateTomorrow.TabIndex = 43;
+            this.buttonOperateTomorrow.Text = "明日";
+            this.buttonOperateTomorrow.UseVisualStyleBackColor = true;
+            this.buttonOperateTomorrow.Click += new System.EventHandler(this.buttonOperateTomorrow_Click);
+            // 
+            // buttonOperateYesterday
+            // 
+            this.buttonOperateYesterday.Location = new System.Drawing.Point(217, 127);
+            this.buttonOperateYesterday.Name = "buttonOperateYesterday";
+            this.buttonOperateYesterday.Size = new System.Drawing.Size(41, 23);
+            this.buttonOperateYesterday.TabIndex = 42;
+            this.buttonOperateYesterday.Text = "昨日";
+            this.buttonOperateYesterday.UseVisualStyleBackColor = true;
+            this.buttonOperateYesterday.Click += new System.EventHandler(this.buttonOperateYesterday_Click);
+            // 
+            // buttonOperateToday
+            // 
+            this.buttonOperateToday.Location = new System.Drawing.Point(177, 127);
+            this.buttonOperateToday.Name = "buttonOperateToday";
+            this.buttonOperateToday.Size = new System.Drawing.Size(41, 23);
+            this.buttonOperateToday.TabIndex = 41;
+            this.buttonOperateToday.Text = "今日";
+            this.buttonOperateToday.UseVisualStyleBackColor = true;
+            this.buttonOperateToday.Click += new System.EventHandler(this.buttonOperateToday_Click);
+            // 
+            // comboBoxOperateAssignedTo
+            // 
+            this.comboBoxOperateAssignedTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxOperateAssignedTo.FormattingEnabled = true;
+            this.comboBoxOperateAssignedTo.Location = new System.Drawing.Point(83, 155);
+            this.comboBoxOperateAssignedTo.Name = "comboBoxOperateAssignedTo";
+            this.comboBoxOperateAssignedTo.Size = new System.Drawing.Size(91, 20);
+            this.comboBoxOperateAssignedTo.TabIndex = 11;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(12, 158);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(65, 12);
+            this.label27.TabIndex = 10;
+            this.label27.Text = "指 派 给：";
             // 
             // splitContainerContentAndMemo
             // 
@@ -549,7 +768,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainerContentAndMemo.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainerContentAndMemo.Location = new System.Drawing.Point(3, 267);
+            this.splitContainerContentAndMemo.Location = new System.Drawing.Point(3, 289);
             this.splitContainerContentAndMemo.Name = "splitContainerContentAndMemo";
             this.splitContainerContentAndMemo.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -562,9 +781,9 @@
             // 
             this.splitContainerContentAndMemo.Panel2.Controls.Add(this.richTextBoxOperateMemo);
             this.splitContainerContentAndMemo.Panel2.Controls.Add(this.label19);
-            this.splitContainerContentAndMemo.Size = new System.Drawing.Size(290, 152);
+            this.splitContainerContentAndMemo.Size = new System.Drawing.Size(302, 152);
             this.splitContainerContentAndMemo.SplitterDistance = 74;
-            this.splitContainerContentAndMemo.TabIndex = 34;
+            this.splitContainerContentAndMemo.TabIndex = 24;
             // 
             // richTextBoxOperateContent
             // 
@@ -573,8 +792,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBoxOperateContent.Location = new System.Drawing.Point(80, 2);
             this.richTextBoxOperateContent.Name = "richTextBoxOperateContent";
-            this.richTextBoxOperateContent.Size = new System.Drawing.Size(200, 70);
-            this.richTextBoxOperateContent.TabIndex = 28;
+            this.richTextBoxOperateContent.Size = new System.Drawing.Size(215, 70);
+            this.richTextBoxOperateContent.TabIndex = 1;
             this.richTextBoxOperateContent.Text = "";
             // 
             // label9
@@ -583,7 +802,7 @@
             this.label9.Location = new System.Drawing.Point(9, 2);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(65, 12);
-            this.label9.TabIndex = 27;
+            this.label9.TabIndex = 0;
             this.label9.Text = "内    容：";
             // 
             // richTextBoxOperateMemo
@@ -593,8 +812,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBoxOperateMemo.Location = new System.Drawing.Point(80, 2);
             this.richTextBoxOperateMemo.Name = "richTextBoxOperateMemo";
-            this.richTextBoxOperateMemo.Size = new System.Drawing.Size(200, 70);
-            this.richTextBoxOperateMemo.TabIndex = 30;
+            this.richTextBoxOperateMemo.Size = new System.Drawing.Size(215, 70);
+            this.richTextBoxOperateMemo.TabIndex = 3;
             this.richTextBoxOperateMemo.Text = "";
             // 
             // label19
@@ -603,12 +822,12 @@
             this.label19.Location = new System.Drawing.Point(9, 2);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(65, 12);
-            this.label19.TabIndex = 29;
+            this.label19.TabIndex = 2;
             this.label19.Text = "备    注：";
             // 
             // textBoxOperateRelatedID
             // 
-            this.textBoxOperateRelatedID.Location = new System.Drawing.Point(83, 80);
+            this.textBoxOperateRelatedID.Location = new System.Drawing.Point(83, 76);
             this.textBoxOperateRelatedID.Name = "textBoxOperateRelatedID";
             this.textBoxOperateRelatedID.Size = new System.Drawing.Size(91, 21);
             this.textBoxOperateRelatedID.TabIndex = 5;
@@ -616,7 +835,7 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(12, 84);
+            this.label24.Location = new System.Drawing.Point(12, 80);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(65, 12);
             this.label24.TabIndex = 4;
@@ -626,7 +845,7 @@
             // 
             this.comboBoxOperateBranch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxOperateBranch.FormattingEnabled = true;
-            this.comboBoxOperateBranch.Location = new System.Drawing.Point(83, 54);
+            this.comboBoxOperateBranch.Location = new System.Drawing.Point(83, 50);
             this.comboBoxOperateBranch.Name = "comboBoxOperateBranch";
             this.comboBoxOperateBranch.Size = new System.Drawing.Size(140, 20);
             this.comboBoxOperateBranch.TabIndex = 3;
@@ -635,7 +854,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(12, 57);
+            this.label22.Location = new System.Drawing.Point(12, 53);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(65, 12);
             this.label22.TabIndex = 2;
@@ -645,7 +864,7 @@
             // 
             this.label21.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(45, 501);
+            this.label21.Location = new System.Drawing.Point(45, 513);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(77, 12);
             this.label21.TabIndex = 30;
@@ -654,7 +873,7 @@
             // buttonWorking
             // 
             this.buttonWorking.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonWorking.Location = new System.Drawing.Point(124, 496);
+            this.buttonWorking.Location = new System.Drawing.Point(124, 508);
             this.buttonWorking.Name = "buttonWorking";
             this.buttonWorking.Size = new System.Drawing.Size(75, 23);
             this.buttonWorking.TabIndex = 31;
@@ -665,7 +884,7 @@
             // buttonDone
             // 
             this.buttonDone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonDone.Location = new System.Drawing.Point(205, 496);
+            this.buttonDone.Location = new System.Drawing.Point(205, 508);
             this.buttonDone.Name = "buttonDone";
             this.buttonDone.Size = new System.Drawing.Size(75, 23);
             this.buttonDone.TabIndex = 32;
@@ -678,7 +897,7 @@
             this.comboBoxOperateStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.comboBoxOperateStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxOperateStatus.FormattingEnabled = true;
-            this.comboBoxOperateStatus.Location = new System.Drawing.Point(83, 425);
+            this.comboBoxOperateStatus.Location = new System.Drawing.Point(83, 447);
             this.comboBoxOperateStatus.Name = "comboBoxOperateStatus";
             this.comboBoxOperateStatus.Size = new System.Drawing.Size(91, 20);
             this.comboBoxOperateStatus.TabIndex = 26;
@@ -687,7 +906,7 @@
             // 
             this.label20.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(12, 428);
+            this.label20.Location = new System.Drawing.Point(12, 450);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(65, 12);
             this.label20.TabIndex = 25;
@@ -696,7 +915,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(266, 217);
+            this.label18.Location = new System.Drawing.Point(266, 239);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(17, 12);
             this.label18.TabIndex = 18;
@@ -705,7 +924,7 @@
             // numericUpDownOperatePlannedDays
             // 
             this.numericUpDownOperatePlannedDays.DecimalPlaces = 2;
-            this.numericUpDownOperatePlannedDays.Location = new System.Drawing.Point(199, 213);
+            this.numericUpDownOperatePlannedDays.Location = new System.Drawing.Point(199, 235);
             this.numericUpDownOperatePlannedDays.Maximum = new decimal(new int[] {
             -1486618625,
             232830643,
@@ -713,22 +932,22 @@
             0});
             this.numericUpDownOperatePlannedDays.Name = "numericUpDownOperatePlannedDays";
             this.numericUpDownOperatePlannedDays.Size = new System.Drawing.Size(65, 21);
-            this.numericUpDownOperatePlannedDays.TabIndex = 17;
+            this.numericUpDownOperatePlannedDays.TabIndex = 19;
             this.numericUpDownOperatePlannedDays.ValueChanged += new System.EventHandler(this.numericUpDownOperatePlannedTime_ValueChanged);
             // 
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(149, 217);
+            this.label17.Location = new System.Drawing.Point(149, 239);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(47, 12);
-            this.label17.TabIndex = 16;
+            this.label17.TabIndex = 18;
             this.label17.Text = "小时 或";
             // 
             // numericUpDownOperatePlannedHours
             // 
             this.numericUpDownOperatePlannedHours.DecimalPlaces = 2;
-            this.numericUpDownOperatePlannedHours.Location = new System.Drawing.Point(83, 213);
+            this.numericUpDownOperatePlannedHours.Location = new System.Drawing.Point(83, 235);
             this.numericUpDownOperatePlannedHours.Maximum = new decimal(new int[] {
             -1486618625,
             232830643,
@@ -736,59 +955,61 @@
             0});
             this.numericUpDownOperatePlannedHours.Name = "numericUpDownOperatePlannedHours";
             this.numericUpDownOperatePlannedHours.Size = new System.Drawing.Size(65, 21);
-            this.numericUpDownOperatePlannedHours.TabIndex = 15;
+            this.numericUpDownOperatePlannedHours.TabIndex = 17;
             this.numericUpDownOperatePlannedHours.ValueChanged += new System.EventHandler(this.numericUpDownOperatePlannedTime_ValueChanged);
             // 
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(12, 217);
+            this.label16.Location = new System.Drawing.Point(12, 239);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(65, 12);
-            this.label16.TabIndex = 14;
+            this.label16.TabIndex = 16;
             this.label16.Text = "计划时长：";
             // 
             // textBoxOperateTitle
             // 
-            this.textBoxOperateTitle.Location = new System.Drawing.Point(83, 240);
+            this.textBoxOperateTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxOperateTitle.Location = new System.Drawing.Point(83, 262);
             this.textBoxOperateTitle.Name = "textBoxOperateTitle";
-            this.textBoxOperateTitle.Size = new System.Drawing.Size(200, 21);
-            this.textBoxOperateTitle.TabIndex = 20;
+            this.textBoxOperateTitle.Size = new System.Drawing.Size(215, 21);
+            this.textBoxOperateTitle.TabIndex = 22;
             // 
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(12, 243);
+            this.label15.Location = new System.Drawing.Point(12, 265);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(65, 12);
-            this.label15.TabIndex = 19;
+            this.label15.TabIndex = 21;
             this.label15.Text = "标    题：";
             // 
             // dateTimePickerOperatePlannedEndTime
             // 
             this.dateTimePickerOperatePlannedEndTime.CustomFormat = "yyyy年MM月dd日 HH时mm分";
             this.dateTimePickerOperatePlannedEndTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePickerOperatePlannedEndTime.Location = new System.Drawing.Point(83, 186);
+            this.dateTimePickerOperatePlannedEndTime.Location = new System.Drawing.Point(83, 208);
             this.dateTimePickerOperatePlannedEndTime.Name = "dateTimePickerOperatePlannedEndTime";
             this.dateTimePickerOperatePlannedEndTime.ShowCheckBox = true;
             this.dateTimePickerOperatePlannedEndTime.Size = new System.Drawing.Size(200, 21);
-            this.dateTimePickerOperatePlannedEndTime.TabIndex = 13;
+            this.dateTimePickerOperatePlannedEndTime.TabIndex = 15;
             this.dateTimePickerOperatePlannedEndTime.ValueChanged += new System.EventHandler(this.dateTimePickerOperatePlannedTime_ValueChanged);
             // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(62, 192);
+            this.label14.Location = new System.Drawing.Point(62, 214);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(17, 12);
-            this.label14.TabIndex = 12;
+            this.label14.TabIndex = 14;
             this.label14.Text = "～";
             // 
             // comboBoxOperateSeverity
             // 
             this.comboBoxOperateSeverity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxOperateSeverity.FormattingEnabled = true;
-            this.comboBoxOperateSeverity.Location = new System.Drawing.Point(83, 133);
+            this.comboBoxOperateSeverity.Location = new System.Drawing.Point(83, 129);
             this.comboBoxOperateSeverity.Name = "comboBoxOperateSeverity";
             this.comboBoxOperateSeverity.Size = new System.Drawing.Size(91, 20);
             this.comboBoxOperateSeverity.TabIndex = 9;
@@ -796,7 +1017,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(12, 136);
+            this.label13.Location = new System.Drawing.Point(12, 132);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(65, 12);
             this.label13.TabIndex = 8;
@@ -806,7 +1027,7 @@
             // 
             this.comboBoxOperatePriority.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxOperatePriority.FormattingEnabled = true;
-            this.comboBoxOperatePriority.Location = new System.Drawing.Point(83, 107);
+            this.comboBoxOperatePriority.Location = new System.Drawing.Point(83, 103);
             this.comboBoxOperatePriority.Name = "comboBoxOperatePriority";
             this.comboBoxOperatePriority.Size = new System.Drawing.Size(91, 20);
             this.comboBoxOperatePriority.TabIndex = 7;
@@ -814,7 +1035,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(12, 110);
+            this.label12.Location = new System.Drawing.Point(12, 106);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(65, 12);
             this.label12.TabIndex = 6;
@@ -823,7 +1044,7 @@
             // buttonDelete
             // 
             this.buttonDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonDelete.Location = new System.Drawing.Point(205, 467);
+            this.buttonDelete.Location = new System.Drawing.Point(205, 479);
             this.buttonDelete.Name = "buttonDelete";
             this.buttonDelete.Size = new System.Drawing.Size(75, 23);
             this.buttonDelete.TabIndex = 29;
@@ -831,21 +1052,10 @@
             this.buttonDelete.UseVisualStyleBackColor = true;
             this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
             // 
-            // buttonExport
-            // 
-            this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonExport.Location = new System.Drawing.Point(151, 509);
-            this.buttonExport.Name = "buttonExport";
-            this.buttonExport.Size = new System.Drawing.Size(75, 23);
-            this.buttonExport.TabIndex = 33;
-            this.buttonExport.Text = "导出";
-            this.buttonExport.UseVisualStyleBackColor = true;
-            this.buttonExport.Visible = false;
-            // 
             // buttonEdit
             // 
             this.buttonEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonEdit.Location = new System.Drawing.Point(124, 467);
+            this.buttonEdit.Location = new System.Drawing.Point(124, 479);
             this.buttonEdit.Name = "buttonEdit";
             this.buttonEdit.Size = new System.Drawing.Size(75, 23);
             this.buttonEdit.TabIndex = 28;
@@ -856,7 +1066,7 @@
             // buttonAdd
             // 
             this.buttonAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonAdd.Location = new System.Drawing.Point(43, 467);
+            this.buttonAdd.Location = new System.Drawing.Point(43, 479);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(75, 23);
             this.buttonAdd.TabIndex = 27;
@@ -868,27 +1078,27 @@
             // 
             this.dateTimePickerOperatePlannedStartTime.CustomFormat = "yyyy年MM月dd日 HH时mm分";
             this.dateTimePickerOperatePlannedStartTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePickerOperatePlannedStartTime.Location = new System.Drawing.Point(83, 159);
+            this.dateTimePickerOperatePlannedStartTime.Location = new System.Drawing.Point(83, 181);
             this.dateTimePickerOperatePlannedStartTime.Name = "dateTimePickerOperatePlannedStartTime";
             this.dateTimePickerOperatePlannedStartTime.ShowCheckBox = true;
             this.dateTimePickerOperatePlannedStartTime.Size = new System.Drawing.Size(200, 21);
-            this.dateTimePickerOperatePlannedStartTime.TabIndex = 11;
+            this.dateTimePickerOperatePlannedStartTime.TabIndex = 13;
             this.dateTimePickerOperatePlannedStartTime.ValueChanged += new System.EventHandler(this.dateTimePickerOperatePlannedTime_ValueChanged);
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(14, 163);
+            this.label10.Location = new System.Drawing.Point(12, 185);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(65, 12);
-            this.label10.TabIndex = 10;
+            this.label10.TabIndex = 12;
             this.label10.Text = "计划时间：";
             // 
             // comboBoxOperateProject
             // 
             this.comboBoxOperateProject.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxOperateProject.FormattingEnabled = true;
-            this.comboBoxOperateProject.Location = new System.Drawing.Point(83, 27);
+            this.comboBoxOperateProject.Location = new System.Drawing.Point(83, 23);
             this.comboBoxOperateProject.Name = "comboBoxOperateProject";
             this.comboBoxOperateProject.Size = new System.Drawing.Size(140, 20);
             this.comboBoxOperateProject.TabIndex = 1;
@@ -897,27 +1107,17 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(12, 30);
+            this.label11.Location = new System.Drawing.Point(12, 26);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(65, 12);
             this.label11.TabIndex = 0;
             this.label11.Text = "项    目：";
             // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.ForeColor = System.Drawing.Color.Red;
-            this.label26.Location = new System.Drawing.Point(28, 129);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(689, 12);
-            this.label26.TabIndex = 21;
-            this.label26.Text = "下方“待办列表”和“数据/操作”可以拖动中间调节宽度；“数据/操作”中的“内容”和“备注”中间可以上下拖动调节高度。";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(814, 694);
+            this.ClientSize = new System.Drawing.Size(852, 694);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.groupBoxSearch);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -979,7 +1179,6 @@
         private System.Windows.Forms.ComboBox comboBoxOperatePriority;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button buttonDelete;
-        private System.Windows.Forms.Button buttonExport;
         private System.Windows.Forms.Button buttonEdit;
         private System.Windows.Forms.Button buttonAdd;
         private System.Windows.Forms.DateTimePicker dateTimePickerOperatePlannedStartTime;
@@ -1010,14 +1209,6 @@
         private System.Windows.Forms.SplitContainer splitContainerMain;
         private System.Windows.Forms.GroupBox groupBoxToDoList;
         private System.Windows.Forms.DataGridView dataGridViewToDoList;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn ColumnDone;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnOrderNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnProject;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnBranch;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnTitle;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPriority;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnSeverity;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPlannedEndTime;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label labelHideInfo;
@@ -1027,5 +1218,31 @@
         private System.Windows.Forms.RichTextBox richTextBoxOperateMemo;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Button buttonExport;
+        private System.Windows.Forms.ComboBox comboBoxOperateAssignedTo;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Button buttonSearchToday;
+        private System.Windows.Forms.Button buttonSearchTomorrow;
+        private System.Windows.Forms.Button buttonSearchYesterday;
+        private System.Windows.Forms.Button buttonSearchNextWeek;
+        private System.Windows.Forms.Button buttonSearchLastWeek;
+        private System.Windows.Forms.Button buttonSearchThisWeek;
+        private System.Windows.Forms.Button buttonOperateNextWeek;
+        private System.Windows.Forms.Button buttonOperateLastWeek;
+        private System.Windows.Forms.Button buttonOperateThisWeek;
+        private System.Windows.Forms.Button buttonOperateTomorrow;
+        private System.Windows.Forms.Button buttonOperateYesterday;
+        private System.Windows.Forms.Button buttonOperateToday;
+        private System.Windows.Forms.ComboBox comboBoxSearchAssignedTo;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn ColumnDone;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnOrderNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnProject;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnBranch;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnTitle;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnAssignedTo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPriority;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnSeverity;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPlannedEndTime;
     }
 }

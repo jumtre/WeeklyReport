@@ -131,6 +131,16 @@ namespace Common
         /// </summary>
         public static readonly string ItemAllName = "（全部）";
 
+        /// <summary>
+        /// 绑定时项目到控件时增加的空项目的值：-99
+        /// </summary>
+        public static readonly int ItemNullValue = -99;
+
+        /// <summary>
+        /// 绑定时项目到控件时增加的空项目的值：string.Empty
+        /// </summary>
+        public static readonly string ItemNullName = string.Empty;
+
         private static int currentUserGetTimes = 0;
         private static User currentUser = null;
         /// <summary>
@@ -295,6 +305,11 @@ namespace Common
     /// </summary>
     public static class CommonFunc
     {
+        /// <summary>
+        /// 获取当前周的起止时间
+        /// </summary>
+        /// <param name="dtStart">当前周的开始时间</param>
+        /// <param name="dtEnd">当前周的结束时间</param>
         public static void GetWeekDateTime(ref DateTime dtStart, ref DateTime dtEnd)
         {
             DateTime now = DateTime.Now;
@@ -304,6 +319,19 @@ namespace Common
                 nDayOfWeek = 7;
             dtStart = now.AddDays(-(nDayOfWeek - 1)).Date;
             dtEnd = dtStart.Date.AddDays(6).Date.AddHours(23).AddMinutes(59).AddSeconds(59);
+        }
+
+        /// <summary>
+        /// 获取当前周的开始时间
+        /// </summary>
+        public static DateTime GetWeekStartDate()
+        {
+            DateTime now = DateTime.Now;
+            DayOfWeek dayOfWeek = DateTime.Now.DayOfWeek;
+            int nDayOfWeek = (int)dayOfWeek;
+            if (dayOfWeek == DayOfWeek.Sunday)
+                nDayOfWeek = 7;
+            return now.AddDays(-(nDayOfWeek - 1)).Date;
         }
 
         /// <summary>
@@ -575,11 +603,21 @@ namespace Common
         /// 获取用户列表
         /// </summary>
         /// <param name="lazyLoad">是否懒加载。默认是</param>
+        /// <param name="firstItemNull">首个项目是否为空。用于不指定用户。默认否</param>
         /// <returns></returns>
-        public static List<User> GetUserList(bool lazyLoad = true)
+        public static List<User> GetUserList(bool lazyLoad = true, bool firstItemNull = false)
         {
             if (CommonData.UserList != null && lazyLoad)
+            {
+                if (firstItemNull)
+                {
+                    List<User> users = new List<User>();
+                    users.Add(new User() { ID = CommonData.ItemNullValue, Name = CommonData.ItemNullName });
+                    users.AddRange(CommonData.UserList);
+                    return users;
+                }
                 return CommonData.UserList;
+            }
             List<User> userList = new List<User>();
             DataTable dtUser = CommonData.AccessHelper.GetDataTable("select ID, Name from [User]");
             if (dtUser != null && dtUser.Rows.Count > 0)
@@ -596,6 +634,13 @@ namespace Common
                 }
             }
             CommonData.UserList = userList;
+            if (firstItemNull)
+            {
+                List<User> users = new List<User>();
+                users.Add(new User() { ID = CommonData.ItemNullValue, Name = CommonData.ItemNullName });
+                users.AddRange(CommonData.UserList);
+                return users;
+            }
             return CommonData.UserList;
         }
 
@@ -622,14 +667,17 @@ namespace Common
         /// </summary>
         /// <param name="comboBox">要绑定数据的ComboBox控件</param>
         /// <param name="userList">要绑定的用户列表</param>
-        /// <param name="forSearch">是否为查询。如果是，首项为“全部”。默认否</param>
+        /// <param name="forSearch">是否为查询。如果是，首项为“全部”。默认否。如果firstItemNull设为true，会把此参数修改为false。</param>
         /// <param name="lazyLoad">是否懒加载。默认是</param>
-        public static void BindUserListToComboBox(ComboBox comboBox, List<User> userList = null, bool forSearch = false, bool lazyLoad = true)
+        /// <param name="firstItemNull">首个项目是否为空。用于不指定用户，如果是，会修改forSearch为false。默认否</param>
+        public static void BindUserListToComboBox(ComboBox comboBox, List<User> userList = null, bool forSearch = false, bool lazyLoad = true, bool firstItemNull = false)
         {
             if (comboBox == null)
                 return;
+            if (firstItemNull)
+                forSearch = false;
             if (userList == null)
-                userList = forSearch ? GetUserListForSearch(lazyLoad) : GetUserList(lazyLoad);
+                userList = forSearch ? GetUserListForSearch(lazyLoad) : GetUserList(lazyLoad, firstItemNull);
             if (userList != null && userList.Count > 0)
             {
                 comboBox.DataSource = userList;

@@ -77,6 +77,7 @@ namespace ToDoList
             dateTimePickerSearchPlannedStartTo.Checked = false;
             dateTimePickerSearchPlannedEndFrom.Checked = false;
             dateTimePickerSearchPlannedEndTo.Checked = false;
+            CommonFunc.BindUserListToComboBox(comboBoxSearchAssignedTo, null, true);
             comboBoxOperateProject.SelectedIndexChanged -= comboBoxOperateProject_SelectedIndexChanged;
             comboBoxOperateBranch.SelectedIndexChanged -= comboBoxOperateBranch_SelectedIndexChanged;
             CommonFunc.BindProjectListToComboBox(comboBoxOperateProject, null, true);
@@ -86,6 +87,7 @@ namespace ToDoList
             CommonFunc.BindToDoPriorityListToComboBox(comboBoxOperatePriority, null, true);
             CommonFunc.BindToDoSeverityListToComboBox(comboBoxOperateSeverity, null, true);
             CommonFunc.BindToDoStatusListToComboBox(comboBoxOperateStatus, null, true);
+            CommonFunc.BindUserListToComboBox(comboBoxOperateAssignedTo, null, false, true, true);
             InitOperateControls();
         }
 
@@ -187,6 +189,8 @@ namespace ToDoList
                 sql.Append(" and t.PlannedEndTime >= " + DataConvert.ToAccessDateTimeValue(dateTimePickerSearchPlannedEndFrom, 0));//#" + dateTimePickerSearchPlannedEndFrom.Value.ToString(CommonData.DateTimeMinuteFormat + ":00") + "#
             if (dateTimePickerSearchPlannedEndTo.Checked)
                 sql.Append(" and t.PlannedEndTime <= " + DataConvert.ToAccessDateTimeValue(dateTimePickerSearchPlannedEndTo, 59));//#" + dateTimePickerSearchPlannedEndTo.Value.ToString(CommonData.DateTimeMinuteFormat + ":59") + "#
+            if (comboBoxSearchAssignedTo.SelectedItem is User user && user.ID != CommonData.ItemAllValue)
+                sql.Append(" and t.UserID = " + user.ID);
             sql.Append(" order by t.Priority, t.Severity, t.PlannedEndTime");
 
             if (toDoListAll == null)
@@ -308,6 +312,11 @@ namespace ToDoList
                     row.Cells[ColumnPlannedEndTime.Index].Value = todo.PlannedEndTime.Value.ToString(CommonData.DateTimeMinuteFormat);
                     row.Cells[ColumnPlannedEndTime.Index].Tag = todo.PlannedEndTime.Value;
                 }
+                if (todo.User != null)
+                {
+                    row.Cells[ColumnAssignedTo.Index].Value = todo.User.Name;
+                    row.Cells[ColumnAssignedTo.Index].Tag = todo.User;
+                }
                 row.Tag = todo;
             }
             dataGridViewToDoList.ClearSelection();
@@ -321,8 +330,12 @@ namespace ToDoList
 
         private void InitOperateControls()
         {
+            comboBoxOperateProject.SelectedIndexChanged -= comboBoxOperateProject_SelectedIndexChanged;
+            comboBoxOperateBranch.SelectedIndexChanged -= comboBoxOperateBranch_SelectedIndexChanged;
             comboBoxOperateProject.SelectedValue = CommonData.ItemAllValue;
             comboBoxOperateBranch.SelectedValue = CommonData.ItemAllValue;
+            comboBoxOperateProject.SelectedIndexChanged += comboBoxOperateProject_SelectedIndexChanged;
+            comboBoxOperateBranch.SelectedIndexChanged += comboBoxOperateBranch_SelectedIndexChanged;
             textBoxOperateRelatedID.Text = string.Empty;
             comboBoxOperatePriority.SelectedValue = EnumToDoPriority.Normal;
             comboBoxOperateSeverity.SelectedValue = EnumToDoSeverity.Minor;
@@ -345,6 +358,7 @@ namespace ToDoList
             richTextBoxOperateContent.Text = string.Empty;
             richTextBoxOperateMemo.Text = string.Empty;
             comboBoxOperateStatus.SelectedValue = EnumToDoStatus.Planning;
+            comboBoxOperateAssignedTo.SelectedValue = CommonData.CurrentUser.ID;
         }
 
         private void dataGridViewToDoList_SelectionChanged(object sender, EventArgs e)
@@ -357,7 +371,10 @@ namespace ToDoList
                 return;
             //选中项目后，自动打开右侧信息栏并赋值
             ShowInfo();
-            comboBoxOperateProject.SelectedValue = todo.Project.ID;
+            if (todo.Project != null && todo.Project.ID > 0)
+                comboBoxOperateProject.SelectedValue = todo.Project.ID;
+            else
+                comboBoxOperateProject.SelectedValue = CommonData.ItemAllValue;
             if (todo.Branch != null && todo.Branch.ID > 0)
                 comboBoxOperateBranch.SelectedValue = todo.Branch.ID;
             else
@@ -399,6 +416,10 @@ namespace ToDoList
             richTextBoxOperateContent.Text = todo.Content;
             richTextBoxOperateMemo.Text = todo.Memo;
             comboBoxOperateStatus.SelectedValue = todo.Status;
+            if (todo.User != null && todo.User.ID > 0)
+                comboBoxOperateAssignedTo.SelectedValue = todo.User.ID;
+            else
+                comboBoxOperateAssignedTo.SelectedValue = CommonData.ItemNullValue;
         }
 
         private ToDo GetToDoFromOperateControls()
@@ -430,6 +451,8 @@ namespace ToDoList
                 toDo.PlannedStartTime = dateTimePickerOperatePlannedStartTime.Value;
             if (dateTimePickerOperatePlannedEndTime.Checked)
                 toDo.PlannedEndTime = dateTimePickerOperatePlannedEndTime.Value;
+            if (comboBoxOperateAssignedTo.SelectedItem is User && comboBoxOperateAssignedTo.SelectedValue is int && (int)comboBoxOperateAssignedTo.SelectedValue != CommonData.ItemNullValue)
+                toDo.User = (User)comboBoxOperateAssignedTo.SelectedItem;
             return toDo;
         }
 
@@ -503,12 +526,20 @@ namespace ToDoList
                 fields.Append(", [Memo]");
                 values.Append(", " + DataConvert.ToAccessStringValue(richTextBoxOperateMemo));
             }
-            fields.Append(", UserID");
-            values.Append(", " + CommonData.CurrentUser.ID);
+            //fields.Append(", UserID");
+            //if (comboBoxOperateAssignedTo.SelectedItem is User && comboBoxOperateAssignedTo.SelectedValue is int && (int)comboBoxOperateAssignedTo.SelectedValue != CommonData.ItemNullValue)
+            //    values.Append(", " + DataConvert.ToAccessIntValue(comboBoxOperateAssignedTo));
+            //else
+            //    values.Append(", " + CommonData.CurrentUser.ID);
             if (comboBoxOperateStatus.SelectedItem is ToDoStatus && comboBoxOperateStatus.SelectedValue is EnumToDoStatus && ((ToDoStatus)comboBoxOperateStatus.SelectedItem).ID != CommonData.ItemAllValue)
             {
                 fields.Append(", Status");
                 values.Append(", " + (int)comboBoxOperateStatus.SelectedValue);
+            }
+            if (comboBoxOperateAssignedTo.SelectedItem is User && comboBoxOperateAssignedTo.SelectedValue is int && (int)comboBoxOperateAssignedTo.SelectedValue != CommonData.ItemNullValue)
+            {
+                fields.Append(", UserID");
+                values.Append(", " + DataConvert.ToAccessIntValue(comboBoxOperateAssignedTo));
             }
             //fields.Append(",FinishTime");
             //fields.Append(",FinishUserID");
@@ -544,12 +575,13 @@ namespace ToDoList
             sets.Append(", Severity = " + (toDoOperate.Severity.HasValue ? ((int)toDoOperate.Severity.Value).ToString() : "null"));
             sets.Append(", Content = " + DataConvert.ToAccessStringValue(toDoOperate.Content));
             sets.Append(", [Memo] = " + DataConvert.ToAccessStringValue(toDoOperate.Memo));
-            sets.Append(", UserID = " + CommonData.CurrentUser.ID);
+            //sets.Append(", UserID = " + CommonData.CurrentUser.ID);
             sets.Append(", PlannedStartTime = " + DataConvert.ToAccessDateTimeValue(toDoOperate.PlannedStartTime));
             sets.Append(", PlannedEndTime = " + DataConvert.ToAccessDateTimeValue(toDoOperate.PlannedEndTime));
             sets.Append(", PlannedHours = " + DataConvert.ToAccessDecimalValue(toDoOperate.PlannedHours));
             sets.Append(", PlannedDays = " + DataConvert.ToAccessDecimalValue(toDoOperate.PlannedDays));
             sets.Append(", Status = " + (toDoOperate.Status.HasValue ? ((int)toDoOperate.Status.Value).ToString() : "null"));
+            sets.Append(", UserID = " + (toDoOperate.User.ID != CommonData.ItemNullValue ? toDoOperate.User.ID.ToString() : "null"));
             //sets.Append(", FinishTime = ");
             //sets.Append(", FinishUserID = ");
             CommonData.AccessHelper.ExecuteNonQuery("update ToDo set " + sets.ToString() + " where ID = " + toDoOriginal.ID);
@@ -723,6 +755,153 @@ namespace ToDoList
                 comboBoxOperateProject.SelectedValue = branch.Project.ID;
                 comboBoxOperateProject.SelectedIndexChanged += comboBoxOperateProject_SelectedIndexChanged;
             }
+        }
+
+        private void buttonSearchToday_Click(object sender, EventArgs e)
+        {
+            dateTimePickerSearchPlannedStartFrom.Checked = false;
+            dateTimePickerSearchPlannedStartTo.Checked = false;
+            //dateTimePickerSearchPlannedEndFrom.Checked = false;
+            dateTimePickerSearchPlannedEndFrom.Value = DateTime.Now.Date;
+            dateTimePickerSearchPlannedEndTo.Value = DateTime.Now.Date.AddDays(1).AddSeconds(-1);
+            dateTimePickerSearchPlannedEndFrom.Checked = true;
+            dateTimePickerSearchPlannedEndTo.Checked = true;
+        }
+
+        private void buttonSearchYesterday_Click(object sender, EventArgs e)
+        {
+            dateTimePickerSearchPlannedStartFrom.Checked = false;
+            dateTimePickerSearchPlannedStartTo.Checked = false;
+            //dateTimePickerSearchPlannedEndFrom.Checked = false;
+            dateTimePickerSearchPlannedEndFrom.Value = DateTime.Now.Date.AddDays(-1);
+            dateTimePickerSearchPlannedEndTo.Value = DateTime.Now.Date.AddSeconds(-1);
+            dateTimePickerSearchPlannedEndFrom.Checked = true;
+            dateTimePickerSearchPlannedEndTo.Checked = true;
+        }
+
+        private void buttonSearchTomorrow_Click(object sender, EventArgs e)
+        {
+            dateTimePickerSearchPlannedStartFrom.Checked = false;
+            dateTimePickerSearchPlannedStartTo.Checked = false;
+            //dateTimePickerSearchPlannedEndFrom.Checked = false;
+            dateTimePickerSearchPlannedEndFrom.Value = DateTime.Now.Date.AddDays(1);
+            dateTimePickerSearchPlannedEndTo.Value = DateTime.Now.Date.AddDays(2).AddSeconds(-1);
+            dateTimePickerSearchPlannedEndFrom.Checked = true;
+            dateTimePickerSearchPlannedEndTo.Checked = true;
+        }
+
+        private void buttonSearchThisWeek_Click(object sender, EventArgs e)
+        {
+            dateTimePickerSearchPlannedStartFrom.Checked = false;
+            dateTimePickerSearchPlannedStartTo.Checked = false;
+            //dateTimePickerSearchPlannedEndFrom.Checked = false;
+            DateTime dtThisWeekStart = CommonFunc.GetWeekStartDate();
+            dateTimePickerSearchPlannedEndFrom.Value = dtThisWeekStart;
+            dateTimePickerSearchPlannedEndTo.Value = dtThisWeekStart.AddDays(6).AddHours(23).AddMinutes(59).AddSeconds(59);
+            dateTimePickerSearchPlannedEndFrom.Checked = true;
+            dateTimePickerSearchPlannedEndTo.Checked = true;
+        }
+
+        private void buttonSearchLastWeek_Click(object sender, EventArgs e)
+        {
+            dateTimePickerSearchPlannedStartFrom.Checked = false;
+            dateTimePickerSearchPlannedStartTo.Checked = false;
+            //dateTimePickerSearchPlannedEndFrom.Checked = false;
+            DateTime dtThisWeekStart = CommonFunc.GetWeekStartDate();
+            dateTimePickerSearchPlannedEndFrom.Value = dtThisWeekStart.AddDays(-7);
+            dateTimePickerSearchPlannedEndTo.Value = dtThisWeekStart.AddDays(-1).AddHours(23).AddMinutes(59).AddSeconds(59);
+            dateTimePickerSearchPlannedEndFrom.Checked = true;
+            dateTimePickerSearchPlannedEndTo.Checked = true;
+        }
+
+        private void buttonSearchNextWeek_Click(object sender, EventArgs e)
+        {
+            dateTimePickerSearchPlannedStartFrom.Checked = false;
+            dateTimePickerSearchPlannedStartTo.Checked = false;
+            //dateTimePickerSearchPlannedEndFrom.Checked = false;
+            DateTime dtThisWeekStart = CommonFunc.GetWeekStartDate();
+            dateTimePickerSearchPlannedEndFrom.Value = dtThisWeekStart.AddDays(7);
+            dateTimePickerSearchPlannedEndTo.Value = dtThisWeekStart.AddDays(13).AddHours(23).AddMinutes(59).AddSeconds(59);
+            dateTimePickerSearchPlannedEndFrom.Checked = true;
+            dateTimePickerSearchPlannedEndTo.Checked = true;
+        }
+
+        private void buttonOperateToday_Click(object sender, EventArgs e)
+        {
+            dateTimePickerOperatePlannedStartTime.Value = DateTime.Now.Date;
+            dateTimePickerOperatePlannedEndTime.Value = DateTime.Now.Date.AddDays(1).AddSeconds(-1);
+            dateTimePickerOperatePlannedStartTime.Checked = true;
+            dateTimePickerOperatePlannedEndTime.Checked = true;
+        }
+
+        private void buttonOperateYesterday_Click(object sender, EventArgs e)
+        {
+            dateTimePickerOperatePlannedStartTime.Value = DateTime.Now.Date.AddDays(-1);
+            dateTimePickerOperatePlannedEndTime.Value = DateTime.Now.Date.AddSeconds(-1);
+            dateTimePickerOperatePlannedStartTime.Checked = true;
+            dateTimePickerOperatePlannedEndTime.Checked = true;
+        }
+
+        private void buttonOperateTomorrow_Click(object sender, EventArgs e)
+        {
+            dateTimePickerOperatePlannedStartTime.Value = DateTime.Now.Date.AddDays(1);
+            dateTimePickerOperatePlannedEndTime.Value = DateTime.Now.Date.AddDays(2).AddSeconds(-1);
+            dateTimePickerOperatePlannedStartTime.Checked = true;
+            dateTimePickerOperatePlannedEndTime.Checked = true;
+        }
+
+        private void buttonOperateThisWeek_Click(object sender, EventArgs e)
+        {
+            DateTime dtThisWeekStart = CommonFunc.GetWeekStartDate();
+            dateTimePickerOperatePlannedStartTime.Value = dtThisWeekStart;
+            dateTimePickerOperatePlannedEndTime.Value = dtThisWeekStart.AddDays(6).AddHours(23).AddMinutes(59).AddSeconds(59);
+            dateTimePickerOperatePlannedStartTime.Checked = true;
+            dateTimePickerOperatePlannedEndTime.Checked = true;
+        }
+
+        private void buttonOperateLastWeek_Click(object sender, EventArgs e)
+        {
+            DateTime dtThisWeekStart = CommonFunc.GetWeekStartDate();
+            dateTimePickerOperatePlannedStartTime.Value = dtThisWeekStart.AddDays(-7);
+            dateTimePickerOperatePlannedEndTime.Value = dtThisWeekStart.AddDays(-1).AddHours(23).AddMinutes(59).AddSeconds(59);
+            dateTimePickerOperatePlannedStartTime.Checked = true;
+            dateTimePickerOperatePlannedEndTime.Checked = true;
+        }
+
+        private void buttonOperateNextWeek_Click(object sender, EventArgs e)
+        {
+            DateTime dtThisWeekStart = CommonFunc.GetWeekStartDate();
+            dateTimePickerOperatePlannedStartTime.Value = dtThisWeekStart.AddDays(7);
+            dateTimePickerOperatePlannedEndTime.Value = dtThisWeekStart.AddDays(13).AddHours(23).AddMinutes(59).AddSeconds(59);
+            dateTimePickerOperatePlannedStartTime.Checked = true;
+            dateTimePickerOperatePlannedEndTime.Checked = true;
+        }
+
+        private void buttonExport_Click(object sender, EventArgs e)
+        {
+            GetToDoList();
+            if (toDoListAll == null || toDoListAll.Count == 0)
+            {
+                MessageBox.Show("没有可以导出的事项", "提示");
+                return;
+            }
+            //string reportType = "周";
+            //if ((dateTimePickerSearchFrom.Value.Day == 1 && dateTimePickerSearchTo.Value - dateTimePickerSearchFrom.Value > new TimeSpan(7, 0, 0, 0))
+            //    || (long)DateTimeManger.DateDiff(DateInterval.Month, dateTimePickerSearchFrom.Value, dateTimePickerSearchTo.Value) == 1)
+            //    reportType = "月";
+            DateTime? plannedStartFrom = null, plannedStartTo = null, plannedEndFrom = null, plannedEndTo = null;
+            if (dateTimePickerSearchPlannedStartFrom.Checked)
+                plannedStartFrom = dateTimePickerSearchPlannedStartFrom.Value;
+            if (dateTimePickerSearchPlannedStartTo.Checked)
+                plannedStartTo = dateTimePickerSearchPlannedStartTo.Value;
+            if (dateTimePickerSearchPlannedEndFrom.Checked)
+                plannedEndFrom = dateTimePickerSearchPlannedEndFrom.Value;
+            if (dateTimePickerSearchPlannedEndTo.Checked)
+                plannedEndTo = dateTimePickerSearchPlannedEndTo.Value;
+            ExportForm export = new ExportForm(toDoListAll, plannedStartFrom, plannedStartTo, plannedEndFrom, plannedEndTo);
+            //export.ShowDialog();
+            //export.Show(this);
+            export.Show();
         }
     }
 }
