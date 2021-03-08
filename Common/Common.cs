@@ -26,7 +26,7 @@ namespace Common
         /// <summary>
         /// 数据库文件名：DB.mdb
         /// </summary>
-        public static readonly string DBFileName = "DB.mdb";
+        public const string DBFileName = "DB.mdb";
 
         /// <summary>
         /// 数据库路径
@@ -36,7 +36,7 @@ namespace Common
         /// <summary>
         /// 配置文件名
         /// </summary>
-        public static readonly string ConfigFileName = "Settings.ini";
+        public const string ConfigFileName = "Settings.ini";
 
         /// <summary>
         /// 配置文件路径
@@ -99,47 +99,47 @@ namespace Common
         /// <summary>
         /// 日期格式：yyyy-MM-dd
         /// </summary>
-        public static readonly string DateFormat = "yyyy-MM-dd";
+        public const string DateFormat = "yyyy-MM-dd";
 
         /// <summary>
         /// 时间格式：HH:mm:ss
         /// </summary>
-        public static readonly string TimeFormat = "HH:mm:ss";
+        public const string TimeFormat = "HH:mm:ss";
 
         /// <summary>
         /// 日期时间格式：yyyy-MM-dd HH:mm:ss
         /// </summary>
-        public static readonly string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+        public const string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
         /// <summary>
         /// 日期时间精确到分钟的格式：yyyy-MM-dd HH:mm
         /// </summary>
-        public static readonly string DateTimeMinuteFormat = "yyyy-MM-dd HH:mm";
+        public const string DateTimeMinuteFormat = "yyyy-MM-dd HH:mm";
 
         /// <summary>
         /// 日期时间详细格式：yyyyMMddHHmmssfff
         /// </summary>
-        public static readonly string DateTimeDetailFormat = "yyyyMMddHHmmssfff";
+        public const string DateTimeDetailFormat = "yyyyMMddHHmmssfff";
 
         /// <summary>
         /// 查询时增加的“（全部）”项目的值：-1
         /// </summary>
-        public static readonly int ItemAllValue = -1;
+        public const int ItemAllValue = -1;
 
         /// <summary>
         /// 查询时增加的“（全部）”项目的名称：（全部）
         /// </summary>
-        public static readonly string ItemAllName = "（全部）";
+        public const string ItemAllName = "（全部）";
 
         /// <summary>
         /// 绑定时项目到控件时增加的空项目的值：-99
         /// </summary>
-        public static readonly int ItemNullValue = -99;
+        public const int ItemNullValue = -99;
 
         /// <summary>
-        /// 绑定时项目到控件时增加的空项目的值：string.Empty
+        /// 绑定时项目到控件时增加的空项目的值：""
         /// </summary>
-        public static readonly string ItemNullName = string.Empty;
+        public const string ItemNullName = "";
 
         private static int currentUserGetTimes = 0;
         private static User currentUser = null;
@@ -150,7 +150,7 @@ namespace Common
         {
             get
             {
-                if (currentUser == null && currentUserGetTimes == 0)
+                if (currentUserGetTimes == 0 && currentUser == null)
                 {
                     currentUserGetTimes++;
                     return CommonFunc.GetCurrentUser();
@@ -159,6 +159,46 @@ namespace Common
                     return currentUser;
             }
             set { currentUser = value; }
+        }
+
+        private static int currentProjectGetTimes = 0;
+        private static Project currentProject = null;
+        /// <summary>
+        /// 当前项目
+        /// </summary>
+        public static Project CurrentProject
+        {
+            get
+            {
+                if (currentProjectGetTimes == 0 && currentProject == null)
+                {
+                    currentProjectGetTimes++;
+                    return CommonFunc.GetCurrentProject();
+                }
+                else
+                    return currentProject;
+            }
+            set { currentProject = value; }
+        }
+
+        private static int currentBranchGetTimes = 0;
+        private static Branch currentBranch = null;
+        /// <summary>
+        /// 当前分支
+        /// </summary>
+        public static Branch CurrentBranch
+        {
+            get
+            {
+                if (currentBranchGetTimes == 0 && currentBranch == null)
+                {
+                    currentBranchGetTimes++;
+                    return CommonFunc.GetCurrentBranch();
+                }
+                else
+                    return currentBranch;
+            }
+            set { currentBranch = value; }
         }
 
         private static int projectSearchTimes = 0;
@@ -244,15 +284,15 @@ namespace Common
         /// <summary>
         /// 待办事项状态“未完成”的ID：-99
         /// </summary>
-        public static readonly int toDoStatusNotDoneID = -99;
+        public const int toDoStatusNotDoneID = -99;
         /// <summary>
         /// 待办事项状态“未完成”的ID名称：未完成
         /// </summary>
-        public static readonly string toDoStatusNotDoneName = "未完成";
+        public const string toDoStatusNotDoneName = "未完成";
         /// <summary>
         /// 待办事项状态“未完成”
         /// </summary>
-        public static ToDoStatus toDoStatusNotDone = new ToDoStatus()
+        public static readonly ToDoStatus toDoStatusNotDone = new ToDoStatus()
         {
             ID = toDoStatusNotDoneID,
             Name = toDoStatusNotDoneName,
@@ -370,10 +410,10 @@ namespace Common
             try
             {
                 string currentUserID = CommonData.IniHelper.Read("Common", "CurrentUserID");
-                if (!int.TryParse(currentUserID, out iCurrentUserID))
-                {
+                if (currentUserID.IsNullOrWhiteSpace())
                     throw new CommonInfoException("配置文件中的 Common.CurrentUserID 配置项数据错误。");
-                }
+                if (!int.TryParse(currentUserID, out iCurrentUserID))
+                    throw new CommonInfoException("配置文件中的 Common.CurrentUserID 配置项数据错误。");
                 string currentUserName = CommonData.IniHelper.Read("Common", "CurrentUserName");
                 CommonData.CurrentUser = new User { ID = iCurrentUserID, Name = currentUserName };
                 return CommonData.CurrentUser;
@@ -381,6 +421,74 @@ namespace Common
             catch (Exception ex)
             {
                 throw new CommonInfoException("配置文件中没有当前用户的设置，请先运行管理工具设置当前用户。", ex);
+            }
+        }
+
+        /// <summary>
+        /// 从配置文件中获取当前项目，若未配置或出错，则设置CommonData.CurrentProject为null并返回CommonData.CurrentProject
+        /// </summary>
+        /// <param name="lazyLoad">是否懒加载。默认是</param>
+        /// <returns></returns>
+        public static Project GetCurrentProject(bool lazyLoad = true)
+        {
+            if (CommonData.CurrentProject != null && lazyLoad)
+                return CommonData.CurrentProject;
+            int iCurrentProjectID = -1;
+            try
+            {
+                string currentProjectID = CommonData.IniHelper.Read("Common", "CurrentProjectID");
+                if (currentProjectID.IsNullOrWhiteSpace())
+                {
+                    CommonData.CurrentProject = null;
+                    return CommonData.CurrentProject;
+                }
+                if (!int.TryParse(currentProjectID, out iCurrentProjectID))
+                {
+                    CommonData.CurrentProject = null;
+                    return CommonData.CurrentProject;
+                }
+                string currentProjectName = CommonData.IniHelper.Read("Common", "CurrentProjectName");
+                CommonData.CurrentProject = new Project { ID = iCurrentProjectID, Name = currentProjectName };
+                return CommonData.CurrentProject;
+            }
+            catch (Exception ex)
+            {
+                CommonData.CurrentProject = null;
+                return CommonData.CurrentProject;
+            }
+        }
+
+        /// <summary>
+        /// 从配置文件中获取当前分支，若未配置或出错，则设置CommonData.CurrentBranch为null并返回CommonData.CurrentBranch
+        /// </summary>
+        /// <param name="lazyLoad">是否懒加载。默认是</param>
+        /// <returns></returns>
+        public static Branch GetCurrentBranch(bool lazyLoad = true)
+        {
+            if (CommonData.CurrentBranch != null && lazyLoad)
+                return CommonData.CurrentBranch;
+            int iCurrentBranchID = -1;
+            try
+            {
+                string currentBranchID = CommonData.IniHelper.Read("Common", "CurrentBranchID");
+                if (currentBranchID.IsNullOrWhiteSpace())
+                {
+                    CommonData.CurrentBranch = null;
+                    return CommonData.CurrentBranch;
+                }
+                if (!int.TryParse(currentBranchID, out iCurrentBranchID))
+                {
+                    CommonData.CurrentBranch = null;
+                    return CommonData.CurrentBranch;
+                }
+                string currentBranchName = CommonData.IniHelper.Read("Common", "CurrentBranchName");
+                CommonData.CurrentBranch = new Branch { ID = iCurrentBranchID, Name = currentBranchName };
+                return CommonData.CurrentBranch;
+            }
+            catch (Exception ex)
+            {
+                CommonData.CurrentBranch = null;
+                return CommonData.CurrentBranch;
             }
         }
 
@@ -413,19 +521,20 @@ namespace Common
         }
 
         /// <summary>
-        /// 为查询获取项目列表（首项为“全部”）
+        /// 为查询获取项目列表
         /// </summary>
         /// <param name="lazyLoad">是否懒加载。默认是</param>
+        /// <param name="firstItemNull">首项是否为空。用于不指定项目。若true，首项为空；若false，首项为“全部”。默认否</param>
         /// <returns></returns>
-        public static List<Project> GetProjectListForSearch(bool lazyLoad = true)
+        public static List<Project> GetProjectListForSearch(bool lazyLoad = true, bool firstItemNull = false)
         {
-            Project projectAll = new Project
+            Project projectFirst = new Project
             {
-                ID = CommonData.ItemAllValue,
-                Name = CommonData.ItemAllName
+                ID = firstItemNull ? CommonData.ItemNullValue : CommonData.ItemAllValue,
+                Name = firstItemNull ? CommonData.ItemNullName : CommonData.ItemAllName
             };
             List<Project> projectList = new List<Project>();
-            projectList.Add(projectAll);
+            projectList.Add(projectFirst);
             projectList.AddRange(GetProjectList(lazyLoad));
             return projectList;
         }
@@ -437,12 +546,15 @@ namespace Common
         /// <param name="projectList">要绑定的项目列表</param>
         /// <param name="forSearch">是否为查询。如果是，首项为“全部”。默认否</param>
         /// <param name="lazyLoad">是否懒加载。默认是</param>
-        public static void BindProjectListToComboBox(ComboBox comboBox, List<Project> projectList = null, bool forSearch = false, bool lazyLoad = true)
+        /// <param name="firstItemNull">首项是否为空。用于不指定项目，如果是，会修改forSearch为true。默认否</param>
+        public static void BindProjectListToComboBox(ComboBox comboBox, List<Project> projectList = null, bool forSearch = false, bool lazyLoad = true, bool firstItemNull = false)
         {
             if (comboBox == null)
                 return;
+            if (firstItemNull)
+                forSearch = true;
             if (projectList == null)
-                projectList = forSearch ? GetProjectListForSearch(lazyLoad) : GetProjectList(lazyLoad);
+                projectList = forSearch ? GetProjectListForSearch(lazyLoad, firstItemNull) : GetProjectList(lazyLoad);
             if (projectList != null && projectList.Count > 0)
             {
                 comboBox.DataSource = projectList;
@@ -491,7 +603,7 @@ namespace Common
         /// <param name="projectID">项目ID</param>
         /// <param name="lazyLoad">是否懒加载。默认是</param>
         /// <returns></returns>
-        public static List<Branch> GetBranchListByProjectID(int projectID, bool lazyLoad = true)
+        public static List<Branch> GetBranchListByProjectID(int projectID=CommonData.ItemNullValue, bool lazyLoad = true)
         {
             if (CommonData.BranchList != null && lazyLoad)
                 return CommonData.BranchList.FindAll(b => b.Project != null && b.Project.ID == projectID);
@@ -523,16 +635,17 @@ namespace Common
         /// 为查询获取分支列表（首项为“全部”）
         /// </summary>
         /// <param name="lazyLoad">是否懒加载。默认是</param>
+        /// <param name="firstItemNull">首项是否为空。用于不指定分支。默认否</param>
         /// <returns></returns>
-        public static List<Branch> GetBranchListForSearch(bool lazyLoad = true)
+        public static List<Branch> GetBranchListForSearch(bool lazyLoad = true, bool firstItemNull = false)
         {
-            Branch branchAll = new Branch
+            Branch branchFirst = new Branch
             {
-                ID = CommonData.ItemAllValue,
-                Name = CommonData.ItemAllName
+                ID = firstItemNull ? CommonData.ItemNullValue : CommonData.ItemAllValue,
+                Name = firstItemNull ? CommonData.ItemNullName : CommonData.ItemAllName
             };
             List<Branch> branchList = new List<Branch>();
-            branchList.Add(branchAll);
+            branchList.Add(branchFirst);
             branchList.AddRange(GetBranchList(lazyLoad));
             return branchList;
         }
@@ -542,16 +655,17 @@ namespace Common
         /// </summary>
         /// <param name="projectID">项目ID</param>
         /// <param name="lazyLoad">是否懒加载。默认是</param>
+        /// <param name="firstItemNull">首项是否为空。用于不指定分支。默认否</param>
         /// <returns></returns>
-        public static List<Branch> GetBranchListForSearchByProjectID(int projectID, bool lazyLoad = true)
+        public static List<Branch> GetBranchListForSearchByProjectID(int projectID, bool lazyLoad = true, bool firstItemNull = false)
         {
-            Branch branchAll = new Branch
+            Branch branchFirst = new Branch
             {
-                ID = CommonData.ItemAllValue,
-                Name = CommonData.ItemAllName
+                ID = firstItemNull ? CommonData.ItemNullValue : CommonData.ItemAllValue,
+                Name = firstItemNull ? CommonData.ItemNullName : CommonData.ItemAllName
             };
             List<Branch> branchList = new List<Branch>();
-            branchList.Add(branchAll);
+            branchList.Add(branchFirst);
             branchList.AddRange(GetBranchListByProjectID(projectID, lazyLoad));
             return branchList;
         }
@@ -563,12 +677,15 @@ namespace Common
         /// <param name="branchList">要绑定的分支列表</param>
         /// <param name="forSearch">是否为查询。如果是，首项为“全部”。默认否</param>
         /// <param name="lazyLoad">是否懒加载。默认是</param>
-        public static void BindBranchListToComboBox(ComboBox comboBox, List<Branch> branchList = null, bool forSearch = false, bool lazyLoad = true)
+        /// <param name="firstItemNull">首项是否为空。用于不指定分支，如果是，会修改forSearch为true。默认否</param>
+        public static void BindBranchListToComboBox(ComboBox comboBox, List<Branch> branchList = null, bool forSearch = false, bool lazyLoad = true, bool firstItemNull = false)
         {
             if (comboBox == null)
                 return;
+            if (firstItemNull)
+                forSearch = true;
             if (branchList == null)
-                branchList = forSearch ? GetBranchListForSearch(lazyLoad) : GetBranchList(lazyLoad);
+                branchList = forSearch ? GetBranchListForSearch(lazyLoad, firstItemNull) : GetBranchList(lazyLoad);
             if (branchList != null && branchList.Count > 0)
             {
                 comboBox.DataSource = branchList;
@@ -585,12 +702,15 @@ namespace Common
         /// <param name="branchList">要绑定的分支列表</param>
         /// <param name="forSearch">是否为查询。如果是，首项为“全部”。默认否</param>
         /// <param name="lazyLoad">是否懒加载。默认是</param>
-        public static void BindBranchListToComboBoxByProjectID(ComboBox comboBox, int projectID, List<Branch> branchList = null, bool forSearch = false, bool lazyLoad = true)
+        /// <param name="firstItemNull">首项是否为空。用于不指定分支，如果是，会修改forSearch为true。默认否</param>
+        public static void BindBranchListToComboBoxByProjectID(ComboBox comboBox, int projectID, List<Branch> branchList = null, bool forSearch = false, bool lazyLoad = true, bool firstItemNull = false)
         {
             if (comboBox == null)
                 return;
+            if (firstItemNull)
+                forSearch = true;
             if (branchList == null)
-                branchList = forSearch ? GetBranchListForSearchByProjectID(projectID, lazyLoad) : GetBranchListByProjectID(projectID, lazyLoad);
+                branchList = forSearch ? GetBranchListForSearchByProjectID(projectID, lazyLoad, firstItemNull) : GetBranchListByProjectID(projectID, lazyLoad);
             if (branchList != null && branchList.Count > 0)
             {
                 comboBox.DataSource = branchList;
@@ -603,21 +723,11 @@ namespace Common
         /// 获取用户列表
         /// </summary>
         /// <param name="lazyLoad">是否懒加载。默认是</param>
-        /// <param name="firstItemNull">首个项目是否为空。用于不指定用户。默认否</param>
         /// <returns></returns>
-        public static List<User> GetUserList(bool lazyLoad = true, bool firstItemNull = false)
+        public static List<User> GetUserList(bool lazyLoad = true)
         {
             if (CommonData.UserList != null && lazyLoad)
-            {
-                if (firstItemNull)
-                {
-                    List<User> users = new List<User>();
-                    users.Add(new User() { ID = CommonData.ItemNullValue, Name = CommonData.ItemNullName });
-                    users.AddRange(CommonData.UserList);
-                    return users;
-                }
                 return CommonData.UserList;
-            }
             List<User> userList = new List<User>();
             DataTable dtUser = CommonData.AccessHelper.GetDataTable("select ID, Name from [User]");
             if (dtUser != null && dtUser.Rows.Count > 0)
@@ -634,13 +744,6 @@ namespace Common
                 }
             }
             CommonData.UserList = userList;
-            if (firstItemNull)
-            {
-                List<User> users = new List<User>();
-                users.Add(new User() { ID = CommonData.ItemNullValue, Name = CommonData.ItemNullName });
-                users.AddRange(CommonData.UserList);
-                return users;
-            }
             return CommonData.UserList;
         }
 
@@ -648,16 +751,17 @@ namespace Common
         /// 为查询获取用户列表（首项为“全部”）
         /// </summary>
         /// <param name="lazyLoad">是否懒加载。默认是</param>
+        /// <param name="firstItemNull">首项是否为空。用于不指定用户。默认否</param>
         /// <returns></returns>
-        public static List<User> GetUserListForSearch(bool lazyLoad = true)
+        public static List<User> GetUserListForSearch(bool lazyLoad = true, bool firstItemNull = false)
         {
-            User userAll = new User
+            User userFirst = new User
             {
-                ID = CommonData.ItemAllValue,
-                Name = CommonData.ItemAllName
+                ID = firstItemNull ? CommonData.ItemNullValue : CommonData.ItemAllValue,
+                Name = firstItemNull ? CommonData.ItemNullName : CommonData.ItemAllName
             };
             List<User> userList = new List<User>();
-            userList.Add(userAll);
+            userList.Add(userFirst);
             userList.AddRange(GetUserList(lazyLoad));
             return userList;
         }
@@ -669,15 +773,15 @@ namespace Common
         /// <param name="userList">要绑定的用户列表</param>
         /// <param name="forSearch">是否为查询。如果是，首项为“全部”。默认否。如果firstItemNull设为true，会把此参数修改为false。</param>
         /// <param name="lazyLoad">是否懒加载。默认是</param>
-        /// <param name="firstItemNull">首个项目是否为空。用于不指定用户，如果是，会修改forSearch为false。默认否</param>
+        /// <param name="firstItemNull">首项是否为空。用于不指定用户，如果是，会修改forSearch为true。默认否</param>
         public static void BindUserListToComboBox(ComboBox comboBox, List<User> userList = null, bool forSearch = false, bool lazyLoad = true, bool firstItemNull = false)
         {
             if (comboBox == null)
                 return;
             if (firstItemNull)
-                forSearch = false;
+                forSearch = true;
             if (userList == null)
-                userList = forSearch ? GetUserListForSearch(lazyLoad) : GetUserList(lazyLoad, firstItemNull);
+                userList = forSearch ? GetUserListForSearch(lazyLoad, firstItemNull) : GetUserList(lazyLoad);
             if (userList != null && userList.Count > 0)
             {
                 comboBox.DataSource = userList;

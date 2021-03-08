@@ -60,7 +60,15 @@ namespace ToDoList
             comboBoxSearchProject.SelectedIndexChanged -= comboBoxSearchProject_SelectedIndexChanged;
             comboBoxSearchBranch.SelectedIndexChanged -= comboBoxSearchBranch_SelectedIndexChanged;
             CommonFunc.BindProjectListToComboBox(comboBoxSearchProject, null, true);
+            if (CommonData.CurrentProject != null && CommonData.CurrentProject.ID != CommonData.ItemNullValue && CommonData.CurrentProject.ID != CommonData.ItemAllValue)
+            {
+                comboBoxSearchProject.SelectedValue = CommonData.CurrentProject.ID;
+            }
             CommonFunc.BindBranchListToComboBox(comboBoxSearchBranch, null, true);
+            if (CommonData.CurrentBranch != null && CommonData.CurrentBranch.ID != CommonData.ItemNullValue && CommonData.CurrentBranch.ID != CommonData.ItemAllValue)
+            {
+                comboBoxSearchBranch.SelectedValue = CommonData.CurrentBranch.ID;
+            }
             comboBoxSearchProject.SelectedIndexChanged += comboBoxSearchProject_SelectedIndexChanged;
             comboBoxSearchBranch.SelectedIndexChanged += comboBoxSearchBranch_SelectedIndexChanged;
             List<ToDoStatus> toDoList = CommonFunc.GetToDoStatusListForSearch();
@@ -332,8 +340,15 @@ namespace ToDoList
         {
             comboBoxOperateProject.SelectedIndexChanged -= comboBoxOperateProject_SelectedIndexChanged;
             comboBoxOperateBranch.SelectedIndexChanged -= comboBoxOperateBranch_SelectedIndexChanged;
-            comboBoxOperateProject.SelectedValue = CommonData.ItemAllValue;
-            comboBoxOperateBranch.SelectedValue = CommonData.ItemAllValue;
+            if (CommonData.CurrentProject != null && CommonData.CurrentProject.ID != CommonData.ItemNullValue && CommonData.CurrentProject.ID != CommonData.ItemAllValue)
+                comboBoxOperateProject.SelectedValue = CommonData.CurrentProject.ID;
+            else
+                comboBoxOperateProject.SelectedValue = CommonData.ItemAllValue;
+
+            if (CommonData.CurrentBranch != null && CommonData.CurrentBranch.ID != CommonData.ItemNullValue && CommonData.CurrentBranch.ID != CommonData.ItemAllValue)
+                comboBoxOperateBranch.SelectedValue = CommonData.CurrentBranch.ID;
+            else
+                comboBoxOperateBranch.SelectedValue = CommonData.ItemAllValue;
             comboBoxOperateProject.SelectedIndexChanged += comboBoxOperateProject_SelectedIndexChanged;
             comboBoxOperateBranch.SelectedIndexChanged += comboBoxOperateBranch_SelectedIndexChanged;
             textBoxOperateRelatedID.Text = string.Empty;
@@ -719,31 +734,45 @@ namespace ToDoList
 
         private void comboBoxSearchProject_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxSearchProject.SelectedItem is Project project && project.ID != CommonData.ItemAllValue)
-            {
-                comboBoxSearchBranch.SelectedIndexChanged -= comboBoxSearchBranch_SelectedIndexChanged;
+            Project project = null;
+            if (comboBoxSearchProject.SelectedItem is Project)
+                project = comboBoxSearchProject.SelectedItem as Project;
+            comboBoxSearchBranch.SelectedIndexChanged -= comboBoxSearchBranch_SelectedIndexChanged;
+            if (project != null && project.ID != CommonData.ItemAllValue)
                 CommonFunc.BindBranchListToComboBoxByProjectID(comboBoxSearchBranch, project.ID, null, true);
-                comboBoxSearchBranch.SelectedIndexChanged += comboBoxSearchBranch_SelectedIndexChanged;
-            }
+            else
+                CommonFunc.BindBranchListToComboBox(comboBoxSearchBranch, null, true);
+            comboBoxSearchBranch.SelectedIndexChanged += comboBoxSearchBranch_SelectedIndexChanged;
         }
 
         private void comboBoxOperateProject_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxOperateProject.SelectedItem is Project project && project.ID != CommonData.ItemAllValue)
-            {
-                comboBoxOperateBranch.SelectedIndexChanged -= comboBoxOperateBranch_SelectedIndexChanged;
+            Project project = null;
+            if (comboBoxOperateProject.SelectedItem is Project)
+                project = comboBoxOperateProject.SelectedItem as Project;
+            comboBoxOperateBranch.SelectedIndexChanged -= comboBoxOperateBranch_SelectedIndexChanged;
+            if (project != null && project.ID != CommonData.ItemAllValue)
                 CommonFunc.BindBranchListToComboBoxByProjectID(comboBoxOperateBranch, project.ID, null, true);
-                comboBoxOperateBranch.SelectedIndexChanged += comboBoxOperateBranch_SelectedIndexChanged;
-            }
+            else
+                CommonFunc.BindBranchListToComboBox(comboBoxOperateBranch, null, true);
+            comboBoxOperateBranch.SelectedIndexChanged += comboBoxOperateBranch_SelectedIndexChanged;
         }
 
         private void comboBoxSearchBranch_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBoxSearchBranch.SelectedItem is Branch branch && branch.Project != null && branch.Project.ID != CommonData.ItemAllValue)
             {
-                comboBoxSearchProject.SelectedIndexChanged -= comboBoxSearchProject_SelectedIndexChanged;
-                comboBoxSearchProject.SelectedValue = branch.Project.ID;
-                comboBoxSearchProject.SelectedIndexChanged += comboBoxSearchProject_SelectedIndexChanged;
+                if (comboBoxSearchProject.SelectedValue.ToString() != branch.Project.ID.ToString())
+                {
+                    comboBoxSearchBranch.SelectedIndexChanged -= comboBoxSearchBranch_SelectedIndexChanged;
+                    CommonFunc.BindBranchListToComboBoxByProjectID(comboBoxSearchBranch, branch.Project.ID, null, true);
+                    comboBoxSearchBranch.SelectedValue = branch.ID;
+                    comboBoxSearchBranch.SelectedIndexChanged += comboBoxSearchBranch_SelectedIndexChanged;
+
+                    comboBoxSearchProject.SelectedIndexChanged -= comboBoxSearchProject_SelectedIndexChanged;
+                    comboBoxSearchProject.SelectedValue = branch.Project.ID;
+                    comboBoxSearchProject.SelectedIndexChanged += comboBoxSearchProject_SelectedIndexChanged;
+                }
             }
         }
 
@@ -751,9 +780,17 @@ namespace ToDoList
         {
             if (comboBoxOperateBranch.SelectedItem is Branch branch && branch.Project != null && branch.Project.ID != CommonData.ItemAllValue)
             {
-                comboBoxOperateProject.SelectedIndexChanged -= comboBoxOperateProject_SelectedIndexChanged;
-                comboBoxOperateProject.SelectedValue = branch.Project.ID;
-                comboBoxOperateProject.SelectedIndexChanged += comboBoxOperateProject_SelectedIndexChanged;
+                if (comboBoxOperateProject.SelectedValue.ToString() != branch.Project.ID.ToString())
+                {
+                    comboBoxOperateBranch.SelectedIndexChanged -= comboBoxSearchBranch_SelectedIndexChanged;
+                    CommonFunc.BindBranchListToComboBoxByProjectID(comboBoxOperateBranch, branch.Project.ID, null, true);
+                    comboBoxOperateBranch.SelectedValue = branch.ID;
+                    comboBoxOperateBranch.SelectedIndexChanged += comboBoxSearchBranch_SelectedIndexChanged;
+
+                    comboBoxOperateProject.SelectedIndexChanged -= comboBoxOperateProject_SelectedIndexChanged;
+                    comboBoxOperateProject.SelectedValue = branch.Project.ID;
+                    comboBoxOperateProject.SelectedIndexChanged += comboBoxOperateProject_SelectedIndexChanged;
+                }
             }
         }
 

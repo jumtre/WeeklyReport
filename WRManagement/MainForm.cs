@@ -52,6 +52,7 @@ namespace WRManagement
                 this.Close();
             }
             accessHelper = new AccessHelper(CommonData.DBPath);
+            iniHelper = new IniHelper(CommonData.ConfigFilePath);
             BindDict();
         }
 
@@ -62,11 +63,31 @@ namespace WRManagement
 
             BindUserDict();
             BindProjectDict();
+            BindBranchDict();
         }
 
         private void BindUserDict(bool lazyLoad = true)
         {
             CommonFunc.BindUserListToComboBox(comboBoxCurrentUser, null, false, lazyLoad);
+            List<User> users = comboBoxCurrentUser.DataSource as List<User>;
+            if (users == null)
+            {
+                MessageBox.Show("绑定的当前用户数据源错误", "提示");
+                return;
+            }
+            string currentUserID = iniHelper.Read("Common", "CurrentUserID");
+            if (currentUserID.NotNullOrWhiteSpace())
+            {
+                comboBoxCurrentUser.SelectedItem = users.FirstOrDefault(u => u.ID.ToString() == currentUserID);
+            }
+            else
+            {
+                string a = string.Empty;
+                string currentUserName = string.Empty;
+                currentUserName = iniHelper.Read("Common", "CurrentUserName");
+                if (currentUserName.NotNullOrWhiteSpace())
+                    comboBoxCurrentUser.SelectedItem = users.FirstOrDefault(u => u.Name == currentUserName);
+            }
         }
 
         private void BindProjectDict(bool lazyLoad = true)
@@ -74,6 +95,52 @@ namespace WRManagement
             comboBoxProject.SelectedIndexChanged -= comboBoxProject_SelectedIndexChanged;
             CommonFunc.BindProjectListToComboBox(comboBoxProject, null, false, lazyLoad);
             comboBoxProject.SelectedIndexChanged += comboBoxProject_SelectedIndexChanged;
+            comboBoxCurrentProject.SelectedIndexChanged -= comboBoxCurrentProject_SelectedIndexChanged;
+            CommonFunc.BindProjectListToComboBox(comboBoxCurrentProject, null, false, lazyLoad, true);
+            List<Project> projects = comboBoxCurrentProject.DataSource as List<Project>;
+            if (projects == null)
+            {
+                MessageBox.Show("绑定的当前项目数据源错误", "提示");
+                return;
+            }
+            string currentProjectID = iniHelper.Read("Common", "CurrentProjectID");
+            if (currentProjectID.NotNullOrWhiteSpace())
+            {
+                comboBoxCurrentProject.SelectedItem = projects.FirstOrDefault(u => u.ID.ToString() == currentProjectID);
+            }
+            else
+            {
+                //comboBoxCurrentProject.Text= iniHelper.Read("Common", "CurrentProjectName");
+                string currentProjectName = iniHelper.Read("Common", "CurrentProjectName");
+                //comboBoxCurrentProject.Text = currentProjectName;
+                if (currentProjectName.NotNullOrWhiteSpace())
+                    comboBoxCurrentProject.SelectedItem = projects.FirstOrDefault(u => u.Name == currentProjectName);
+            }
+            comboBoxCurrentProject.SelectedIndexChanged += comboBoxCurrentProject_SelectedIndexChanged;
+        }
+
+        private void BindBranchDict(bool lazyLoad = true)
+        {
+            comboBoxCurrentBranch.SelectedIndexChanged -= comboBoxCurrentBranch_SelectedIndexChanged;
+            CommonFunc.BindBranchListToComboBox(comboBoxCurrentBranch, null, false, lazyLoad, true);
+            List<Branch> branches = comboBoxCurrentBranch.DataSource as List<Branch>;
+            if (branches == null)
+            {
+                MessageBox.Show("绑定的当前分支数据源错误", "提示");
+                return;
+            }
+            string currentBranchID = iniHelper.Read("Common", "CurrentBranchID");
+            if (currentBranchID.NotNullOrWhiteSpace())
+            {
+                comboBoxCurrentBranch.SelectedItem = branches.FirstOrDefault(u => u.ID.ToString() == currentBranchID);
+            }
+            else
+            {
+                string currentBranchName = iniHelper.Read("Common", "CurrentBranchName");
+                if (currentBranchName.NotNullOrWhiteSpace())
+                    comboBoxCurrentBranch.SelectedItem = branches.FirstOrDefault(u => u.Name == currentBranchName);
+            }
+            comboBoxCurrentBranch.SelectedIndexChanged += comboBoxCurrentBranch_SelectedIndexChanged;
         }
 
         private void BindUserList(List<User> list = null)
@@ -313,6 +380,7 @@ namespace WRManagement
             if (!string.IsNullOrWhiteSpace(sql))
                 accessHelper.ExecuteNonQuery(sql);
             textBoxItemName.Text = string.Empty;
+            textBoxMemo.Text = string.Empty;
             ShowMessageAskRefresh();
         }
 
@@ -401,8 +469,8 @@ namespace WRManagement
                 MessageBox.Show("数据错误，请重新打开程序再试", "提示");
                 return;
             }
-            if (iniHelper == null)
-                iniHelper = new IniHelper(CommonData.ConfigFilePath);
+            //if (iniHelper == null)
+            //    iniHelper = new IniHelper(CommonData.ConfigFilePath);
             iniHelper.Write("Common", "CurrentUserID", currentUser.ID.ToString());
             iniHelper.Write("Common", "CurrentUserName", currentUser.Name);
         }
@@ -437,6 +505,66 @@ namespace WRManagement
         private void comboBoxProject_SelectedIndexChanged(object sender, EventArgs e)
         {
             //BindBranchList();
+        }
+
+        private void buttonSetCurrentProjectAndBranch_Click(object sender, EventArgs e)
+        {
+            Project currentProject = comboBoxCurrentProject.SelectedItem as Project;
+            Branch currentBranch = comboBoxCurrentBranch.SelectedItem as Branch;
+            //if (iniHelper == null)
+            //    iniHelper = new IniHelper(CommonData.ConfigFilePath);
+            if (currentProject == null)
+            {
+                iniHelper.Write("Common", "CurrentProjectID", string.Empty);
+                iniHelper.Write("Common", "CurrentProjectName", string.Empty);
+                currentBranch = null;
+            }
+            else
+            {
+                iniHelper.Write("Common", "CurrentProjectID", currentProject.ID.ToString());
+                iniHelper.Write("Common", "CurrentProjectName", currentProject.Name);
+            }
+            if (currentBranch == null)
+            {
+                iniHelper.Write("Common", "CurrentBranchID", string.Empty);
+                iniHelper.Write("Common", "CurrentBranchName", string.Empty);
+            }
+            else
+            {
+                iniHelper.Write("Common", "CurrentBranchID", currentBranch.ID.ToString());
+                iniHelper.Write("Common", "CurrentBranchName", currentBranch.Name);
+            }
+        }
+
+        private void comboBoxCurrentProject_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Project project = null;
+            if (comboBoxCurrentProject.SelectedItem is Project)
+                project = comboBoxCurrentProject.SelectedItem as Project;
+            comboBoxCurrentBranch.SelectedIndexChanged -= comboBoxCurrentBranch_SelectedIndexChanged;
+            if (project != null && project.ID != CommonData.ItemNullValue)
+                CommonFunc.BindBranchListToComboBoxByProjectID(comboBoxCurrentBranch, project.ID, null, true, true, true);
+            else
+                CommonFunc.BindBranchListToComboBox(comboBoxCurrentBranch, null, false, true, true);
+            comboBoxCurrentBranch.SelectedIndexChanged += comboBoxCurrentBranch_SelectedIndexChanged;
+        }
+
+        private void comboBoxCurrentBranch_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxCurrentBranch.SelectedItem is Branch branch && branch.Project != null && branch.Project.ID != CommonData.ItemNullValue)
+            {
+                if (comboBoxCurrentProject.SelectedValue.ToString() != branch.Project.ID.ToString())
+                {
+                    comboBoxCurrentBranch.SelectedIndexChanged -= comboBoxCurrentBranch_SelectedIndexChanged;
+                    CommonFunc.BindBranchListToComboBoxByProjectID(comboBoxCurrentBranch, branch.Project.ID, null, true, true, true);
+                    comboBoxCurrentBranch.SelectedValue = branch.ID;
+                    comboBoxCurrentBranch.SelectedIndexChanged += comboBoxCurrentBranch_SelectedIndexChanged;
+
+                    comboBoxCurrentProject.SelectedIndexChanged -= comboBoxCurrentProject_SelectedIndexChanged;
+                    comboBoxCurrentProject.SelectedValue = branch.Project.ID;
+                    comboBoxCurrentProject.SelectedIndexChanged += comboBoxCurrentProject_SelectedIndexChanged;
+                }
+            }
         }
     }
 }
