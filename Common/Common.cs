@@ -117,6 +117,11 @@ namespace Common
         public const string DateTimeMinuteFormat = "yyyy-MM-dd HH:mm";
 
         /// <summary>
+        /// 日期时间精确到小时的格式：yyyy-MM-dd HH
+        /// </summary>
+        public const string DateTimeHourFormat = "yyyy-MM-dd HH";
+
+        /// <summary>
         /// 日期时间详细格式：yyyyMMddHHmmssfff
         /// </summary>
         public const string DateTimeDetailFormat = "yyyyMMddHHmmssfff";
@@ -1236,6 +1241,37 @@ namespace Common
                 else
                     secondsValueStr = secondsValue.ToString("00");
                 return "#" + dateTimePicker.Value.ToString(CommonData.DateTimeMinuteFormat) + ":" + secondsValueStr + "#";
+            }
+            else
+                return "null";
+        }
+
+        /// <summary>
+        /// 转换成Access数据库DateTime类型对应的值
+        /// </summary>
+        /// <param name="dateTimePicker">要转换值的DateTimePicker控件</param>
+        /// <param name="minutesValue">DateTime中分的值。小于等于0取0，大于等于59取59</param>
+        /// <param name="secondsValue">DateTime中秒的值。小于等于0取0，大于等于59取59</param>
+        /// <returns></returns>
+        public static string ToAccessDateTimeValue(DateTimePicker dateTimePicker, int minutesValue, int secondsValue)
+        {
+            if ((dateTimePicker.ShowCheckBox && dateTimePicker.Checked) || !dateTimePicker.ShowCheckBox)
+            {
+                string minutesValueStr = "00";
+                if (minutesValue <= 0)
+                    minutesValueStr = "00";
+                else if (minutesValue >= 59)
+                    minutesValueStr = "59";
+                else
+                    minutesValueStr = secondsValue.ToString("00");
+                string secondsValueStr = "00";
+                if (secondsValue <= 0)
+                    secondsValueStr = "00";
+                else if (secondsValue >= 59)
+                    secondsValueStr = "59";
+                else
+                    secondsValueStr = secondsValue.ToString("00");
+                return "#" + dateTimePicker.Value.ToString(CommonData.DateTimeHourFormat) + ":" + minutesValueStr + ":" + secondsValueStr + "#";
             }
             else
                 return "null";

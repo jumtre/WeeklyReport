@@ -68,6 +68,7 @@
             this.ColumnBranch = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnContent = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnFinishTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.buttonRelateToToDo = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -235,6 +236,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.buttonRelateToToDo);
             this.groupBox2.Controls.Add(this.textBoxOperateRelatedID);
             this.groupBox2.Controls.Add(this.label10);
             this.groupBox2.Controls.Add(this.comboBoxOperateBranch);
@@ -466,6 +468,16 @@
             this.ColumnFinishTime.ReadOnly = true;
             this.ColumnFinishTime.Width = 120;
             // 
+            // buttonRelateToToDo
+            // 
+            this.buttonRelateToToDo.Location = new System.Drawing.Point(517, 56);
+            this.buttonRelateToToDo.Name = "buttonRelateToToDo";
+            this.buttonRelateToToDo.Size = new System.Drawing.Size(75, 23);
+            this.buttonRelateToToDo.TabIndex = 15;
+            this.buttonRelateToToDo.Text = "关联待办项";
+            this.buttonRelateToToDo.UseVisualStyleBackColor = true;
+            this.buttonRelateToToDo.Click += new System.EventHandler(this.buttonRelateToToDo_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -531,6 +543,7 @@
         private System.Windows.Forms.TextBox textBoxOperateRelatedID;
         private System.Windows.Forms.TextBox textBoxSearchRelatedID;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Button buttonRelateToToDo;
     }
 }
 

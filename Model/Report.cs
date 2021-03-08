@@ -50,5 +50,10 @@ namespace Model
         /// 来源
         /// </summary>
         public EnumReportSource? Source { get; set; }
+
+        /// <summary>
+        /// 关联的待办事项ID
+        /// </summary>
+        public decimal? ToDoID { get; set; }
     }
 }

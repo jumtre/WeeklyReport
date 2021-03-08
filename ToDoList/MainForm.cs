@@ -219,6 +219,11 @@ namespace ToDoList
                         //    ID = DataConvert.ToInt(row["ProjectID"]),
                         //    Name = DataConvert.ToString(row["ProjectName"])
                         //},
+                        //Branch = new Branch()
+                        //{
+                        //    ID = DataConvert.ToInt(row["BranchID"]),
+                        //    Name = DataConvert.ToString(row["BranchName"])
+                        //},
                         RelatedID = DataConvert.ToString(row["RelatedID"]),
                         Priority = (EnumToDoPriority?)DataConvert.ToEnum<EnumToDoPriority>(row["Priority"]),
                         Severity = (EnumToDoSeverity?)DataConvert.ToEnum<EnumToDoSeverity>(row["Severity"]),

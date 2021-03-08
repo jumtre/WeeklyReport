@@ -189,7 +189,7 @@
             this.comboBoxSearchAssignedTo.Location = new System.Drawing.Point(750, 20);
             this.comboBoxSearchAssignedTo.Name = "comboBoxSearchAssignedTo";
             this.comboBoxSearchAssignedTo.Size = new System.Drawing.Size(91, 20);
-            this.comboBoxSearchAssignedTo.TabIndex = 21;
+            this.comboBoxSearchAssignedTo.TabIndex = 7;
             // 
             // label28
             // 
@@ -197,7 +197,7 @@
             this.label28.Location = new System.Drawing.Point(697, 23);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(53, 12);
-            this.label28.TabIndex = 20;
+            this.label28.TabIndex = 6;
             this.label28.Text = "指派给：";
             // 
             // buttonSearchNextWeek
@@ -205,7 +205,7 @@
             this.buttonSearchNextWeek.Location = new System.Drawing.Point(648, 99);
             this.buttonSearchNextWeek.Name = "buttonSearchNextWeek";
             this.buttonSearchNextWeek.Size = new System.Drawing.Size(41, 23);
-            this.buttonSearchNextWeek.TabIndex = 27;
+            this.buttonSearchNextWeek.TabIndex = 29;
             this.buttonSearchNextWeek.Text = "下周";
             this.buttonSearchNextWeek.UseVisualStyleBackColor = true;
             this.buttonSearchNextWeek.Click += new System.EventHandler(this.buttonSearchNextWeek_Click);
@@ -215,7 +215,7 @@
             this.buttonSearchLastWeek.Location = new System.Drawing.Point(608, 99);
             this.buttonSearchLastWeek.Name = "buttonSearchLastWeek";
             this.buttonSearchLastWeek.Size = new System.Drawing.Size(41, 23);
-            this.buttonSearchLastWeek.TabIndex = 26;
+            this.buttonSearchLastWeek.TabIndex = 28;
             this.buttonSearchLastWeek.Text = "上周";
             this.buttonSearchLastWeek.UseVisualStyleBackColor = true;
             this.buttonSearchLastWeek.Click += new System.EventHandler(this.buttonSearchLastWeek_Click);
@@ -225,7 +225,7 @@
             this.buttonSearchThisWeek.Location = new System.Drawing.Point(568, 99);
             this.buttonSearchThisWeek.Name = "buttonSearchThisWeek";
             this.buttonSearchThisWeek.Size = new System.Drawing.Size(41, 23);
-            this.buttonSearchThisWeek.TabIndex = 25;
+            this.buttonSearchThisWeek.TabIndex = 27;
             this.buttonSearchThisWeek.Text = "本周";
             this.buttonSearchThisWeek.UseVisualStyleBackColor = true;
             this.buttonSearchThisWeek.Click += new System.EventHandler(this.buttonSearchThisWeek_Click);
@@ -235,7 +235,7 @@
             this.buttonSearchTomorrow.Location = new System.Drawing.Point(648, 72);
             this.buttonSearchTomorrow.Name = "buttonSearchTomorrow";
             this.buttonSearchTomorrow.Size = new System.Drawing.Size(41, 23);
-            this.buttonSearchTomorrow.TabIndex = 24;
+            this.buttonSearchTomorrow.TabIndex = 26;
             this.buttonSearchTomorrow.Text = "明日";
             this.buttonSearchTomorrow.UseVisualStyleBackColor = true;
             this.buttonSearchTomorrow.Click += new System.EventHandler(this.buttonSearchTomorrow_Click);
@@ -245,7 +245,7 @@
             this.buttonSearchYesterday.Location = new System.Drawing.Point(608, 72);
             this.buttonSearchYesterday.Name = "buttonSearchYesterday";
             this.buttonSearchYesterday.Size = new System.Drawing.Size(41, 23);
-            this.buttonSearchYesterday.TabIndex = 23;
+            this.buttonSearchYesterday.TabIndex = 25;
             this.buttonSearchYesterday.Text = "昨日";
             this.buttonSearchYesterday.UseVisualStyleBackColor = true;
             this.buttonSearchYesterday.Click += new System.EventHandler(this.buttonSearchYesterday_Click);
@@ -255,18 +255,17 @@
             this.buttonSearchToday.Location = new System.Drawing.Point(568, 72);
             this.buttonSearchToday.Name = "buttonSearchToday";
             this.buttonSearchToday.Size = new System.Drawing.Size(41, 23);
-            this.buttonSearchToday.TabIndex = 22;
+            this.buttonSearchToday.TabIndex = 24;
             this.buttonSearchToday.Text = "今日";
             this.buttonSearchToday.UseVisualStyleBackColor = true;
             this.buttonSearchToday.Click += new System.EventHandler(this.buttonSearchToday_Click);
             // 
             // buttonExport
             // 
-            this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonExport.Location = new System.Drawing.Point(770, 45);
             this.buttonExport.Name = "buttonExport";
             this.buttonExport.Size = new System.Drawing.Size(72, 77);
-            this.buttonExport.TabIndex = 29;
+            this.buttonExport.TabIndex = 23;
             this.buttonExport.Text = "导 出";
             this.buttonExport.UseVisualStyleBackColor = true;
             this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
@@ -286,7 +285,7 @@
             this.textBoxSearchRelatedID.Location = new System.Drawing.Point(582, 46);
             this.textBoxSearchRelatedID.Name = "textBoxSearchRelatedID";
             this.textBoxSearchRelatedID.Size = new System.Drawing.Size(106, 21);
-            this.textBoxSearchRelatedID.TabIndex = 11;
+            this.textBoxSearchRelatedID.TabIndex = 13;
             // 
             // label25
             // 
@@ -294,7 +293,7 @@
             this.label25.Location = new System.Drawing.Point(529, 50);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(53, 12);
-            this.label25.TabIndex = 10;
+            this.label25.TabIndex = 12;
             this.label25.Text = "关联ID：";
             // 
             // comboBoxSearchBranch
@@ -321,7 +320,7 @@
             this.buttonSearch.Location = new System.Drawing.Point(697, 45);
             this.buttonSearch.Name = "buttonSearch";
             this.buttonSearch.Size = new System.Drawing.Size(72, 77);
-            this.buttonSearch.TabIndex = 28;
+            this.buttonSearch.TabIndex = 22;
             this.buttonSearch.Text = "查 询";
             this.buttonSearch.UseVisualStyleBackColor = true;
             this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
@@ -334,7 +333,7 @@
             this.dateTimePickerSearchPlannedEndTo.Name = "dateTimePickerSearchPlannedEndTo";
             this.dateTimePickerSearchPlannedEndTo.ShowCheckBox = true;
             this.dateTimePickerSearchPlannedEndTo.Size = new System.Drawing.Size(200, 21);
-            this.dateTimePickerSearchPlannedEndTo.TabIndex = 19;
+            this.dateTimePickerSearchPlannedEndTo.TabIndex = 21;
             // 
             // label5
             // 
@@ -342,7 +341,7 @@
             this.label5.Location = new System.Drawing.Point(324, 106);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(17, 12);
-            this.label5.TabIndex = 18;
+            this.label5.TabIndex = 20;
             this.label5.Text = "～";
             // 
             // dateTimePickerSearchPlannedEndFrom
@@ -353,7 +352,7 @@
             this.dateTimePickerSearchPlannedEndFrom.Name = "dateTimePickerSearchPlannedEndFrom";
             this.dateTimePickerSearchPlannedEndFrom.ShowCheckBox = true;
             this.dateTimePickerSearchPlannedEndFrom.Size = new System.Drawing.Size(200, 21);
-            this.dateTimePickerSearchPlannedEndFrom.TabIndex = 17;
+            this.dateTimePickerSearchPlannedEndFrom.TabIndex = 19;
             // 
             // label6
             // 
@@ -361,7 +360,7 @@
             this.label6.Location = new System.Drawing.Point(12, 106);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(89, 12);
-            this.label6.TabIndex = 16;
+            this.label6.TabIndex = 18;
             this.label6.Text = "计划结束时间：";
             // 
             // dateTimePickerSearchPlannedStartTo
@@ -372,7 +371,7 @@
             this.dateTimePickerSearchPlannedStartTo.Name = "dateTimePickerSearchPlannedStartTo";
             this.dateTimePickerSearchPlannedStartTo.ShowCheckBox = true;
             this.dateTimePickerSearchPlannedStartTo.Size = new System.Drawing.Size(200, 21);
-            this.dateTimePickerSearchPlannedStartTo.TabIndex = 15;
+            this.dateTimePickerSearchPlannedStartTo.TabIndex = 17;
             // 
             // label7
             // 
@@ -380,7 +379,7 @@
             this.label7.Location = new System.Drawing.Point(324, 79);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(17, 12);
-            this.label7.TabIndex = 14;
+            this.label7.TabIndex = 16;
             this.label7.Text = "～";
             // 
             // dateTimePickerSearchPlannedStartFrom
@@ -391,7 +390,7 @@
             this.dateTimePickerSearchPlannedStartFrom.Name = "dateTimePickerSearchPlannedStartFrom";
             this.dateTimePickerSearchPlannedStartFrom.ShowCheckBox = true;
             this.dateTimePickerSearchPlannedStartFrom.Size = new System.Drawing.Size(200, 21);
-            this.dateTimePickerSearchPlannedStartFrom.TabIndex = 13;
+            this.dateTimePickerSearchPlannedStartFrom.TabIndex = 15;
             // 
             // label8
             // 
@@ -399,7 +398,7 @@
             this.label8.Location = new System.Drawing.Point(12, 79);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(89, 12);
-            this.label8.TabIndex = 12;
+            this.label8.TabIndex = 14;
             this.label8.Text = "计划开始时间：";
             // 
             // comboBoxSearchStatus
@@ -425,7 +424,7 @@
             this.textBoxSearchContent.Location = new System.Drawing.Point(356, 46);
             this.textBoxSearchContent.Name = "textBoxSearchContent";
             this.textBoxSearchContent.Size = new System.Drawing.Size(165, 21);
-            this.textBoxSearchContent.TabIndex = 9;
+            this.textBoxSearchContent.TabIndex = 11;
             // 
             // label3
             // 
@@ -433,7 +432,7 @@
             this.label3.Location = new System.Drawing.Point(315, 50);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(41, 12);
-            this.label3.TabIndex = 8;
+            this.label3.TabIndex = 10;
             this.label3.Text = "内容：";
             // 
             // textBoxSearchTitle
@@ -441,7 +440,7 @@
             this.textBoxSearchTitle.Location = new System.Drawing.Point(59, 46);
             this.textBoxSearchTitle.Name = "textBoxSearchTitle";
             this.textBoxSearchTitle.Size = new System.Drawing.Size(248, 21);
-            this.textBoxSearchTitle.TabIndex = 7;
+            this.textBoxSearchTitle.TabIndex = 9;
             // 
             // label2
             // 
@@ -449,7 +448,7 @@
             this.label2.Location = new System.Drawing.Point(12, 50);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(41, 12);
-            this.label2.TabIndex = 6;
+            this.label2.TabIndex = 8;
             this.label2.Text = "标题：";
             // 
             // comboBoxSearchProject
@@ -689,7 +688,7 @@
             this.buttonOperateNextWeek.Location = new System.Drawing.Point(257, 154);
             this.buttonOperateNextWeek.Name = "buttonOperateNextWeek";
             this.buttonOperateNextWeek.Size = new System.Drawing.Size(41, 23);
-            this.buttonOperateNextWeek.TabIndex = 46;
+            this.buttonOperateNextWeek.TabIndex = 38;
             this.buttonOperateNextWeek.Text = "下周";
             this.buttonOperateNextWeek.UseVisualStyleBackColor = true;
             this.buttonOperateNextWeek.Click += new System.EventHandler(this.buttonOperateNextWeek_Click);
@@ -699,7 +698,7 @@
             this.buttonOperateLastWeek.Location = new System.Drawing.Point(217, 154);
             this.buttonOperateLastWeek.Name = "buttonOperateLastWeek";
             this.buttonOperateLastWeek.Size = new System.Drawing.Size(41, 23);
-            this.buttonOperateLastWeek.TabIndex = 45;
+            this.buttonOperateLastWeek.TabIndex = 37;
             this.buttonOperateLastWeek.Text = "上周";
             this.buttonOperateLastWeek.UseVisualStyleBackColor = true;
             this.buttonOperateLastWeek.Click += new System.EventHandler(this.buttonOperateLastWeek_Click);
@@ -709,7 +708,7 @@
             this.buttonOperateThisWeek.Location = new System.Drawing.Point(177, 154);
             this.buttonOperateThisWeek.Name = "buttonOperateThisWeek";
             this.buttonOperateThisWeek.Size = new System.Drawing.Size(41, 23);
-            this.buttonOperateThisWeek.TabIndex = 44;
+            this.buttonOperateThisWeek.TabIndex = 36;
             this.buttonOperateThisWeek.Text = "本周";
             this.buttonOperateThisWeek.UseVisualStyleBackColor = true;
             this.buttonOperateThisWeek.Click += new System.EventHandler(this.buttonOperateThisWeek_Click);
@@ -719,7 +718,7 @@
             this.buttonOperateTomorrow.Location = new System.Drawing.Point(257, 127);
             this.buttonOperateTomorrow.Name = "buttonOperateTomorrow";
             this.buttonOperateTomorrow.Size = new System.Drawing.Size(41, 23);
-            this.buttonOperateTomorrow.TabIndex = 43;
+            this.buttonOperateTomorrow.TabIndex = 35;
             this.buttonOperateTomorrow.Text = "明日";
             this.buttonOperateTomorrow.UseVisualStyleBackColor = true;
             this.buttonOperateTomorrow.Click += new System.EventHandler(this.buttonOperateTomorrow_Click);
@@ -729,7 +728,7 @@
             this.buttonOperateYesterday.Location = new System.Drawing.Point(217, 127);
             this.buttonOperateYesterday.Name = "buttonOperateYesterday";
             this.buttonOperateYesterday.Size = new System.Drawing.Size(41, 23);
-            this.buttonOperateYesterday.TabIndex = 42;
+            this.buttonOperateYesterday.TabIndex = 34;
             this.buttonOperateYesterday.Text = "昨日";
             this.buttonOperateYesterday.UseVisualStyleBackColor = true;
             this.buttonOperateYesterday.Click += new System.EventHandler(this.buttonOperateYesterday_Click);
@@ -739,7 +738,7 @@
             this.buttonOperateToday.Location = new System.Drawing.Point(177, 127);
             this.buttonOperateToday.Name = "buttonOperateToday";
             this.buttonOperateToday.Size = new System.Drawing.Size(41, 23);
-            this.buttonOperateToday.TabIndex = 41;
+            this.buttonOperateToday.TabIndex = 33;
             this.buttonOperateToday.Text = "今日";
             this.buttonOperateToday.UseVisualStyleBackColor = true;
             this.buttonOperateToday.Click += new System.EventHandler(this.buttonOperateToday_Click);
@@ -918,7 +917,7 @@
             this.label18.Location = new System.Drawing.Point(266, 239);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(17, 12);
-            this.label18.TabIndex = 18;
+            this.label18.TabIndex = 20;
             this.label18.Text = "天";
             // 
             // numericUpDownOperatePlannedDays

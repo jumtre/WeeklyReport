@@ -86,7 +86,7 @@ namespace WeeklyReport
         {
             if (reportAll != null && reportAll.Count > 0)
                 reportAll.Clear();
-            StringBuilder sql = new StringBuilder("select r.ID, r.UserID, u.Name as UserName, r.ProjectID, p.Name as ProjectName, r.BranchID, b.Name as BranchName, r.RelatedID, r.Content, r.FinishTime, r.Source from ((Report r left join [User] u on r.UserID = u.ID) left join Project p on r.ProjectID = p.ID) left join Branch b on r.BranchID = b.ID where 1 = 1");
+            StringBuilder sql = new StringBuilder("select r.ID, r.UserID, u.Name as UserName, r.ProjectID, p.Name as ProjectName, r.BranchID, b.Name as BranchName, r.RelatedID, r.Content, r.FinishTime, r.Source, r.ToDoID from ((Report r left join [User] u on r.UserID = u.ID) left join Project p on r.ProjectID = p.ID) left join Branch b on r.BranchID = b.ID where 1 = 1");
             if (dateTimePickerSearchFrom.Checked)
                 sql.Append(" and r.FinishTime >= #" + dateTimePickerSearchFrom.Value.ToString(CommonData.DateFormat + " 00:00:00") + "#");
             if (dateTimePickerSearchTo.Checked)
@@ -132,7 +132,8 @@ namespace WeeklyReport
                         RelatedID = DataConvert.ToString(row["RelatedID"]),
                         Content = DataConvert.ToString(row["Content"]),
                         FinishTime = DataConvert.ToDateTime(row["FinishTime"]),
-                        Source = (EnumReportSource?)DataConvert.ToEnum<EnumReportSource>(row["Source"])
+                        Source = (EnumReportSource?)DataConvert.ToEnum<EnumReportSource>(row["Source"]),
+                        ToDoID = DataConvert.ToNullableDecimal(row["ToDoID"])
                     };
                     reportAll.Add(report);
                 }
@@ -179,6 +180,7 @@ namespace WeeklyReport
             dateTimePickerOperateFinishTime.Checked = false;
             textBoxOperateRelatedID.Text = string.Empty;
             richTextBoxOperateContent.Text = string.Empty;
+            richTextBoxOperateContent.Tag = null;
         }
 
         private void dataGridViewShow_SelectionChanged(object sender, EventArgs e)
@@ -201,6 +203,7 @@ namespace WeeklyReport
             }
             textBoxOperateRelatedID.Text = report.RelatedID;
             richTextBoxOperateContent.Text = report.Content;
+            richTextBoxOperateContent.Tag = report;
         }
 
         private void buttonSearch_Click(object sender, EventArgs e)
@@ -424,6 +427,70 @@ namespace WeeklyReport
                 if (DateTime.TryParse(e.Value?.ToString(), out dt))
                     e.Value = dt.ToString(CommonData.DateTimeFormat);
             }
+        }
+
+        private void buttonRelateToToDo_Click(object sender, EventArgs e)
+        {
+            if (richTextBoxOperateContent.Tag == null || !(richTextBoxOperateContent.Tag is Report report) || report == null || report.ID == CommonData.ItemNullValue || report.ID == CommonData.ItemAllValue)
+            {
+                MessageBox.Show("没有选择报告或报告数据错误", "提示");
+                return;
+            }
+
+            int projectID = CommonData.ItemAllValue, branchID = CommonData.ItemAllValue;
+            //ToDo toDo;
+            if (report.ToDoID.HasValue && report.ToDoID.Value != CommonData.ItemNullValue && report.ToDoID.Value != CommonData.ItemAllValue)
+            {
+                //string sql = "select ID, ProjectID, BranchID, RelatedID, Priority, Severity, Title, Content, [Memo], UserID, PlannedStartTime, PlannedEndTime, PlannedHours, PlannedDays, Status, FinishTime, FinishUserID from ToDo where ID = " + report.ToDoID.Value;
+                //DataTable dt = CommonData.AccessHelper.GetDataTable(sql.ToString());
+                //if (dt != null && dt.Rows.Count > 0)
+                //{
+                //    DataRow row = dt.Rows[0];
+                //    toDo = new ToDo
+                //    {
+                //        ID = DataConvert.ToDecimal(row["ID"]),
+                //        RelatedID = DataConvert.ToString(row["RelatedID"]),
+                //        Priority = (EnumToDoPriority?)DataConvert.ToEnum<EnumToDoPriority>(row["Priority"]),
+                //        Severity = (EnumToDoSeverity?)DataConvert.ToEnum<EnumToDoSeverity>(row["Severity"]),
+                //        Title = DataConvert.ToString(row["Title"]),
+                //        Content = DataConvert.ToString(row["Content"]),
+                //        Memo = DataConvert.ToString(row["Memo"]),
+                //        PlannedStartTime = DataConvert.ToNullableDateTime(row["PlannedStartTime"]),
+                //        PlannedEndTime = DataConvert.ToNullableDateTime(row["PlannedEndTime"]),
+                //        PlannedHours = DataConvert.ToNullableDecimal(row["PlannedHours"]),
+                //        PlannedDays = DataConvert.ToNullableDecimal(row["PlannedDays"]),
+                //        Status = (EnumToDoStatus?)DataConvert.ToEnum<EnumToDoStatus>(row["Status"]),
+                //        FinishTime = DataConvert.ToNullableDateTime(row["FinishTime"])
+                //    };
+                //    projectID = DataConvert.ToInt(row["ProjectID"]);
+                //    if (projectID > 0)
+                //        toDo.Project = new Project() { ID = projectID };
+                //    branchID = DataConvert.ToInt(row["BranchID"]);
+                //    if (branchID > 0)
+                //        toDo.Branch = new Branch() { ID = branchID };//, Project = toDo.Project
+                //    int userID = DataConvert.ToInt(row["UserID"]);
+                //    if (userID > 0)
+                //        toDo.User = new User() { ID = userID };
+                //    int finishUserID = DataConvert.ToInt(row["FinishUserID"]);
+                //    if (finishUserID > 0)
+                //        toDo.FinishUser = new User() { ID = finishUserID };
+                //}
+                string sql = "select Title from ToDo where ID = :ID";
+                Dictionary<string, object> paramDict = new Dictionary<string, object>();
+                paramDict.Add("ID", report.ToDoID.Value);
+                object result = CommonData.AccessHelper.ExecuteScalar(sql, paramDict);
+                if (result != null)
+                {
+                    if (DialogResult.No == MessageBox.Show("已关联【" + result.ToString() + "】，是否重新关联？", "提示", MessageBoxButtons.YesNo))
+                        return;
+                }
+            }
+            if (comboBoxOperateProject.SelectedValue != null)
+                int.TryParse(comboBoxOperateProject.SelectedValue.ToString(), out projectID);
+            if (comboBoxOperateBranch.SelectedValue != null)
+                int.TryParse(comboBoxOperateBranch.SelectedValue.ToString(), out branchID);
+            RelateToToDo relate = new RelateToToDo(projectID, branchID, report);
+            relate.ShowDialog();
         }
     }
 }
