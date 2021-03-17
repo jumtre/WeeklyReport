@@ -334,9 +334,12 @@ namespace WRManagement
 
         private bool BranchExists(int projectID, string branchName)
         {
-            string sql = "select count(*) from Branch where ProjectID = " + projectID + " and Name = '" + branchName + "'";
+            string sql = "select count(*) from Branch where ProjectID = @ProjectID and Name = @Name";
+            Dictionary<string, object> paramDict = new Dictionary<string, object>();
+            paramDict.Add("ProjectID", projectID);
+            paramDict.Add("Name", branchName);
             int i = -1;
-            if (int.TryParse(accessHelper.ExecuteScalar(sql).ToString(), out i) && i > 0)
+            if (int.TryParse(accessHelper.ExecuteScalar(sql, paramDict).ToString(), out i) && i > 0)
                 return true;
             else
                 return false;
@@ -351,14 +354,20 @@ namespace WRManagement
                 MessageBox.Show("名称不能为空", "提示");
                 return;
             }
-            string sql = string.Empty;
+            //string sql = string.Empty;
+            string table = string.Empty;
+            Dictionary<string, object> paramDict = new Dictionary<string, object>();
             if (currentDataType == CurrentDataType.User)
             {
-                sql = "insert into [User] (Name) values ('" + textBoxItemName.Text.Trim() + "')";
+                //sql = "insert into [User] (Name) values ('" + textBoxItemName.Text.Trim() + "')";
+                table = "[User]";
+                paramDict.Add("Name", textBoxItemName.Text.Trim());
             }
             else if (currentDataType == CurrentDataType.Project)
             {
-                sql = "insert into Project (Name) values ('" + textBoxItemName.Text.Trim() + "')";
+                //sql = "insert into Project (Name) values ('" + textBoxItemName.Text.Trim() + "')";
+                table = "Project";
+                paramDict.Add("Name", textBoxItemName.Text.Trim());
             }
             else if (currentDataType == CurrentDataType.Branch)
             {
@@ -370,15 +379,21 @@ namespace WRManagement
                     MessageBox.Show("项目不能为空", "提示");
                     return;
                 }
-                if(BranchExists(projectID, textBoxItemName.Text.Trim()))
+                if (BranchExists(projectID, textBoxItemName.Text.Trim()))
                 {
                     MessageBox.Show("项目中已存在同名分支", "提示");
                     return;
                 }
-                sql = "insert into Branch (Name, [Memo], ProjectID) values ('" + textBoxItemName.Text.Trim() + "', '" + textBoxMemo.Text.Trim() + "', " + projectID + ")";
+                //sql = "insert into Branch (Name, [Memo], ProjectID) values ('" + textBoxItemName.Text.Trim() + "', '" + textBoxMemo.Text.Trim() + "', " + projectID + ")";
+                table = "Branch";
+                paramDict.Add("Name", textBoxItemName.Text.Trim());
+                paramDict.Add("[Memo]", textBoxMemo.Text.Trim());
+                paramDict.Add("ProjectID", projectID);
             }
-            if (!string.IsNullOrWhiteSpace(sql))
-                accessHelper.ExecuteNonQuery(sql);
+            //if (!string.IsNullOrWhiteSpace(sql))
+            //    accessHelper.ExecuteNonQuery(sql);
+            if (table.NotNullOrWhiteSpace() && paramDict.Count > 0)
+                accessHelper.Insert(table, paramDict);
             textBoxItemName.Text = string.Empty;
             textBoxMemo.Text = string.Empty;
             ShowMessageAskRefresh();
@@ -398,14 +413,23 @@ namespace WRManagement
                 MessageBox.Show("数据错误，请重新选择要修改的数据后重试", "提示");
                 return;
             }
-            string sql = string.Empty;
+            //string sql = string.Empty;
+            string table = string.Empty;
+            Dictionary<string, object> setParamDict = new Dictionary<string, object>();
+            Dictionary<string, object> whereParamDict = new Dictionary<string, object>();
             if (currentDataType == CurrentDataType.User)
             {
-                sql = string.Format("update [User] set Name = '{0}' where ID = {1}", textBoxItemName.Text.Trim(), textBoxItemName.Tag.ToString());
+                //sql = string.Format("update [User] set Name = '{0}' where ID = {1}", textBoxItemName.Text.Trim(), textBoxItemName.Tag.ToString());
+                table = "[User]";
+                setParamDict.Add("Name", textBoxItemName.Text.Trim());
+                whereParamDict.Add("ID", textBoxItemName.Tag);
             }
             else if (currentDataType == CurrentDataType.Project)
             {
-                sql = string.Format("update Project set Name = '{0}' where ID = {1}", textBoxItemName.Text.Trim(), textBoxItemName.Tag.ToString());
+                //sql = string.Format("update Project set Name = '{0}' where ID = {1}", textBoxItemName.Text.Trim(), textBoxItemName.Tag.ToString());
+                table = "Project";
+                setParamDict.Add("Name", textBoxItemName.Text.Trim());
+                whereParamDict.Add("ID", textBoxItemName.Tag);
             }
             else if (currentDataType == CurrentDataType.Branch)
             {
@@ -422,10 +446,17 @@ namespace WRManagement
                     MessageBox.Show("项目中已存在同名分支", "提示");
                     return;
                 }
-                sql = string.Format("update Branch set Name = '{0}', [Memo] = '{1}', ProjectID = {2} where ID = {3}", textBoxItemName.Text.Trim(), textBoxMemo.Text.Trim(), projectID, textBoxItemName.Tag.ToString());
+                //sql = string.Format("update Branch set Name = '{0}', [Memo] = '{1}', ProjectID = {2} where ID = {3}", textBoxItemName.Text.Trim(), textBoxMemo.Text.Trim(), projectID, textBoxItemName.Tag.ToString());
+                table = "Branch";
+                setParamDict.Add("Name", textBoxItemName.Text.Trim());
+                setParamDict.Add("Memo", textBoxMemo.Text.Trim());
+                setParamDict.Add("ProjectID", projectID);
+                whereParamDict.Add("ID", textBoxItemName.Tag);
             }
-            if (!string.IsNullOrWhiteSpace(sql))
-                accessHelper.ExecuteNonQuery(sql);
+            //if (!string.IsNullOrWhiteSpace(sql))
+            //    accessHelper.ExecuteNonQuery(sql);
+            if (table.NotNullOrWhiteSpace() && setParamDict.Count > 0 && whereParamDict.Count > 0)
+                accessHelper.Update(table, setParamDict, whereParamDict);
             ShowMessageAskRefresh();
         }
 
@@ -438,21 +469,31 @@ namespace WRManagement
                 MessageBox.Show("数据错误，请重新选择要修改的数据后重试", "提示");
                 return;
             }
-            string sql = string.Empty;
+            //string sql = string.Empty;
+            string table = string.Empty;
+            Dictionary<string, object> paramDict = new Dictionary<string, object>();
             if (currentDataType == CurrentDataType.User)
             {
-                sql = "delete from [User] where ID = " + textBoxItemName.Tag.ToString();
+                //sql = "delete from [User] where ID = " + textBoxItemName.Tag.ToString();
+                table = "[User]";
             }
             else if (currentDataType == CurrentDataType.Project)
             {
-                sql = "delete from Project where ID = " + textBoxItemName.Tag.ToString();
+                //sql = "delete from Project where ID = " + textBoxItemName.Tag.ToString();
+                table = "Project";
             }
             else if (currentDataType == CurrentDataType.Branch)
             {
-                sql = "delete from Branch where ID = " + textBoxItemName.Tag.ToString();
+                //sql = "delete from Branch where ID = " + textBoxItemName.Tag.ToString();
+                table = "Branch";
             }
-            if (!string.IsNullOrWhiteSpace(sql))
-                accessHelper.ExecuteNonQuery(sql);
+            //if (!string.IsNullOrWhiteSpace(sql))
+            //    accessHelper.ExecuteNonQuery(sql);
+            if (table.NotNullOrWhiteSpace())
+            {
+                paramDict.Add("ID", textBoxItemName.Tag);
+                accessHelper.Delete(table, paramDict);
+            }
             ShowMessageAskRefresh();
         }
 

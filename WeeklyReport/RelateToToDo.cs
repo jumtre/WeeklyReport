@@ -97,29 +97,73 @@ namespace WeeklyReport
             if (toDoListAll != null && toDoListAll.Count > 0)
                 toDoListAll.Clear();
             StringBuilder sql = new StringBuilder("select t.ID, t.ProjectID, p.Name as ProjectName, t.BranchID, b.Name as BranchName, t.RelatedID, t.Priority, t.Severity, t.Title, t.Content, t.[Memo], t.UserID, u.Name as UserName, t.PlannedStartTime, t.PlannedEndTime, t.PlannedHours, t.PlannedDays, t.Status, t.FinishTime, t.FinishUserID, uf.Name as FinishUserName from (((ToDo t left join Project p on t.ProjectID = p.ID) left join Branch b on t.BranchID = b.ID) left join [User] u on t.UserID = u.ID) left join [User] uf on t.FinishUserID = uf.ID where 1 = 1");
+            //Dictionary<string, object> paramDict = new Dictionary<string, object>();
+            SqlParams paramDict = new SqlParams();
             if (comboBoxSearchProject.SelectedItem is Project project && project.ID != CommonData.ItemAllValue)
-                sql.Append(" and t.ProjectID = " + project.ID);
+            {
+                //sql.Append(" and t.ProjectID = @ProjectID");
+                //paramDict.Add("ProjectID", project.ID);
+                sql.Append(paramDict.AddToWhere("ProjectID", project.ID, "t"));
+            }
             if (comboBoxSearchBranch.SelectedItem is Branch branch && branch.ID != CommonData.ItemAllValue)
-                sql.Append(" and t.BranchID = " + branch.ID);
+            {
+                //sql.Append(" and t.BranchID = @BranchID");
+                //paramDict.Add("BranchID", branch.ID);
+                sql.Append(paramDict.AddToWhere("BranchID", branch.ID, "t"));
+            }
             if (!string.IsNullOrWhiteSpace(textBoxSearchTitle.Text.Trim()))
-                sql.Append(" and t.Title like '%" + textBoxSearchTitle.Text.Trim() + "%'");
+            {
+                //sql.Append(" and t.Title like @Title");
+                //paramDict.Add("Title", "%" + textBoxSearchTitle.Text.Trim() + "%");
+                sql.Append(paramDict.AddLikeToWhere("Title", textBoxSearchTitle, "t"));
+            }
             if (!string.IsNullOrWhiteSpace(textBoxSearchContent.Text.Trim()))
-                sql.Append(" and t.Content like '%" + textBoxSearchContent.Text.Trim() + "%'");
+            {
+                //sql.Append(" and t.Content like @Content");
+                //paramDict.Add("Content", "%" + textBoxSearchContent.Text.Trim() + "%");
+                sql.Append(paramDict.AddLikeToWhere("Content", textBoxSearchContent, "t"));
+            }
             if (textBoxSearchRelatedID.Text.NotNullOrWhiteSpace())
-                sql.Append(" and t.RelatedID = " + DataConvert.ToAccessStringValue(textBoxSearchRelatedID));
+            {
+                //sql.Append(" and t.RelatedID = @RelatedID");
+                //paramDict.Add("RelatedID", textBoxSearchRelatedID.Text.Trim());
+                sql.Append(paramDict.AddToWhere("RelatedID", textBoxSearchRelatedID, "t"));
+            }
             if (comboBoxSearchStatus.SelectedItem is ToDoStatus status && status.ID != CommonData.ItemAllValue)
             {
                 if (status.ID == CommonData.toDoStatusNotDoneID)
-                    sql.Append(" and (t.Status = " + (int)EnumToDoStatus.Planning + " or t.Status = " + (int)EnumToDoStatus.Working + ")");
+                {
+                    //sql.Append(" and (t.Status = @Status1 or t.Status = @Status2)");
+                    //paramDict.Add("Status1", (int)EnumToDoStatus.Planning);
+                    //paramDict.Add("Status2", (int)EnumToDoStatus.Working);
+                    List<object> paramValueList = new List<object>() { (int)EnumToDoStatus.Planning, (int)EnumToDoStatus.Working };
+                    sql.Append(paramDict.AddToWhere("Status", paramValueList, "t"));
+                }
                 else
-                    sql.Append(" and t.Status = " + (int)status.Status);
+                {
+                    //sql.Append(" and t.Status = @Status");
+                    //paramDict.Add("Status", (int)status.Status);
+                    sql.Append(paramDict.AddToWhere("Status", (int)status.Status, "t"));
+                }
             }
             if (dateTimePickerSearchFisnishTimeFrom.Checked)
-                sql.Append(" and t.FinishTime >= " + DataConvert.ToAccessDateTimeValue(dateTimePickerSearchFisnishTimeFrom, 0, 0));
+            {
+                //sql.Append(" and t.FinishTime >= @FinishTimeStart");
+                //paramDict.Add("FinishTimeStart", DataConvert.ToDateTimeValue(dateTimePickerSearchFisnishTimeFrom, 0, 0));
+                sql.Append(paramDict.AddToWhere("FinishTime", ">=", "FinishTimeStart", DataConvert.ToDateTimeValue(dateTimePickerSearchFisnishTimeFrom, 0, 0), "t"));
+            }
             if (dateTimePickerSearchFinishTimeTo.Checked)
-                sql.Append(" and t.FinishTime <= " + DataConvert.ToAccessDateTimeValue(dateTimePickerSearchFinishTimeTo, 59, 59));
+            {
+                //sql.Append(" and t.FinishTime <= @FinishTimeEnd");
+                //paramDict.Add("FinishTimeEnd", DataConvert.ToDateTimeValue(dateTimePickerSearchFinishTimeTo, 59, 59));
+                sql.Append(paramDict.AddToWhere("FinishTime", "<=", "FinishTimeEnd", DataConvert.ToDateTimeValue(dateTimePickerSearchFinishTimeTo, 59, 59), "t"));
+            }
             if (comboBoxSearchFinishUser.SelectedItem is User user && user.ID != CommonData.ItemAllValue)
-                sql.Append(" and t.FinishUserID = " + user.ID);
+            {
+                //sql.Append(" and t.FinishUserID = @FinishUserID");
+                //paramDict.Add("FinishUserID", user.ID);
+                sql.Append(paramDict.AddToWhere("FinishUserID", user.ID, "t"));
+            }
             sql.Append(" order by t.FinishTime desc");
 
             if (toDoListAll == null)
@@ -127,7 +171,7 @@ namespace WeeklyReport
             else if (toDoListAll.Count > 0)
                 toDoListAll.Clear();
             toDoListAll.Clear();
-            DataTable dt = CommonData.AccessHelper.GetDataTable(sql.ToString());
+            DataTable dt = CommonData.AccessHelper.GetDataTable(sql.ToString(), paramDict);
             if (dt != null && dt.Rows.Count > 0)
             {
                 foreach (DataRow row in dt.Rows)
@@ -187,7 +231,6 @@ namespace WeeklyReport
 
         private void BindToDoList()
         {
-            //dataGridViewToDoList.SelectionChanged -= dataGridViewToDoList_SelectionChanged;
             dataGridViewToDoList.Rows.Clear();
             if (toDoListAll == null || toDoListAll.Count == 0)
                 return;
@@ -249,7 +292,6 @@ namespace WeeklyReport
                 row.Tag = todo;
             }
             dataGridViewToDoList.ClearSelection();
-            //dataGridViewToDoList.SelectionChanged += dataGridViewToDoList_SelectionChanged;
         }
 
         private void buttonSearch_Click(object sender, EventArgs e)
@@ -349,17 +391,28 @@ namespace WeeklyReport
             if (dataGridViewToDoList.SelectedRows[0].Tag is ToDo toDo && toDo != null)
             {
                 relatedReport.ToDoID = toDo.ID;
-                string sql = "update Report set ToDoID = :ToDoID where ID = :ID";
-                Dictionary<string, object> paramDict = new Dictionary<string, object>();
-                paramDict.Add("ToDoID", relatedReport.ToDoID);
-                paramDict.Add("ID", relatedReport.ID);
-                CommonData.AccessHelper.ExecuteNonQuery(sql, paramDict);
+                //string sql = "update Report set ToDoID = @ToDoID where ID = @ID";
+                //Dictionary<string, object> paramDict = new Dictionary<string, object>();
+                //paramDict.Add("ToDoID", relatedReport.ToDoID);
+                //paramDict.Add("ID", relatedReport.ID);
+                //CommonData.AccessHelper.ExecuteNonQuery(sql, paramDict);
+                CommonData.AccessHelper.Update("Report", "ToDoID", relatedReport.ToDoID, "ID", relatedReport.ID);
                 this.Close();
             }
             else
             {
                 MessageBox.Show("选中的项目有误", "提示");
                 return;
+            }
+        }
+
+        private void comboBoxSearchStatus_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxSearchStatus.SelectedItem is ToDoStatus status && status.Status != EnumToDoStatus.Done)
+            {
+                comboBoxSearchFinishUser.SelectedValue = CommonData.ItemAllValue;
+                dateTimePickerSearchFisnishTimeFrom.Checked = false;
+                dateTimePickerSearchFinishTimeTo.Checked = false;
             }
         }
     }

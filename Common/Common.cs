@@ -343,6 +343,23 @@ namespace Common
             }
             set { toDoSeverityList = value; }
         }
+
+        /// <summary>
+        /// Access数据库关键字列表，只存小写
+        /// </summary>
+        private static List<string> AccessKeyword = new List<string>() { "memo", "user" };
+
+        /// <summary>
+        /// 当前字符串是否Access数据库中的关键字
+        /// </summary>
+        /// <param name="str">要判断的字符串</param>
+        /// <returns></returns>
+        public static bool IsAccessKeyword(string str)
+        {
+            if (string.IsNullOrWhiteSpace(str))
+                return false;
+            return AccessKeyword.Contains(str.ToLower());
+        }
     }
 
     /// <summary>
@@ -613,7 +630,9 @@ namespace Common
             if (CommonData.BranchList != null && lazyLoad)
                 return CommonData.BranchList.FindAll(b => b.Project != null && b.Project.ID == projectID);
             List<Branch> branchList = new List<Branch>();
-            DataTable dtBranch = CommonData.AccessHelper.GetDataTable("select b.ID, b.Name, b.[Memo], b.ProjectID, p.Name as ProjectName from Branch b left join Project p on b.ProjectID = p.ID where ProjectID = " + projectID);
+            Dictionary<string, object> paramDict = new Dictionary<string, object>();
+            paramDict.Add("ProjectID", projectID);
+            DataTable dtBranch = CommonData.AccessHelper.GetDataTable("select b.ID, b.Name, b.[Memo], b.ProjectID, p.Name as ProjectName from Branch b left join Project p on b.ProjectID = p.ID where ProjectID = @ProjectID", paramDict);
             if (dtBranch != null && dtBranch.Rows.Count > 0)
             {
                 branchList = new List<Branch>();
@@ -941,6 +960,28 @@ namespace Common
                 comboBox.DisplayMember = "Name";
             }
         }
+
+        public static string SafeSql(this string str)
+        {
+            if (str.IsNullOrWhiteSpace())
+                return str;
+            str = str.Replace("'", "''");
+            str = new Regex("exec", RegexOptions.IgnoreCase).Replace(str, "&#101;xec");
+            str = new Regex("xp_cmdshell", RegexOptions.IgnoreCase).Replace(str, "&#120;p_cmdshell");
+            str = new Regex("select", RegexOptions.IgnoreCase).Replace(str, "&#115;elect");
+            str = new Regex("insert", RegexOptions.IgnoreCase).Replace(str, "&#105;nsert");
+            str = new Regex("update", RegexOptions.IgnoreCase).Replace(str, "&#117;pdate");
+            str = new Regex("delete", RegexOptions.IgnoreCase).Replace(str, "&#100;elete");
+            str = new Regex("drop", RegexOptions.IgnoreCase).Replace(str, "&#100;rop");
+            str = new Regex("create", RegexOptions.IgnoreCase).Replace(str, "&#99;reate");
+            str = new Regex("rename", RegexOptions.IgnoreCase).Replace(str, "&#114;ename");
+            str = new Regex("truncate", RegexOptions.IgnoreCase).Replace(str, "&#116;runcate");
+            str = new Regex("alter", RegexOptions.IgnoreCase).Replace(str, "&#97;lter");
+            str = new Regex("exists", RegexOptions.IgnoreCase).Replace(str, "&#101;xists");
+            str = new Regex("master.", RegexOptions.IgnoreCase).Replace(str, "&#109;aster.");
+            str = new Regex("restore", RegexOptions.IgnoreCase).Replace(str, "&#114;estore");
+            return str;
+        }
     }
 
     /// <summary>
@@ -1227,7 +1268,7 @@ namespace Common
         /// 转换成Access数据库DateTime类型对应的值
         /// </summary>
         /// <param name="dateTimePicker">要转换值的DateTimePicker控件</param>
-        /// <param name="secondsValue">DateTime中秒的值。小于等于0取0，大于等于59取59</param>
+        /// <param name="secondsValue">DateTime中秒的值。小于0取0，大于59取59</param>
         /// <returns></returns>
         public static string ToAccessDateTimeValue(DateTimePicker dateTimePicker, int secondsValue)
         {
@@ -1250,8 +1291,8 @@ namespace Common
         /// 转换成Access数据库DateTime类型对应的值
         /// </summary>
         /// <param name="dateTimePicker">要转换值的DateTimePicker控件</param>
-        /// <param name="minutesValue">DateTime中分的值。小于等于0取0，大于等于59取59</param>
-        /// <param name="secondsValue">DateTime中秒的值。小于等于0取0，大于等于59取59</param>
+        /// <param name="minutesValue">DateTime中分的值。小于0取0，大于59取59</param>
+        /// <param name="secondsValue">DateTime中秒的值。小于0取0，大于59取59</param>
         /// <returns></returns>
         public static string ToAccessDateTimeValue(DateTimePicker dateTimePicker, int minutesValue, int secondsValue)
         {
@@ -1303,6 +1344,112 @@ namespace Common
                     break;
             }
             return aValue;
+        }
+
+        /// <summary>
+        /// 从DateTimePicker控件中取到可空DateTime类型的值
+        /// </summary>
+        /// <param name="dateTimePicker">要取值的DateTimePicker控件</param>
+        /// <returns></returns>
+        public static DateTime? ToDateTimeValue(DateTimePicker dateTimePicker)
+        {
+            if ((dateTimePicker.ShowCheckBox && dateTimePicker.Checked) || !dateTimePicker.ShowCheckBox)
+                return dateTimePicker.Value;
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// 从DateTimePicker控件中取到可空DateTime类型的值
+        /// </summary>
+        /// <param name="dateTimePicker">要取值的DateTimePicker控件</param>
+        /// <param name="secondsValue">DateTime中秒的值。小于0取0，大于59取59</param>
+        /// <returns></returns>
+        public static DateTime? ToDateTimeValue(DateTimePicker dateTimePicker, int secondsValue)
+        {
+            if ((dateTimePicker.ShowCheckBox && dateTimePicker.Checked) || !dateTimePicker.ShowCheckBox)
+            {
+                if (secondsValue < 0)
+                    secondsValue = 0;
+                else if (secondsValue > 59)
+                    secondsValue = 59;
+                DateTime dateTime = dateTimePicker.Value;
+                if (dateTime.Second != secondsValue)
+                    dateTime = dateTime.AddSeconds(-dateTime.Second + secondsValue);
+                return dateTime;
+                //return dateTimePicker.Value.AddSeconds(-dateTimePicker.Value.Second).AddSeconds(secondsValue);
+            }
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// 从DateTimePicker控件中取到可空DateTime类型的值
+        /// </summary>
+        /// <param name="dateTimePicker">要取值的DateTimePicker控件</param>
+        /// <param name="minutesValue">DateTime中分的值。小于0取0，大于59取59</param>
+        /// <param name="secondsValue">DateTime中秒的值。小于0取0，大于59取59</param>
+        /// <returns></returns>
+        public static DateTime? ToDateTimeValue(DateTimePicker dateTimePicker, int minutesValue, int secondsValue)
+        {
+            if ((dateTimePicker.ShowCheckBox && dateTimePicker.Checked) || !dateTimePicker.ShowCheckBox)
+            {
+                if (minutesValue < 0)
+                    minutesValue = 0;
+                else if (minutesValue > 59)
+                    minutesValue = 59;
+                if (secondsValue < 0)
+                    secondsValue = 0;
+                else if (secondsValue > 59)
+                    secondsValue = 59;
+                DateTime dateTime = dateTimePicker.Value;
+                if (dateTime.Minute != minutesValue)
+                    dateTime = dateTime.AddMinutes(-dateTime.Minute + minutesValue);
+                if (dateTime.Second != secondsValue)
+                    dateTime = dateTime.AddSeconds(-dateTime.Second + secondsValue);
+                return dateTime;
+                //return dateTimePicker.Value.AddMinutes(-dateTimePicker.Value.Minute).AddSeconds(-dateTimePicker.Value.Second).AddMinutes(minutesValue).AddSeconds(secondsValue);
+            }
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// 从DateTimePicker控件中取到可空DateTime类型的值
+        /// </summary>
+        /// <param name="dateTimePicker">要取值的DateTimePicker控件</param>
+        /// <param name="hoursValue">DateTime中小时的值。小于0取0，大于23取23</param>
+        /// <param name="minutesValue">DateTime中分的值。小于0取0，大于59取59</param>
+        /// <param name="secondsValue">DateTime中秒的值。小于0取0，大于59取59</param>
+        /// <returns></returns>
+        public static DateTime? ToDateTimeValue(DateTimePicker dateTimePicker, int hoursValue, int minutesValue, int secondsValue)
+        {
+            if ((dateTimePicker.ShowCheckBox && dateTimePicker.Checked) || !dateTimePicker.ShowCheckBox)
+            {
+                if (hoursValue < 0)
+                    hoursValue = 0;
+                else if (hoursValue > 23)
+                    hoursValue = 23;
+                if (minutesValue < 0)
+                    minutesValue = 0;
+                else if (minutesValue > 59)
+                    minutesValue = 59;
+                if (secondsValue < 0)
+                    secondsValue = 0;
+                else if (secondsValue > 59)
+                    secondsValue = 59;
+                DateTime dateTime = dateTimePicker.Value.Date;
+                if (hoursValue > 0)
+                    dateTime = dateTime.AddHours(hoursValue);
+                if (minutesValue > 0)
+                    dateTime = dateTime.AddMinutes(minutesValue);
+                if (secondsValue > 0)
+                    dateTime = dateTime.AddSeconds(secondsValue);
+                return dateTime;
+                //return dateTimePicker.Value.Date.AddHours(hoursValue).AddMinutes(minutesValue).AddSeconds(secondsValue);
+            }
+            else
+                return null;
         }
     }
 

@@ -66,7 +66,7 @@ namespace Common
         /// <param name="sql">查询语句</param>
         /// <param name="conn">数据库连接</param>
         /// <returns></returns>
-        public DataTable GetDataTable(string sql, OleDbConnection conn = null)
+        public DataTable GetDataTable(string sql, Dictionary<string, object> paramDict = null, OleDbConnection conn = null)
         {
             if (string.IsNullOrWhiteSpace(sql))
                 return null;
@@ -78,6 +78,11 @@ namespace Common
             {
                 conn.Open();
                 OleDbDataAdapter da = new OleDbDataAdapter(sql, conn);
+                if (paramDict != null && paramDict.Count > 0)
+                {
+                    foreach (KeyValuePair<string, object> pair in paramDict)
+                        da.SelectCommand.Parameters.AddWithValue(pair.Key, pair.Value ?? DBNull.Value);
+                }
                 da.Fill(dt);
                 da.Dispose();
                 conn.Close();
@@ -100,7 +105,7 @@ namespace Common
             if (conn == null)
                 conn = GetDbConnection();
 
-            int i = 0;
+            int result = 0;
             using (conn)
             {
                 conn.Open();
@@ -109,14 +114,14 @@ namespace Common
                 if (paramDict != null && paramDict.Count > 0)
                 {
                     foreach (KeyValuePair<string, object> pair in paramDict)
-                        cmd.Parameters.AddWithValue(pair.Key, pair.Value ?? string.Empty);
+                        cmd.Parameters.AddWithValue(pair.Key, pair.Value ?? DBNull.Value);
                 }
-                i = cmd.ExecuteNonQuery();
+                result = cmd.ExecuteNonQuery();
                 cmd.Dispose();
                 conn.Close();
                 conn.Dispose();
             }
-            return i;
+            return result;
         }
 
         /// <summary>
@@ -142,7 +147,7 @@ namespace Common
                 if (paramDict != null && paramDict.Count > 0)
                 {
                     foreach (KeyValuePair<string, object> pair in paramDict)
-                        cmd.Parameters.AddWithValue(pair.Key, pair.Value ?? string.Empty);
+                        cmd.Parameters.AddWithValue(pair.Key, pair.Value ?? DBNull.Value);
                 }
                 o = cmd.ExecuteScalar();
                 cmd.Dispose();
@@ -150,6 +155,32 @@ namespace Common
                 conn.Dispose();
             }
             return o;
+        }
+
+        /// <summary>
+        /// 格式化字段名
+        /// </summary>
+        /// <param name="fieldName">要格式化的原始字段名</param>
+        /// <returns></returns>
+        public string FormatFieldName(string fieldName)
+        {
+            return CommonData.IsAccessKeyword(fieldName) ? "[" + fieldName + "]" : fieldName;
+        }
+
+        /// <summary>
+        /// 格式化参数名
+        /// </summary>
+        /// <param name="paramName">要格式化的原始参数名</param>
+        /// <param name="prefix">参数名前缀。可选，默认为空字符串。</param>
+        /// <returns></returns>
+        public string FormatParamName(string paramName, string prefix = "")
+        {
+            string strParamName = paramName;
+            if (strParamName.StartsWith("[") && strParamName.EndsWith("]"))
+                strParamName = strParamName.TrimStart('[').TrimEnd(']');
+            if (!string.IsNullOrWhiteSpace(prefix))
+                strParamName = prefix.Trim() + strParamName;
+            return strParamName;
         }
 
         /// <summary>
@@ -162,30 +193,235 @@ namespace Common
         public int Insert(string tableName, Dictionary<string, object> paramDict, OleDbConnection conn = null)
         {
             if (string.IsNullOrWhiteSpace(tableName) || paramDict == null || paramDict.Count == 0)
-                throw new CommonInfoException("执行失败，信息不完整。");
+                throw new ArgumentException("执行失败，参数有误。");
             if (conn == null)
                 conn = GetDbConnection();
 
-            int i = 0;
+            int result = 0;
             using (conn)
             {
                 conn.Open();
                 OleDbCommand cmd = conn.CreateCommand();
-                StringBuilder field = new StringBuilder();
-                StringBuilder param = new StringBuilder();
+                StringBuilder fieldBuilder = new StringBuilder();
+                StringBuilder paramBuilder = new StringBuilder();
                 foreach (KeyValuePair<string, object> pair in paramDict)
                 {
-                    field.Append(pair.Key + ",");
-                    param.Append("@" + pair.Key + ",");
-                    cmd.Parameters.AddWithValue(pair.Key, pair.Value ?? string.Empty);
+                    //Access关键字需进行处理
+                    string fieldName = FormatFieldName(pair.Key);
+                    string paramName = pair.Key.StartsWith("[") && pair.Key.EndsWith("]") ? pair.Key.TrimStart('[').TrimEnd(']') : pair.Key;
+                    fieldBuilder.Append(fieldName + ",");
+                    paramBuilder.Append("@" + paramName + ",");
+                    cmd.Parameters.AddWithValue(paramName, pair.Value ?? DBNull.Value);
                 }
-                cmd.CommandText = "insert into " + tableName + " (" + field.ToString().TrimEnd(',') + ") values (" + param.ToString().TrimEnd(',') + ")";
-                i = cmd.ExecuteNonQuery();
+                cmd.CommandText = "insert into " + tableName + " (" + fieldBuilder.ToString().TrimEnd(',') + ") values (" + paramBuilder.ToString().TrimEnd(',') + ")";
+                result = cmd.ExecuteNonQuery();
                 cmd.Dispose();
                 conn.Close();
                 conn.Dispose();
             }
-            return i;
+            return result;
+        }
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="tableName">表名</param>
+        /// <param name="setParamDict">set参数字典</param>
+        /// <param name="whereParamDict">where参数字典</param>
+        /// <param name="conn">数据库连接</param>
+        /// <returns></returns>
+        public int Update(string tableName, Dictionary<string, object> setParamDict, Dictionary<string, object> whereParamDict, OleDbConnection conn = null)
+        {
+            //检查whereParamDict，避免全表更新
+            if (string.IsNullOrWhiteSpace(tableName) || setParamDict == null || setParamDict.Count == 0 || whereParamDict == null || whereParamDict.Count == 0)
+                throw new ArgumentException("执行失败，参数有误。");
+            if (conn == null)
+                conn = GetDbConnection();
+
+            int result = 0;
+            using (conn)
+            {
+                conn.Open();
+                OleDbCommand cmd = conn.CreateCommand();
+                StringBuilder setBuilder = new StringBuilder();
+                foreach (KeyValuePair<string, object> pair in setParamDict)
+                {
+                    //Access关键字需进行处理
+                    string fieldName = FormatFieldName(pair.Key);
+                    string paramName = FormatParamName(pair.Key);
+                    setBuilder.Append(fieldName + " = @" + paramName + ",");
+                    cmd.Parameters.AddWithValue(paramName, pair.Value ?? DBNull.Value);
+                }
+                //StringBuilder whereBuilder = new StringBuilder();
+                //for (int i = 0; i < whereParamDict.Count; i++)
+                //{
+                //    KeyValuePair<string, object> pair = whereParamDict.ElementAt(i);
+                //    //Access关键字需进行处理
+                //    string fieldName = CommonData.AccessKeyword.Contains(pair.Key) ? "[" + pair.Key + "]" : pair.Key;
+                //    string paramName = pair.Key.StartsWith("[") && pair.Key.EndsWith("]") ? pair.Key.TrimStart('[').TrimEnd(']') : pair.Key;
+                //    //参数名前加特定字符串，避免与set里的参数名重复
+                //    if (i == 0)
+                //        whereBuilder.Append(fieldName + " = @Where" + paramName);
+                //    else
+                //        whereBuilder.Append(" and " + fieldName + " = @Where" + paramName);
+                //    cmd.Parameters.AddWithValue("Where" + paramName, pair.Value ?? DBNull.Value);
+                //}
+                //cmd.CommandText = "update " + tableName + " set " + setBuilder.ToString().TrimEnd(',') + " where " + whereBuilder.ToString();
+                cmd.CommandText = "update " + tableName + " set " + setBuilder.ToString().TrimEnd(',') + GetCommandWhereStr(cmd, whereParamDict, "Where");
+                result = cmd.ExecuteNonQuery();
+                cmd.Dispose();
+                conn.Close();
+                conn.Dispose();
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 通过某一字段及其值更新表中另一字段为另一个值
+        /// </summary>
+        /// <param name="tableName">表名</param>
+        /// <param name="setParamDict">set参数字典</param>
+        /// <param name="whereParamDict">where参数字典</param>
+        /// <param name="conn">数据库连接</param>
+        /// <returns></returns>
+        public int Update(string tableName, string setFieldName, object setParamValue, string whereFieldName, object whereParamValue, OleDbConnection conn = null)
+        {
+            //检查whereParamDict，避免全表更新
+            if (string.IsNullOrWhiteSpace(tableName) || string.IsNullOrWhiteSpace(setFieldName) || string.IsNullOrWhiteSpace(whereFieldName))
+                throw new ArgumentException("执行失败，参数有误。");
+            if (conn == null)
+                conn = GetDbConnection();
+
+            int result = 0;
+            using (conn)
+            {
+                conn.Open();
+                OleDbCommand cmd = conn.CreateCommand();
+                //Access关键字需进行处理
+                string setParamName = FormatParamName(setFieldName);
+                setFieldName = FormatFieldName(setFieldName);
+                string whereParamName = FormatParamName(whereFieldName);
+                whereFieldName = FormatFieldName(whereFieldName);
+                //判断set的参数名和where的参数名是否相同，相同则进行处理
+                if (whereParamName.ToLower() == setParamName.ToLower())
+                    whereParamName = "Where" + whereParamName;
+                cmd.CommandText = "update " + tableName + " set " + setFieldName + " = @" + setParamName + " where " + whereFieldName + " = @" + whereParamName;
+                cmd.Parameters.AddWithValue(setParamName, setParamValue ?? DBNull.Value);
+                cmd.Parameters.AddWithValue(whereParamName, whereParamValue ?? DBNull.Value);
+                result = cmd.ExecuteNonQuery();
+                cmd.Dispose();
+                conn.Close();
+                conn.Dispose();
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="tableName">表名</param>
+        /// <param name="paramDict">参数字典</param>
+        /// <param name="conn">数据库连接</param>
+        /// <returns></returns>
+        public int Delete(string tableName, Dictionary<string, object> paramDict, OleDbConnection conn = null)
+        {
+            //检查whereParamDict，避免全表更新
+            if (string.IsNullOrWhiteSpace(tableName)  || paramDict == null || paramDict.Count == 0)
+                throw new ArgumentException("执行失败，参数有误。");
+            if (conn == null)
+                conn = GetDbConnection();
+
+            int result = 0;
+            using (conn)
+            {
+                conn.Open();
+                OleDbCommand cmd = conn.CreateCommand();
+                //StringBuilder whereBuilder = new StringBuilder();
+                //for (int i = 0; i < paramDict.Count; i++)
+                //{
+                //    KeyValuePair<string, object> pair = paramDict.ElementAt(i);
+                //    //Access关键字需进行处理
+                //    string fieldName = CommonData.AccessKeyword.Contains(pair.Key) ? "[" + pair.Key + "]" : pair.Key;
+                //    string paramName = pair.Key.StartsWith("[") && pair.Key.EndsWith("]") ? pair.Key.TrimStart('[').TrimEnd(']') : pair.Key;
+                //    //参数名前加特定字符串，避免与set里的参数名重复
+                //    if (i == 0)
+                //        whereBuilder.Append(fieldName + " = @" + paramName);
+                //    else
+                //        whereBuilder.Append(" and " + fieldName + " = @" + paramName);
+                //    cmd.Parameters.AddWithValue(paramName, pair.Value ?? DBNull.Value);
+                //}
+                //cmd.CommandText = "delete from " + tableName + " where " + whereBuilder.ToString();
+                cmd.CommandText = "delete from " + tableName + GetCommandWhereStr(cmd, paramDict);
+                result = cmd.ExecuteNonQuery();
+                cmd.Dispose();
+                conn.Close();
+                conn.Dispose();
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 通过某一字段及其值执行SQL删除语句
+        /// </summary>
+        /// <param name="tableName">表名</param>
+        /// <param name="fieldName">根据此字段执行删除，同时会用来做参数名</param>
+        /// <param name="paramValue">参数的值</param>
+        /// <param name="conn">数据库连接</param>
+        /// <returns></returns>
+        public int Delete(string tableName, string fieldName, object paramValue, OleDbConnection conn = null)
+        {
+            //检查whereParamDict，避免全表更新
+            if (string.IsNullOrWhiteSpace(tableName) || string.IsNullOrWhiteSpace(fieldName))
+                throw new ArgumentException("执行失败，参数有误。");
+            if (conn == null)
+                conn = GetDbConnection();
+
+            int result = 0;
+            using (conn)
+            {
+                conn.Open();
+                OleDbCommand cmd = conn.CreateCommand();
+                //Access关键字需进行处理
+                string paramName = FormatParamName(fieldName);
+                fieldName = FormatFieldName(fieldName);
+                cmd.CommandText = "delete from " + tableName + " where " + fieldName + " = @" + paramName;
+                cmd.Parameters.AddWithValue(paramName, paramValue ?? DBNull.Value);
+                result = cmd.ExecuteNonQuery();
+                cmd.Dispose();
+                conn.Close();
+                conn.Dispose();
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 通过参数字典获取到SQL中的Where语句部分
+        /// </summary>
+        /// <param name="cmd">SQL命令</param>
+        /// <param name="whereParamDict">Where语句中的参数字典</param>
+        /// <param name="paramPrefix">参数名前缀，用于避免和SQL语句中其他部分的参数重名。可选，默认为空字符串。</param>
+        /// <returns></returns>
+        private string GetCommandWhereStr(OleDbCommand cmd, Dictionary<string, object> whereParamDict, string paramPrefix = "")
+        {
+            if (cmd == null)
+                throw new ArgumentException("参数有误。");
+            if (whereParamDict == null || whereParamDict.Count == 0)
+                return string.Empty;
+            StringBuilder whereBuilder = new StringBuilder(" where ");
+            for (int i = 0; i < whereParamDict.Count; i++)
+            {
+                KeyValuePair<string, object> pair = whereParamDict.ElementAt(i);
+                //Access关键字需进行处理
+                string fieldName = FormatFieldName(pair.Key);
+                //参数名前加特定字符串，避免与set里的参数名重复
+                string paramName = FormatParamName(pair.Key, paramPrefix);
+                if (i == 0)
+                    whereBuilder.Append(fieldName + " = @" + paramName);
+                else
+                    whereBuilder.Append(" and " + fieldName + " = @" + paramName);
+                cmd.Parameters.AddWithValue(paramName, pair.Value ?? DBNull.Value);
+            }
+            return whereBuilder.ToString();
         }
     }
 }

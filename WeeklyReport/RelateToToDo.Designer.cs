@@ -288,6 +288,7 @@
             this.comboBoxSearchStatus.Name = "comboBoxSearchStatus";
             this.comboBoxSearchStatus.Size = new System.Drawing.Size(106, 20);
             this.comboBoxSearchStatus.TabIndex = 5;
+            this.comboBoxSearchStatus.SelectedIndexChanged += new System.EventHandler(this.comboBoxSearchStatus_SelectedIndexChanged);
             // 
             // label8
             // 

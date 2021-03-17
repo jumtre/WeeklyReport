@@ -172,33 +172,85 @@ namespace ToDoList
             if (toDoListAll != null && toDoListAll.Count > 0)
                 toDoListAll.Clear();
             StringBuilder sql = new StringBuilder("select t.ID, t.ProjectID, p.Name as ProjectName, t.BranchID, b.Name as BranchName, t.RelatedID, t.Priority, t.Severity, t.Title, t.Content, t.[Memo], t.UserID, u.Name as UserName, t.PlannedStartTime, t.PlannedEndTime, t.PlannedHours, t.PlannedDays, t.Status, t.FinishTime, t.FinishUserID, uf.Name as FinishUserName from (((ToDo t left join Project p on t.ProjectID = p.ID) left join Branch b on t.BranchID = b.ID) left join [User] u on t.UserID = u.ID) left join [User] uf on t.FinishUserID = uf.ID where 1 = 1");
+            //Dictionary<string, object> paramDict = new Dictionary<string, object>();
+            SqlParams paramDict = new SqlParams();
             if (comboBoxSearchProject.SelectedItem is Project project && project.ID != CommonData.ItemAllValue)
-                sql.Append(" and t.ProjectID = " + project.ID);
+            {
+                //sql.Append(" and t.ProjectID = @ProjectID");
+                //paramDict.Add("ProjectID", project.ID);
+                sql.Append(paramDict.AddToWhere("ProjectID", project.ID, "t"));
+            }
             if (comboBoxSearchBranch.SelectedItem is Branch branch && branch.ID != CommonData.ItemAllValue)
-                sql.Append(" and t.BranchID = " + branch.ID);
-            if (!string.IsNullOrWhiteSpace(textBoxSearchTitle.Text.Trim()))
-                sql.Append(" and t.Title like '%" + textBoxSearchTitle.Text.Trim() + "%'");
-            if (!string.IsNullOrWhiteSpace(textBoxSearchContent.Text.Trim()))
-                sql.Append(" and t.Content like '%" + textBoxSearchContent.Text.Trim() + "%'");
+            {
+                //sql.Append(" and t.BranchID = @BranchID");
+                //paramDict.Add("BranchID", branch.ID);
+                sql.Append(paramDict.AddToWhere("BranchID", branch.ID, "t"));
+            }
+            if (textBoxSearchTitle.Text.NotNullOrWhiteSpace())
+            {
+                //sql.Append(" and t.Title like @Title");
+                //paramDict.Add("Title", "%" + textBoxSearchTitle.Text.Trim() + "%");
+                sql.Append(paramDict.AddLikeToWhere("Title", textBoxSearchTitle, "t"));
+            }
+            if (textBoxSearchContent.Text.NotNullOrWhiteSpace())
+            {
+                //sql.Append(" and t.Content like @Content");
+                //paramDict.Add("Content", "%" + textBoxSearchContent.Text.Trim() + "%");
+                sql.Append(paramDict.AddLikeToWhere("Content", textBoxSearchContent, "t"));
+            }
             if (textBoxSearchRelatedID.Text.NotNullOrWhiteSpace())
-                sql.Append(" and t.RelatedID = " + DataConvert.ToAccessStringValue(textBoxSearchRelatedID));
+            {
+                //sql.Append(" and t.RelatedID = @RelatedID");
+                //paramDict.Add("RelatedID", textBoxSearchRelatedID.Text.Trim());
+                sql.Append(paramDict.AddToWhere("RelatedID", textBoxSearchRelatedID, "t"));
+            }
             if (comboBoxSearchStatus.SelectedItem is ToDoStatus status && status.ID != CommonData.ItemAllValue)
             {
                 if (status.ID == CommonData.toDoStatusNotDoneID)
-                    sql.Append(" and (t.Status = " + (int)EnumToDoStatus.Planning + " or t.Status = " + (int)EnumToDoStatus.Working + ")");
+                {
+                    //sql.Append(" and (t.Status = @Status1 or t.Status = @Status2)");
+                    //paramDict.Add("Status1", (int)EnumToDoStatus.Planning);
+                    //paramDict.Add("Status2", (int)EnumToDoStatus.Working);
+                    List<object> paramValueList = new List<object> { (int)EnumToDoStatus.Planning, (int)EnumToDoStatus.Working };
+                    sql.Append(paramDict.AddToWhere("Status", paramValueList, "t"));
+                }
                 else
-                    sql.Append(" and t.Status = " + (int)status.Status);
+                {
+                    //sql.Append(" and t.Status = @Status");
+                    //paramDict.Add("Status", (int)status.Status);
+                    sql.Append(paramDict.AddToWhere("Status", (int)status.Status, "t"));
+                }
             }
             if (dateTimePickerSearchPlannedStartFrom.Checked)
-                sql.Append(" and t.PlannedStartTime >= " + DataConvert.ToAccessDateTimeValue(dateTimePickerSearchPlannedStartFrom, 0));//#" + dateTimePickerSearchPlannedStartFrom.Value.ToString(CommonData.DateTimeMinuteFormat + ":00") + "#
+            {
+                //sql.Append(" and t.PlannedStartTime >= @PlannedStartTimeStart");//#" + dateTimePickerSearchPlannedStartFrom.Value.ToString(CommonData.DateTimeMinuteFormat + ":00") + "#
+                //paramDict.Add("PlannedStartTimeStart", DataConvert.ToDateTimeValue(dateTimePickerSearchPlannedStartFrom, 0));
+                sql.Append(paramDict.AddToWhere("PlannedStartTime", ">=", "PlannedStartTimeStart", DataConvert.ToDateTimeValue(dateTimePickerSearchPlannedStartFrom, 0), "t"));
+            }
             if (dateTimePickerSearchPlannedStartTo.Checked)
-                sql.Append(" and t.PlannedStartTime <= " + DataConvert.ToAccessDateTimeValue(dateTimePickerSearchPlannedStartTo, 59));//#" + dateTimePickerSearchPlannedStartTo.Value.ToString(CommonData.DateTimeMinuteFormat + ":59") + "#
+            {
+                //sql.Append(" and t.PlannedStartTime <= @PlannedStartTimeEnd");//#" + dateTimePickerSearchPlannedStartTo.Value.ToString(CommonData.DateTimeMinuteFormat + ":59") + "#
+                //paramDict.Add("PlannedStartTimeEnd", DataConvert.ToDateTimeValue(dateTimePickerSearchPlannedStartTo, 59));
+                sql.Append(paramDict.AddToWhere("PlannedStartTime", "<=", "PlannedStartTimeEnd", DataConvert.ToDateTimeValue(dateTimePickerSearchPlannedStartTo, 59), "t"));
+            }
             if (dateTimePickerSearchPlannedEndFrom.Checked)
-                sql.Append(" and t.PlannedEndTime >= " + DataConvert.ToAccessDateTimeValue(dateTimePickerSearchPlannedEndFrom, 0));//#" + dateTimePickerSearchPlannedEndFrom.Value.ToString(CommonData.DateTimeMinuteFormat + ":00") + "#
+            {
+                //sql.Append(" and t.PlannedEndTime >= @PlannedEndTimeStart");//#" + dateTimePickerSearchPlannedEndFrom.Value.ToString(CommonData.DateTimeMinuteFormat + ":00") + "#
+                //paramDict.Add("PlannedEndTimeStart", DataConvert.ToDateTimeValue(dateTimePickerSearchPlannedEndFrom, 0));
+                sql.Append(paramDict.AddToWhere("PlannedEndTime", ">=", "PlannedEndTimeStart", DataConvert.ToDateTimeValue(dateTimePickerSearchPlannedEndFrom, 0)));
+            }
             if (dateTimePickerSearchPlannedEndTo.Checked)
-                sql.Append(" and t.PlannedEndTime <= " + DataConvert.ToAccessDateTimeValue(dateTimePickerSearchPlannedEndTo, 59));//#" + dateTimePickerSearchPlannedEndTo.Value.ToString(CommonData.DateTimeMinuteFormat + ":59") + "#
+            {
+                //sql.Append(" and t.PlannedEndTime <= @PlannedEndTimeEnd");//#" + dateTimePickerSearchPlannedEndTo.Value.ToString(CommonData.DateTimeMinuteFormat + ":59") + "#
+                //paramDict.Add("PlannedEndTimeEnd", DataConvert.ToDateTimeValue(dateTimePickerSearchPlannedEndTo, 59));
+                sql.Append(paramDict.AddToWhere("PlannedEndTime", "<=", "PlannedEndTimeEnd", DataConvert.ToDateTimeValue(dateTimePickerSearchPlannedEndTo, 59), "t"));
+            }
             if (comboBoxSearchAssignedTo.SelectedItem is User user && user.ID != CommonData.ItemAllValue)
-                sql.Append(" and t.UserID = " + user.ID);
+            {
+                //sql.Append(" and t.UserID = @UserID");
+                //paramDict.Add("UserID", user.ID);
+                sql.Append(paramDict.AddToWhere("UserID", user.ID, "t"));
+            }
             sql.Append(" order by t.Priority, t.Severity, t.PlannedEndTime");
 
             if (toDoListAll == null)
@@ -206,7 +258,7 @@ namespace ToDoList
             else if (toDoListAll.Count > 0)
                 toDoListAll.Clear();
             toDoListAll.Clear();
-            DataTable dt = CommonData.AccessHelper.GetDataTable(sql.ToString());
+            DataTable dt = CommonData.AccessHelper.GetDataTable(sql.ToString(), paramDict);
             if (dt != null && dt.Rows.Count > 0)
             {
                 foreach (DataRow row in dt.Rows)
@@ -494,77 +546,62 @@ namespace ToDoList
                 MessageBox.Show("标题不能为空", "提示");
                 return;
             }
-            StringBuilder fields = new StringBuilder("Title");
-            StringBuilder values = new StringBuilder(DataConvert.ToAccessStringValue(textBoxOperateTitle));
-            if (comboBoxOperateProject.SelectedItem is Project && comboBoxOperateProject.SelectedValue is int && (int)comboBoxOperateProject.SelectedValue != CommonData.ItemAllValue)
+            Dictionary<string, object> paramDict = new Dictionary<string, object>();
+            paramDict.Add("Title", textBoxOperateTitle.Text.Trim());
+            if (comboBoxOperateProject.SelectedItem is Project project && project.ID != CommonData.ItemAllValue)
             {
-                fields.Append(", ProjectID");
-                values.Append(", " + DataConvert.ToAccessIntValue(comboBoxOperateProject));
+                paramDict.Add("ProjectID", project.ID);
             }
-            if (comboBoxOperateBranch.SelectedItem is Branch && comboBoxOperateBranch.SelectedValue is int && (int)comboBoxOperateBranch.SelectedValue != CommonData.ItemAllValue)
+            if (comboBoxOperateBranch.SelectedItem is Branch branch && branch.ID != CommonData.ItemAllValue)
             {
-                fields.Append(", BranchID");
-                values.Append(", " + DataConvert.ToAccessIntValue(comboBoxOperateBranch));
+                paramDict.Add("BranchID", branch.ID);
             }
             if (textBoxOperateRelatedID.Text.NotNullOrWhiteSpace())
             {
-                fields.Append(", RelatedID");
-                values.Append(", '" + textBoxOperateRelatedID.Text.Trim() + "'");
+                paramDict.Add("RelatedID", textBoxOperateRelatedID.Text.Trim());
             }
-            if (comboBoxOperatePriority.SelectedItem is ToDoPriority && comboBoxOperatePriority.SelectedValue is EnumToDoPriority && ((ToDoPriority)comboBoxOperatePriority.SelectedItem).ID != CommonData.ItemAllValue)
+            if (comboBoxOperatePriority.SelectedItem is ToDoPriority priority && priority.ID != CommonData.ItemAllValue)
             {
-                fields.Append(", Priority");
-                //values.Append("," + (int)(EnumToDoPriority)comboBoxOperatePriority.SelectedValue);
-                values.Append(", " + (int)comboBoxOperatePriority.SelectedValue);
+                paramDict.Add("Priority", priority.ID);
             }
-            if (comboBoxOperateSeverity.SelectedItem is ToDoSeverity && comboBoxOperateSeverity.SelectedValue is EnumToDoSeverity && ((ToDoSeverity)comboBoxOperateSeverity.SelectedItem).ID != CommonData.ItemAllValue)
+            if (comboBoxOperateSeverity.SelectedItem is ToDoSeverity severity && severity.ID != CommonData.ItemAllValue)
             {
-                fields.Append(", Severity");
-                values.Append(", " + (int)comboBoxOperateSeverity.SelectedValue);
+                paramDict.Add("Severity", severity.ID);
             }
             if (dateTimePickerOperatePlannedStartTime.Checked)
             {
-                fields.Append(", PlannedStartTime");
-                values.Append(", " + DataConvert.ToAccessDateTimeValue(dateTimePickerOperatePlannedStartTime));
+                paramDict.Add("PlannedStartTime", DataConvert.ToDateTimeValue(dateTimePickerOperatePlannedStartTime));
             }
             if (dateTimePickerOperatePlannedEndTime.Checked)
             {
-                fields.Append(", PlannedEndTime");
-                values.Append(", " + DataConvert.ToAccessDateTimeValue(dateTimePickerOperatePlannedEndTime));
+                paramDict.Add("PlannedEndTime", DataConvert.ToDateTimeValue(dateTimePickerOperatePlannedEndTime));
             }
-            fields.Append(", PlannedHours");
-            values.Append(", " + DataConvert.ToAccessDecimalValue(numericUpDownOperatePlannedHours));
-            fields.Append(", PlannedDays");
-            values.Append(", " + DataConvert.ToAccessDecimalValue(numericUpDownOperatePlannedDays));
+            paramDict.Add("PlannedHours", numericUpDownOperatePlannedHours.Value);
+            paramDict.Add("PlannedDays", numericUpDownOperatePlannedDays.Value);
             if (!string.IsNullOrWhiteSpace(richTextBoxOperateContent.Text))
             {
-                fields.Append(", Content");
-                values.Append(", " + DataConvert.ToAccessStringValue(richTextBoxOperateContent));
+                paramDict.Add("Content", richTextBoxOperateContent.Text.Trim());
             }
             if (!string.IsNullOrWhiteSpace(richTextBoxOperateMemo.Text))
             {
-                fields.Append(", [Memo]");
-                values.Append(", " + DataConvert.ToAccessStringValue(richTextBoxOperateMemo));
+                paramDict.Add("[Memo]", richTextBoxOperateMemo.Text.Trim());
             }
             //fields.Append(", UserID");
             //if (comboBoxOperateAssignedTo.SelectedItem is User && comboBoxOperateAssignedTo.SelectedValue is int && (int)comboBoxOperateAssignedTo.SelectedValue != CommonData.ItemNullValue)
             //    values.Append(", " + DataConvert.ToAccessIntValue(comboBoxOperateAssignedTo));
             //else
             //    values.Append(", " + CommonData.CurrentUser.ID);
-            if (comboBoxOperateStatus.SelectedItem is ToDoStatus && comboBoxOperateStatus.SelectedValue is EnumToDoStatus && ((ToDoStatus)comboBoxOperateStatus.SelectedItem).ID != CommonData.ItemAllValue)
+            if (comboBoxOperateStatus.SelectedItem is ToDoStatus status && comboBoxOperateStatus.SelectedValue is EnumToDoStatus statusEnum && status.ID != CommonData.ItemAllValue)
             {
-                fields.Append(", Status");
-                values.Append(", " + (int)comboBoxOperateStatus.SelectedValue);
+                paramDict.Add("Status", (int)statusEnum);
             }
-            if (comboBoxOperateAssignedTo.SelectedItem is User && comboBoxOperateAssignedTo.SelectedValue is int && (int)comboBoxOperateAssignedTo.SelectedValue != CommonData.ItemNullValue)
+            if (comboBoxOperateAssignedTo.SelectedItem is User user && user.ID != CommonData.ItemNullValue)
             {
-                fields.Append(", UserID");
-                values.Append(", " + DataConvert.ToAccessIntValue(comboBoxOperateAssignedTo));
+                paramDict.Add("UserID", user.ID);
             }
             //fields.Append(",FinishTime");
             //fields.Append(",FinishUserID");
-            string sql = "insert into ToDo (" + fields.ToString() + ") values (" + values.ToString() + ")";
-            CommonData.AccessHelper.ExecuteNonQuery(sql);
+            CommonData.AccessHelper.Insert("ToDo", paramDict);
             richTextBoxOperateContent.Text = string.Empty;
             ShowMessageAskRefresh();
         }
@@ -587,24 +624,43 @@ namespace ToDoList
                 return;
             }
             ToDo toDoOperate = GetToDoFromOperateControls();
-            StringBuilder sets = new StringBuilder("Title = " + DataConvert.ToAccessStringValue(toDoOperate.Title));
-            sets.Append(", ProjectID = " + (toDoOperate.Project.ID != CommonData.ItemAllValue ? toDoOperate.Project.ID.ToString() : "null"));
-            sets.Append(", BranchID = " + (toDoOperate.Branch != null && toDoOperate.Branch.ID != CommonData.ItemAllValue ? toDoOperate.Branch.ID.ToString() : "null"));
-            sets.Append(", RelatedID = " + (textBoxOperateRelatedID.Text.NotNullOrWhiteSpace() ? DataConvert.ToAccessStringValue(textBoxOperateRelatedID.Text.Trim()) : "null"));
-            sets.Append(", Priority = " + (toDoOperate.Priority.HasValue ? ((int)toDoOperate.Priority.Value).ToString() : "null"));
-            sets.Append(", Severity = " + (toDoOperate.Severity.HasValue ? ((int)toDoOperate.Severity.Value).ToString() : "null"));
-            sets.Append(", Content = " + DataConvert.ToAccessStringValue(toDoOperate.Content));
-            sets.Append(", [Memo] = " + DataConvert.ToAccessStringValue(toDoOperate.Memo));
-            //sets.Append(", UserID = " + CommonData.CurrentUser.ID);
-            sets.Append(", PlannedStartTime = " + DataConvert.ToAccessDateTimeValue(toDoOperate.PlannedStartTime));
-            sets.Append(", PlannedEndTime = " + DataConvert.ToAccessDateTimeValue(toDoOperate.PlannedEndTime));
-            sets.Append(", PlannedHours = " + DataConvert.ToAccessDecimalValue(toDoOperate.PlannedHours));
-            sets.Append(", PlannedDays = " + DataConvert.ToAccessDecimalValue(toDoOperate.PlannedDays));
-            sets.Append(", Status = " + (toDoOperate.Status.HasValue ? ((int)toDoOperate.Status.Value).ToString() : "null"));
-            sets.Append(", UserID = " + (toDoOperate.User.ID != CommonData.ItemNullValue ? toDoOperate.User.ID.ToString() : "null"));
-            //sets.Append(", FinishTime = ");
-            //sets.Append(", FinishUserID = ");
-            CommonData.AccessHelper.ExecuteNonQuery("update ToDo set " + sets.ToString() + " where ID = " + toDoOriginal.ID);
+            Dictionary<string, object> setParamDict = new Dictionary<string, object>();
+            setParamDict.Add("Title", toDoOperate.Title);
+            setParamDict.Add("ProjectID", toDoOperate.Project.ID != CommonData.ItemAllValue ? (int?)toDoOperate.Project.ID : null);//test
+            setParamDict.Add("BranchID", toDoOperate.Branch != null && toDoOperate.Branch.ID != CommonData.ItemAllValue ? (int?)toDoOperate.Branch.ID : null);
+            setParamDict.Add("RelatedID", textBoxOperateRelatedID.Text.NotNullOrWhiteSpace() ? textBoxOperateRelatedID.Text.Trim() : null);
+            setParamDict.Add("Priority", toDoOperate.Priority.HasValue ? (int?)toDoOperate.Priority.Value : null);
+            setParamDict.Add("Severity", toDoOperate.Severity.HasValue ? (int?)toDoOperate.Severity.Value : null);
+            setParamDict.Add("Content", toDoOperate.Content);
+            setParamDict.Add("Memo", toDoOperate.Memo);
+            setParamDict.Add("PlannedStartTime", toDoOperate.PlannedStartTime);
+            setParamDict.Add("PlannedEndTime", toDoOperate.PlannedEndTime);
+            setParamDict.Add("PlannedHours", toDoOperate.PlannedHours);
+            setParamDict.Add("PlannedDays", toDoOperate.PlannedDays);
+            setParamDict.Add("Status", toDoOperate.Status.HasValue ? (int?)toDoOperate.Status.Value : null);
+            setParamDict.Add("UserID", toDoOperate.User.ID != CommonData.ItemNullValue ? (int?)toDoOperate.User.ID : null);
+            Dictionary<string, object> whereParamDict = new Dictionary<string, object>();
+            whereParamDict.Add("ID", toDoOriginal.ID);
+            CommonData.AccessHelper.Update("ToDo", setParamDict, whereParamDict);
+
+            //StringBuilder sets = new StringBuilder("Title = " + DataConvert.ToAccessStringValue(toDoOperate.Title));
+            //sets.Append(", ProjectID = " + (toDoOperate.Project.ID != CommonData.ItemAllValue ? toDoOperate.Project.ID.ToString() : "null"));
+            //sets.Append(", BranchID = " + (toDoOperate.Branch != null && toDoOperate.Branch.ID != CommonData.ItemAllValue ? toDoOperate.Branch.ID.ToString() : "null"));
+            //sets.Append(", RelatedID = " + (textBoxOperateRelatedID.Text.NotNullOrWhiteSpace() ? DataConvert.ToAccessStringValue(textBoxOperateRelatedID.Text.Trim()) : "null"));
+            //sets.Append(", Priority = " + (toDoOperate.Priority.HasValue ? ((int)toDoOperate.Priority.Value).ToString() : "null"));
+            //sets.Append(", Severity = " + (toDoOperate.Severity.HasValue ? ((int)toDoOperate.Severity.Value).ToString() : "null"));
+            //sets.Append(", Content = " + DataConvert.ToAccessStringValue(toDoOperate.Content));
+            //sets.Append(", [Memo] = " + DataConvert.ToAccessStringValue(toDoOperate.Memo));
+            ////sets.Append(", UserID = " + CommonData.CurrentUser.ID);
+            //sets.Append(", PlannedStartTime = " + DataConvert.ToAccessDateTimeValue(toDoOperate.PlannedStartTime));
+            //sets.Append(", PlannedEndTime = " + DataConvert.ToAccessDateTimeValue(toDoOperate.PlannedEndTime));
+            //sets.Append(", PlannedHours = " + DataConvert.ToAccessDecimalValue(toDoOperate.PlannedHours));
+            //sets.Append(", PlannedDays = " + DataConvert.ToAccessDecimalValue(toDoOperate.PlannedDays));
+            //sets.Append(", Status = " + (toDoOperate.Status.HasValue ? ((int)toDoOperate.Status.Value).ToString() : "null"));
+            //sets.Append(", UserID = " + (toDoOperate.User.ID != CommonData.ItemNullValue ? toDoOperate.User.ID.ToString() : "null"));
+            ////sets.Append(", FinishTime = ");
+            ////sets.Append(", FinishUserID = ");
+            //CommonData.AccessHelper.ExecuteNonQuery("update ToDo set " + sets.ToString() + " where ID = " + toDoOriginal.ID);
             ShowMessageAskRefresh();
         }
 
@@ -620,8 +676,9 @@ namespace ToDoList
                 MessageBox.Show("待办事项数据错误", "提示");
                 return;
             }
-            CommonData.AccessHelper.ExecuteNonQuery("delete from ToDo where ID = " + toDo.ID);
-            //MessageBox.Show("删除完成", "提示");
+            CommonData.AccessHelper.Delete("ToDo", "ID", toDo.ID);
+            //CommonData.AccessHelper.ExecuteNonQuery("delete from ToDo where ID = " + toDo.ID);
+            ////MessageBox.Show("删除完成", "提示");
             ShowMessageAskRefresh();
         }
 
@@ -637,7 +694,8 @@ namespace ToDoList
                 MessageBox.Show("待办事项数据错误", "提示");
                 return;
             }
-            int i = CommonData.AccessHelper.ExecuteNonQuery("update ToDo set Status = " + (int)EnumToDoStatus.Working + " where ID = " + toDo.ID);
+            //int i = CommonData.AccessHelper.ExecuteNonQuery("update ToDo set Status = " + (int)EnumToDoStatus.Working + " where ID = " + toDo.ID);
+            int i = CommonData.AccessHelper.Update("ToDo", "Status", (int)EnumToDoStatus.Working, "ID", toDo.ID);
             //因为更新后有修改界面的逻辑，所以先判断是否更新成功，未更新成功就提示。避免更新失败后还是更新界面，导致界面显示与实际数据不同
             if (i == 0)
             {
@@ -684,7 +742,15 @@ namespace ToDoList
                 return;
             }
             DateTime now = DateTime.Now;
-            int i = CommonData.AccessHelper.ExecuteNonQuery("update ToDo set Status = " + (int)EnumToDoStatus.Done + ", FinishTime = " + DataConvert.ToAccessDateTimeValue(now) + ", FinishUserID = " + CommonData.CurrentUser.ID + " where ID = " + toDo.ID);
+            //int i = CommonData.AccessHelper.ExecuteNonQuery("update ToDo set Status = " + (int)EnumToDoStatus.Done + ", FinishTime = " + DataConvert.ToAccessDateTimeValue(now) + ", FinishUserID = " + CommonData.CurrentUser.ID + " where ID = " + toDo.ID);
+            SqlParams setParamDict = new SqlParams();
+            //Dictionary<string, object> setParamDict = new Dictionary<string, object>();
+            setParamDict.Add("Status", (int)EnumToDoStatus.Done);
+            setParamDict.Add("FinishTime", now);
+            setParamDict.Add("FinishUserID", CommonData.CurrentUser.ID);
+            Dictionary<string, object> whereParamDict = new Dictionary<string, object>();
+            whereParamDict.Add("ID", toDo.ID);
+            int i = CommonData.AccessHelper.Update("ToDo", setParamDict, whereParamDict);
             //因为更新后有修改界面的逻辑，所以先判断是否更新成功，未更新成功就提示。避免更新失败后还是更新界面，导致界面显示与实际数据不同
             if (i == 0)
             {

@@ -71,25 +71,25 @@ namespace ToDoList
                 MessageBox.Show("内容不能为空", "提示");
                 return;
             }
-            string fields = "UserID, ProjectID, Content, Source, ToDoID";
-            string values = CommonData.CurrentUser.ID + ", " + project.ID + ", " + "'" + richTextBoxContent.Text.Trim() + "', " + (int)EnumReportSource.Todo + ", " + toDo.ID;
+            Dictionary<string, object> paramDict = new Dictionary<string, object>();
+            paramDict.Add("UserID", CommonData.CurrentUser.ID);
+            paramDict.Add("ProjectID", project.ID);
+            paramDict.Add("Content", richTextBoxContent.Text.Trim());
+            paramDict.Add("Source", (int)EnumReportSource.Todo);
+            paramDict.Add("ToDoID", toDo.ID);
             if (dateTimePickerFinishTime.Checked && dateTimePickerFinishTime.Value > DateTime.MinValue)
             {
-                fields += ", FinishTime";
-                values += ", " + DataConvert.ToAccessDateTimeValue(dateTimePickerFinishTime);
+                paramDict.Add("FinishTime", DataConvert.ToDateTimeValue(dateTimePickerFinishTime));
             }
             if (comboBoxBranch.SelectedItem is Branch branch && branch.ID != CommonData.ItemAllValue)
             {
-                fields += ", BranchID";
-                values += ", " + branch.ID;
+                paramDict.Add("BranchID", branch.ID);
             }
             if (textBoxRelatedID.Text.NotNullOrWhiteSpace())
             {
-                fields += ", RelatedID";
-                values += ", " + DataConvert.ToAccessStringValue(textBoxRelatedID);
+                paramDict.Add("RelatedID", textBoxRelatedID.Text.ToString());
             }
-            string sql = "insert into Report (" + fields + ") values (" + values + ")";
-            int i = CommonData.AccessHelper.ExecuteNonQuery(sql);
+            int i = CommonData.AccessHelper.Insert("Report", paramDict);
             //避免新增失败后用户不知道，此处进行提醒
             if (i > 0)
                 this.Close();
