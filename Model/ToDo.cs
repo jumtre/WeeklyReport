@@ -95,5 +95,15 @@ namespace Model
         /// 完成用户
         /// </summary>
         public User FinishUser { get; set; }
+
+        /// <summary>
+        /// 取消时间
+        /// </summary>
+        public DateTime? CancelTime { get; set; }
+
+        /// <summary>
+        /// 取消用户
+        /// </summary>
+        public User CancelUser { get; set; }
     }
 }

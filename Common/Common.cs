@@ -19,9 +19,9 @@ namespace Common
     public static class CommonData
     {
         /// <summary>
-        /// 程序路径：Environment.CurrentDirectory
+        /// 程序路径：AppDomain.CurrentDomain.BaseDirectory
         /// </summary>
-        public static readonly string ApplicationPath = Environment.CurrentDirectory;
+        public static readonly string ApplicationPath = AppDomain.CurrentDomain.BaseDirectory;
 
         /// <summary>
         /// 数据库文件名：DB.mdb
@@ -826,6 +826,7 @@ namespace Common
             toDoStatusList.Add(new ToDoStatus((int)EnumToDoStatus.Planning, GetDescription(EnumToDoStatus.Planning), EnumToDoStatus.Planning));
             toDoStatusList.Add(new ToDoStatus((int)EnumToDoStatus.Working, GetDescription(EnumToDoStatus.Working), EnumToDoStatus.Working));
             toDoStatusList.Add(new ToDoStatus((int)EnumToDoStatus.Done, GetDescription(EnumToDoStatus.Done), EnumToDoStatus.Done));
+            toDoStatusList.Add(new ToDoStatus((int)EnumToDoStatus.Cancelled, GetDescription(EnumToDoStatus.Cancelled), EnumToDoStatus.Cancelled));
             CommonData.ToDoStatusList = toDoStatusList;
             return CommonData.ToDoStatusList;
         }

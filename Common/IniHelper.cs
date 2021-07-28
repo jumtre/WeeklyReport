@@ -74,7 +74,7 @@ namespace Common
         public void SetIniFilePath(string filePath = null)
         {
             if (string.IsNullOrWhiteSpace(filePath))
-                FilePath = Environment.CurrentDirectory + "\\Settings.ini";
+                FilePath = AppDomain.CurrentDomain.BaseDirectory + "\\Settings.ini";
             else
                 FilePath = filePath;
             if (!File.Exists(FilePath))

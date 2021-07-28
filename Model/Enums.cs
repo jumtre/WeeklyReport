@@ -65,7 +65,12 @@ namespace Model
         /// 已完成
         /// </summary>
         [Description("已完成")]
-        Done
+        Done,
+        /// <summary>
+        /// 已取消
+        /// </summary>
+        [Description("已取消")]
+        Cancelled
     }
 
     /// <summary>

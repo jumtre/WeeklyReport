@@ -211,7 +211,19 @@ namespace Common
                     string paramName = pair.Key.StartsWith("[") && pair.Key.EndsWith("]") ? pair.Key.TrimStart('[').TrimEnd(']') : pair.Key;
                     fieldBuilder.Append(fieldName + ",");
                     paramBuilder.Append("@" + paramName + ",");
-                    cmd.Parameters.AddWithValue(paramName, pair.Value ?? DBNull.Value);
+                    //update貌似无需处理
+                    if (pair.Value.GetType() == typeof(DateTime))//针对DateTime类型的特殊处理，可能DateTime和OleDbType没有映射关系，不指定OleDbType会报错“System.Data.OleDb.OleDbException: 标准表达式中数据类型不匹配”
+                    {
+                        cmd.Parameters.Add(new OleDbParameter()
+                        {
+                            OleDbType = OleDbType.Date,//这里试过DBDate和DBTimeStamp都不行；DBDate只会记录日期部分，DBTimeStamp报数据类型不匹配的错误
+                            Value = pair.Value ?? DBNull.Value
+                        });
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue(paramName, pair.Value ?? DBNull.Value);
+                    }
                 }
                 cmd.CommandText = "insert into " + tableName + " (" + fieldBuilder.ToString().TrimEnd(',') + ") values (" + paramBuilder.ToString().TrimEnd(',') + ")";
                 result = cmd.ExecuteNonQuery();

@@ -122,6 +122,7 @@
             this.comboBoxOperateProject = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
             this.toolTipInfo = new System.Windows.Forms.ToolTip(this.components);
+            this.buttonCancelled = new System.Windows.Forms.Button();
             this.groupBoxSearch.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
@@ -637,6 +638,7 @@
             // 
             // groupBoxDataOperation
             // 
+            this.groupBoxDataOperation.Controls.Add(this.buttonCancelled);
             this.groupBoxDataOperation.Controls.Add(this.buttonOperateNextWeek);
             this.groupBoxDataOperation.Controls.Add(this.buttonOperateLastWeek);
             this.groupBoxDataOperation.Controls.Add(this.buttonOperateThisWeek);
@@ -874,7 +876,7 @@
             this.buttonWorking.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonWorking.Location = new System.Drawing.Point(124, 508);
             this.buttonWorking.Name = "buttonWorking";
-            this.buttonWorking.Size = new System.Drawing.Size(75, 23);
+            this.buttonWorking.Size = new System.Drawing.Size(50, 23);
             this.buttonWorking.TabIndex = 31;
             this.buttonWorking.Text = "工作中";
             this.buttonWorking.UseVisualStyleBackColor = true;
@@ -883,9 +885,9 @@
             // buttonDone
             // 
             this.buttonDone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonDone.Location = new System.Drawing.Point(205, 508);
+            this.buttonDone.Location = new System.Drawing.Point(177, 508);
             this.buttonDone.Name = "buttonDone";
-            this.buttonDone.Size = new System.Drawing.Size(75, 23);
+            this.buttonDone.Size = new System.Drawing.Size(50, 23);
             this.buttonDone.TabIndex = 32;
             this.buttonDone.Text = "已完成";
             this.buttonDone.UseVisualStyleBackColor = true;
@@ -1112,6 +1114,17 @@
             this.label11.TabIndex = 0;
             this.label11.Text = "项    目：";
             // 
+            // buttonCancelled
+            // 
+            this.buttonCancelled.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonCancelled.Location = new System.Drawing.Point(230, 508);
+            this.buttonCancelled.Name = "buttonCancelled";
+            this.buttonCancelled.Size = new System.Drawing.Size(50, 23);
+            this.buttonCancelled.TabIndex = 33;
+            this.buttonCancelled.Text = "已取消";
+            this.buttonCancelled.UseVisualStyleBackColor = true;
+            this.buttonCancelled.Click += new System.EventHandler(this.buttonCancelled_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1243,5 +1256,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPriority;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnSeverity;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPlannedEndTime;
+        private System.Windows.Forms.Button buttonCancelled;
     }
 }

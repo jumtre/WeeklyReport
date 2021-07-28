@@ -137,9 +137,15 @@ namespace ToDoList
                 return;
             numericUpDownOperatePlannedHours.ValueChanged -= numericUpDownOperatePlannedTime_ValueChanged;
             numericUpDownOperatePlannedDays.ValueChanged -= numericUpDownOperatePlannedTime_ValueChanged;
-            decimal hours = (decimal)DateTimeManger.DateDiff(DateInterval.Hour, dateTimePickerOperatePlannedStartTime.Value, dateTimePickerOperatePlannedEndTime.Value);
+            //处理结束时间，计算计划时长时能更精准
+            DateTime endTime = dateTimePickerOperatePlannedEndTime.Value;
+            if (endTime.Hour == 23 && endTime.Minute == 59)
+                endTime = endTime.Date.AddDays(1);
+            else if (endTime.Second != 0)
+                endTime = endTime.AddSeconds(-endTime.Second);
+            decimal hours = (decimal)DateTimeManger.DateDiff(DateInterval.Hour, dateTimePickerOperatePlannedStartTime.Value, endTime);
             numericUpDownOperatePlannedHours.Value = hours >= numericUpDownOperatePlannedHours.Minimum && hours <= numericUpDownOperatePlannedHours.Maximum ? hours : 0;
-            decimal days = (decimal)DateTimeManger.DateDiff(DateInterval.Day, dateTimePickerOperatePlannedStartTime.Value, dateTimePickerOperatePlannedEndTime.Value);
+            decimal days = (decimal)DateTimeManger.DateDiff(DateInterval.Day, dateTimePickerOperatePlannedStartTime.Value, endTime);
             numericUpDownOperatePlannedDays.Value = days >= numericUpDownOperatePlannedDays.Minimum && days <= numericUpDownOperatePlannedDays.Maximum ? days : 0;
             numericUpDownOperatePlannedHours.ValueChanged += numericUpDownOperatePlannedTime_ValueChanged;
             numericUpDownOperatePlannedDays.ValueChanged += numericUpDownOperatePlannedTime_ValueChanged;
@@ -344,6 +350,7 @@ namespace ToDoList
                         case EnumToDoStatus.Done:
                             row.Cells[ColumnDone.Index].Value = "true";
                             break;
+                        case EnumToDoStatus.Cancelled:
                         default:
                             row.Cells[ColumnDone.Index].Value = "false";
                             break;
@@ -732,6 +739,53 @@ namespace ToDoList
                 return;
             }
             ToDoDone(toDo);
+        }
+
+        private void buttonCancelled_Click(object sender, EventArgs e)
+        {
+            if (dataGridViewToDoList.SelectedRows.Count != 1)
+            {
+                MessageBox.Show("选中一行后再设置", "提示");
+                return;
+            }
+            if (!(dataGridViewToDoList.SelectedRows[0].Tag is ToDo toDo) || toDo.ID <= 0)
+            {
+                MessageBox.Show("待办事项数据错误", "提示");
+                return;
+            }
+            DateTime now = DateTime.Now;
+            //int i = CommonData.AccessHelper.ExecuteNonQuery("update ToDo set Status = " + (int)EnumToDoStatus.Cancelled + " where ID = " + toDo.ID);
+            SqlParams setParamDict = new SqlParams();
+            setParamDict.Add("Status", (int)EnumToDoStatus.Cancelled);
+            setParamDict.Add("CancelTime", now);
+            setParamDict.Add("CancelUserID", CommonData.CurrentUser.ID);
+            SqlParams whereParamDict = new SqlParams();
+            whereParamDict.Add("ID", toDo.ID);
+            int i = CommonData.AccessHelper.Update("ToDo", setParamDict, whereParamDict);
+            //因为更新后有修改界面的逻辑，所以先判断是否更新成功，未更新成功就提示。避免更新失败后还是更新界面，导致界面显示与实际数据不同
+            if (i == 0)
+            {
+                MessageBox.Show("更新失败", "提示");
+                return;
+            }
+            toDo.Status = EnumToDoStatus.Cancelled;
+            toDo.CancelTime = now;
+            toDo.CancelUser = CommonData.CurrentUser;
+            if (ShowMessageAskRefresh() == DialogResult.No)
+            {
+                foreach (DataGridViewRow row in dataGridViewToDoList.Rows)
+                {
+                    if (row.Tag is ToDo)
+                    {
+                        ToDo toDoRow = row.Tag as ToDo;
+                        if (toDoRow.ID == toDo.ID)
+                        {
+                            row.Cells[ColumnDone.Index].Value = "false";
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         private void ToDoDone(ToDo toDo)
