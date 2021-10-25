@@ -23,10 +23,6 @@ namespace WRManagement
             Branch
         }
         /// <summary>
-        /// 数据库帮助类
-        /// </summary>
-        private AccessHelper accessHelper;
-        /// <summary>
         /// 当前编辑数据的类型
         /// </summary>
         private CurrentDataType currentDataType;
@@ -34,10 +30,6 @@ namespace WRManagement
         /// 是否触发DataGridView的SelectionChanged事件
         /// </summary>
         private bool fireSelectionChanged = true;
-        /// <summary>
-        /// ini文件帮助类
-        /// </summary>
-        private IniHelper iniHelper;
 
         public MainForm()
         {
@@ -51,8 +43,6 @@ namespace WRManagement
                 MessageBox.Show("数据库文件未找到。", "提示");
                 this.Close();
             }
-            accessHelper = new AccessHelper(CommonData.DBPath);
-            iniHelper = new IniHelper(CommonData.ConfigFilePath);
             BindDict();
         }
 
@@ -64,6 +54,7 @@ namespace WRManagement
             BindUserDict();
             BindProjectDict();
             BindBranchDict();
+            checkBoxApplyCurrentProjectAndBranchToSearch.Checked = CommonData.IniHelper.Read("Common", "ApplyCurrentProjectAndBranchToSearch").ToLower() == "true" ? true : false;
         }
 
         private void BindUserDict(bool lazyLoad = true)
@@ -75,7 +66,7 @@ namespace WRManagement
                 MessageBox.Show("绑定的当前用户数据源错误", "提示");
                 return;
             }
-            string currentUserID = iniHelper.Read("Common", "CurrentUserID");
+            string currentUserID = CommonData.IniHelper.Read("Common", "CurrentUserID");
             if (currentUserID.NotNullOrWhiteSpace())
             {
                 comboBoxCurrentUser.SelectedItem = users.FirstOrDefault(u => u.ID.ToString() == currentUserID);
@@ -84,7 +75,7 @@ namespace WRManagement
             {
                 string a = string.Empty;
                 string currentUserName = string.Empty;
-                currentUserName = iniHelper.Read("Common", "CurrentUserName");
+                currentUserName = CommonData.IniHelper.Read("Common", "CurrentUserName");
                 if (currentUserName.NotNullOrWhiteSpace())
                     comboBoxCurrentUser.SelectedItem = users.FirstOrDefault(u => u.Name == currentUserName);
             }
@@ -103,15 +94,15 @@ namespace WRManagement
                 MessageBox.Show("绑定的当前项目数据源错误", "提示");
                 return;
             }
-            string currentProjectID = iniHelper.Read("Common", "CurrentProjectID");
+            string currentProjectID = CommonData.IniHelper.Read("Common", "CurrentProjectID");
             if (currentProjectID.NotNullOrWhiteSpace())
             {
                 comboBoxCurrentProject.SelectedItem = projects.FirstOrDefault(u => u.ID.ToString() == currentProjectID);
             }
             else
             {
-                //comboBoxCurrentProject.Text= iniHelper.Read("Common", "CurrentProjectName");
-                string currentProjectName = iniHelper.Read("Common", "CurrentProjectName");
+                //comboBoxCurrentProject.Text= CommonData.IniHelper.Read("Common", "CurrentProjectName");
+                string currentProjectName = CommonData.IniHelper.Read("Common", "CurrentProjectName");
                 //comboBoxCurrentProject.Text = currentProjectName;
                 if (currentProjectName.NotNullOrWhiteSpace())
                     comboBoxCurrentProject.SelectedItem = projects.FirstOrDefault(u => u.Name == currentProjectName);
@@ -129,14 +120,14 @@ namespace WRManagement
                 MessageBox.Show("绑定的当前分支数据源错误", "提示");
                 return;
             }
-            string currentBranchID = iniHelper.Read("Common", "CurrentBranchID");
+            string currentBranchID = CommonData.IniHelper.Read("Common", "CurrentBranchID");
             if (currentBranchID.NotNullOrWhiteSpace())
             {
                 comboBoxCurrentBranch.SelectedItem = branches.FirstOrDefault(u => u.ID.ToString() == currentBranchID);
             }
             else
             {
-                string currentBranchName = iniHelper.Read("Common", "CurrentBranchName");
+                string currentBranchName = CommonData.IniHelper.Read("Common", "CurrentBranchName");
                 if (currentBranchName.NotNullOrWhiteSpace())
                     comboBoxCurrentBranch.SelectedItem = branches.FirstOrDefault(u => u.Name == currentBranchName);
             }
@@ -339,7 +330,7 @@ namespace WRManagement
             paramDict.Add("ProjectID", projectID);
             paramDict.Add("Name", branchName);
             int i = -1;
-            if (int.TryParse(accessHelper.ExecuteScalar(sql, paramDict).ToString(), out i) && i > 0)
+            if (int.TryParse(CommonData.AccessHelper.ExecuteScalar(sql, paramDict).ToString(), out i) && i > 0)
                 return true;
             else
                 return false;
@@ -393,7 +384,7 @@ namespace WRManagement
             //if (!string.IsNullOrWhiteSpace(sql))
             //    accessHelper.ExecuteNonQuery(sql);
             if (table.NotNullOrWhiteSpace() && paramDict.Count > 0)
-                accessHelper.Insert(table, paramDict);
+                CommonData.AccessHelper.Insert(table, paramDict);
             textBoxItemName.Text = string.Empty;
             textBoxMemo.Text = string.Empty;
             ShowMessageAskRefresh();
@@ -441,11 +432,11 @@ namespace WRManagement
                     MessageBox.Show("项目不能为空", "提示");
                     return;
                 }
-                if (BranchExists(projectID, textBoxItemName.Text.Trim()))
-                {
-                    MessageBox.Show("项目中已存在同名分支", "提示");
-                    return;
-                }
+                //if (BranchExists(projectID, textBoxItemName.Text.Trim()))
+                //{
+                //    MessageBox.Show("项目中已存在同名分支", "提示");
+                //    return;
+                //}
                 //sql = string.Format("update Branch set Name = '{0}', [Memo] = '{1}', ProjectID = {2} where ID = {3}", textBoxItemName.Text.Trim(), textBoxMemo.Text.Trim(), projectID, textBoxItemName.Tag.ToString());
                 table = "Branch";
                 setParamDict.Add("Name", textBoxItemName.Text.Trim());
@@ -456,7 +447,7 @@ namespace WRManagement
             //if (!string.IsNullOrWhiteSpace(sql))
             //    accessHelper.ExecuteNonQuery(sql);
             if (table.NotNullOrWhiteSpace() && setParamDict.Count > 0 && whereParamDict.Count > 0)
-                accessHelper.Update(table, setParamDict, whereParamDict);
+                CommonData.AccessHelper.Update(table, setParamDict, whereParamDict);
             ShowMessageAskRefresh();
         }
 
@@ -492,7 +483,7 @@ namespace WRManagement
             if (table.NotNullOrWhiteSpace())
             {
                 paramDict.Add("ID", textBoxItemName.Tag);
-                accessHelper.Delete(table, paramDict);
+                CommonData.AccessHelper.Delete(table, paramDict);
             }
             ShowMessageAskRefresh();
         }
@@ -510,10 +501,8 @@ namespace WRManagement
                 MessageBox.Show("数据错误，请重新打开程序再试", "提示");
                 return;
             }
-            //if (iniHelper == null)
-            //    iniHelper = new IniHelper(CommonData.ConfigFilePath);
-            iniHelper.Write("Common", "CurrentUserID", currentUser.ID.ToString());
-            iniHelper.Write("Common", "CurrentUserName", currentUser.Name);
+            CommonData.IniHelper.Write("Common", "CurrentUserID", currentUser.ID.ToString());
+            CommonData.IniHelper.Write("Common", "CurrentUserName", currentUser.Name);
         }
 
         private void buttonBackup_Click(object sender, EventArgs e)
@@ -552,29 +541,28 @@ namespace WRManagement
         {
             Project currentProject = comboBoxCurrentProject.SelectedItem as Project;
             Branch currentBranch = comboBoxCurrentBranch.SelectedItem as Branch;
-            //if (iniHelper == null)
-            //    iniHelper = new IniHelper(CommonData.ConfigFilePath);
             if (currentProject == null)
             {
-                iniHelper.Write("Common", "CurrentProjectID", string.Empty);
-                iniHelper.Write("Common", "CurrentProjectName", string.Empty);
+                CommonData.IniHelper.Write("Common", "CurrentProjectID", string.Empty);
+                CommonData.IniHelper.Write("Common", "CurrentProjectName", string.Empty);
                 currentBranch = null;
             }
             else
             {
-                iniHelper.Write("Common", "CurrentProjectID", currentProject.ID.ToString());
-                iniHelper.Write("Common", "CurrentProjectName", currentProject.Name);
+                CommonData.IniHelper.Write("Common", "CurrentProjectID", currentProject.ID.ToString());
+                CommonData.IniHelper.Write("Common", "CurrentProjectName", currentProject.Name);
             }
             if (currentBranch == null)
             {
-                iniHelper.Write("Common", "CurrentBranchID", string.Empty);
-                iniHelper.Write("Common", "CurrentBranchName", string.Empty);
+                CommonData.IniHelper.Write("Common", "CurrentBranchID", string.Empty);
+                CommonData.IniHelper.Write("Common", "CurrentBranchName", string.Empty);
             }
             else
             {
-                iniHelper.Write("Common", "CurrentBranchID", currentBranch.ID.ToString());
-                iniHelper.Write("Common", "CurrentBranchName", currentBranch.Name);
+                CommonData.IniHelper.Write("Common", "CurrentBranchID", currentBranch.ID.ToString());
+                CommonData.IniHelper.Write("Common", "CurrentBranchName", currentBranch.Name);
             }
+            CommonData.IniHelper.Write("Common", "ApplyCurrentProjectAndBranchToSearch", checkBoxApplyCurrentProjectAndBranchToSearch.Checked ? "true" : "false");
         }
 
         private void comboBoxCurrentProject_SelectedIndexChanged(object sender, EventArgs e)

@@ -66,15 +66,17 @@ namespace WeeklyReport
             CommonFunc.BindProjectListToComboBox(comboBoxOperateProject, null, true);
             if (CommonData.CurrentProject != null && CommonData.CurrentProject.ID != CommonData.ItemNullValue && CommonData.CurrentProject.ID != CommonData.ItemAllValue)
             {
-                comboBoxSearchProject.SelectedValue = CommonData.CurrentProject.ID;
                 comboBoxOperateProject.SelectedValue = CommonData.CurrentProject.ID;
+                if (CommonData.ApplyCurrentProjectAndBranchToSearch)
+                    comboBoxSearchProject.SelectedValue = CommonData.CurrentProject.ID;
             }
             CommonFunc.BindBranchListToComboBox(comboBoxSearchBranch, null, true);
             CommonFunc.BindBranchListToComboBox(comboBoxOperateBranch, null, true);
             if (CommonData.CurrentBranch != null && CommonData.CurrentBranch.ID != CommonData.ItemNullValue && CommonData.CurrentBranch.ID != CommonData.ItemAllValue)
             {
-                comboBoxSearchBranch.SelectedValue = CommonData.CurrentBranch.ID;
                 comboBoxOperateBranch.SelectedValue = CommonData.CurrentBranch.ID;
+                if (CommonData.ApplyCurrentProjectAndBranchToSearch)
+                    comboBoxSearchBranch.SelectedValue = CommonData.CurrentBranch.ID;
             }
             comboBoxSearchProject.SelectedIndexChanged += comboBoxSearchProject_SelectedIndexChanged;
             comboBoxOperateProject.SelectedIndexChanged += comboBoxOperateProject_SelectedIndexChanged;
@@ -458,6 +460,8 @@ namespace WeeklyReport
             dtLastWeekEnd = dtLastWeekEnd.AddDays(-7);
             dateTimePickerSearchFrom.Value = dtLastWeekStart;
             dateTimePickerSearchTo.Value = dtLastWeekEnd;
+            dateTimePickerSearchFrom.Checked = true;
+            dateTimePickerSearchTo.Checked = true;
         }
 
         private void buttonThisWeek_Click(object sender, EventArgs e)
@@ -467,6 +471,8 @@ namespace WeeklyReport
             CommonFunc.GetWeekDateTime(ref dtThisWeekStart, ref dtThisWeekEnd);
             dateTimePickerSearchFrom.Value = dtThisWeekStart;
             dateTimePickerSearchTo.Value = dtThisWeekEnd;
+            dateTimePickerSearchFrom.Checked = true;
+            dateTimePickerSearchTo.Checked = true;
         }
 
         private void dataGridViewShow_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)

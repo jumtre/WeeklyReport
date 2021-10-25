@@ -63,6 +63,7 @@
             this.buttonSetCurrentUser = new System.Windows.Forms.Button();
             this.comboBoxCurrentUser = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.checkBoxApplyCurrentProjectAndBranchToSearch = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewShow)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -90,7 +91,7 @@
             this.dataGridViewShow.RowHeadersVisible = false;
             this.dataGridViewShow.RowTemplate.Height = 23;
             this.dataGridViewShow.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewShow.Size = new System.Drawing.Size(494, 199);
+            this.dataGridViewShow.Size = new System.Drawing.Size(604, 199);
             this.dataGridViewShow.TabIndex = 1;
             this.dataGridViewShow.SelectionChanged += new System.EventHandler(this.dataGridViewShow_SelectionChanged);
             // 
@@ -134,7 +135,7 @@
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox3.Location = new System.Drawing.Point(5, 333);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(500, 219);
+            this.groupBox3.Size = new System.Drawing.Size(610, 219);
             this.groupBox3.TabIndex = 5;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "显示";
@@ -190,20 +191,22 @@
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox2.Location = new System.Drawing.Point(5, 121);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(500, 212);
+            this.groupBox2.Size = new System.Drawing.Size(610, 212);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "数据/操作";
             // 
             // groupBox5
             // 
+            this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox5.Controls.Add(this.comboBoxProject);
             this.groupBox5.Controls.Add(this.label6);
             this.groupBox5.Controls.Add(this.textBoxMemo);
             this.groupBox5.Controls.Add(this.label5);
             this.groupBox5.Location = new System.Drawing.Point(3, 96);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(494, 73);
+            this.groupBox5.Size = new System.Drawing.Size(604, 73);
             this.groupBox5.TabIndex = 1;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "分支";
@@ -245,11 +248,13 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.Controls.Add(this.label4);
             this.groupBox4.Controls.Add(this.textBoxItemName);
             this.groupBox4.Location = new System.Drawing.Point(3, 52);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(494, 44);
+            this.groupBox4.Size = new System.Drawing.Size(604, 44);
             this.groupBox4.TabIndex = 0;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "用户/项目/分支";
@@ -282,6 +287,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.checkBoxApplyCurrentProjectAndBranchToSearch);
             this.groupBox1.Controls.Add(this.comboBoxCurrentBranch);
             this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Controls.Add(this.buttonSetCurrentProjectAndBranch);
@@ -297,7 +303,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(5, 5);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(500, 116);
+            this.groupBox1.Size = new System.Drawing.Size(610, 116);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "功能";
@@ -323,10 +329,10 @@
             // 
             // buttonSetCurrentProjectAndBranch
             // 
-            this.buttonSetCurrentProjectAndBranch.Location = new System.Drawing.Point(428, 53);
+            this.buttonSetCurrentProjectAndBranch.Location = new System.Drawing.Point(526, 52);
             this.buttonSetCurrentProjectAndBranch.Name = "buttonSetCurrentProjectAndBranch";
             this.buttonSetCurrentProjectAndBranch.Size = new System.Drawing.Size(56, 23);
-            this.buttonSetCurrentProjectAndBranch.TabIndex = 9;
+            this.buttonSetCurrentProjectAndBranch.TabIndex = 10;
             this.buttonSetCurrentProjectAndBranch.Text = "设置";
             this.buttonSetCurrentProjectAndBranch.UseVisualStyleBackColor = true;
             this.buttonSetCurrentProjectAndBranch.Click += new System.EventHandler(this.buttonSetCurrentProjectAndBranch_Click);
@@ -355,7 +361,7 @@
             this.buttonBackup.Location = new System.Drawing.Point(205, 83);
             this.buttonBackup.Name = "buttonBackup";
             this.buttonBackup.Size = new System.Drawing.Size(56, 23);
-            this.buttonBackup.TabIndex = 13;
+            this.buttonBackup.TabIndex = 14;
             this.buttonBackup.Text = "备份";
             this.buttonBackup.UseVisualStyleBackColor = true;
             this.buttonBackup.Click += new System.EventHandler(this.buttonBackup_Click);
@@ -368,7 +374,7 @@
             this.checkBoxBackupConfigFile.Location = new System.Drawing.Point(122, 87);
             this.checkBoxBackupConfigFile.Name = "checkBoxBackupConfigFile";
             this.checkBoxBackupConfigFile.Size = new System.Drawing.Size(72, 16);
-            this.checkBoxBackupConfigFile.TabIndex = 12;
+            this.checkBoxBackupConfigFile.TabIndex = 13;
             this.checkBoxBackupConfigFile.Text = "配置文件";
             this.checkBoxBackupConfigFile.UseVisualStyleBackColor = true;
             // 
@@ -380,7 +386,7 @@
             this.checkBoxBackupDatabase.Location = new System.Drawing.Point(56, 87);
             this.checkBoxBackupDatabase.Name = "checkBoxBackupDatabase";
             this.checkBoxBackupDatabase.Size = new System.Drawing.Size(60, 16);
-            this.checkBoxBackupDatabase.TabIndex = 11;
+            this.checkBoxBackupDatabase.TabIndex = 12;
             this.checkBoxBackupDatabase.Text = "数据库";
             this.checkBoxBackupDatabase.UseVisualStyleBackColor = true;
             // 
@@ -390,7 +396,7 @@
             this.label3.Location = new System.Drawing.Point(9, 88);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(41, 12);
-            this.label3.TabIndex = 10;
+            this.label3.TabIndex = 11;
             this.label3.Text = "备份：";
             // 
             // buttonSetCurrentUser
@@ -421,11 +427,21 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "当前用户：";
             // 
+            // checkBoxApplyCurrentProjectAndBranchToSearch
+            // 
+            this.checkBoxApplyCurrentProjectAndBranchToSearch.AutoSize = true;
+            this.checkBoxApplyCurrentProjectAndBranchToSearch.Location = new System.Drawing.Point(436, 56);
+            this.checkBoxApplyCurrentProjectAndBranchToSearch.Name = "checkBoxApplyCurrentProjectAndBranchToSearch";
+            this.checkBoxApplyCurrentProjectAndBranchToSearch.Size = new System.Drawing.Size(84, 16);
+            this.checkBoxApplyCurrentProjectAndBranchToSearch.TabIndex = 9;
+            this.checkBoxApplyCurrentProjectAndBranchToSearch.Text = "应用到查询";
+            this.checkBoxApplyCurrentProjectAndBranchToSearch.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(510, 557);
+            this.ClientSize = new System.Drawing.Size(620, 557);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -484,6 +500,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox comboBoxCurrentBranch;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.CheckBox checkBoxApplyCurrentProjectAndBranchToSearch;
     }
 }
 

@@ -60,12 +60,12 @@ namespace ToDoList
             comboBoxSearchProject.SelectedIndexChanged -= comboBoxSearchProject_SelectedIndexChanged;
             comboBoxSearchBranch.SelectedIndexChanged -= comboBoxSearchBranch_SelectedIndexChanged;
             CommonFunc.BindProjectListToComboBox(comboBoxSearchProject, null, true);
-            if (CommonData.CurrentProject != null && CommonData.CurrentProject.ID != CommonData.ItemNullValue && CommonData.CurrentProject.ID != CommonData.ItemAllValue)
+            if (CommonData.ApplyCurrentProjectAndBranchToSearch && CommonData.CurrentProject != null && CommonData.CurrentProject.ID != CommonData.ItemNullValue && CommonData.CurrentProject.ID != CommonData.ItemAllValue)
             {
                 comboBoxSearchProject.SelectedValue = CommonData.CurrentProject.ID;
             }
             CommonFunc.BindBranchListToComboBox(comboBoxSearchBranch, null, true);
-            if (CommonData.CurrentBranch != null && CommonData.CurrentBranch.ID != CommonData.ItemNullValue && CommonData.CurrentBranch.ID != CommonData.ItemAllValue)
+            if (CommonData.ApplyCurrentProjectAndBranchToSearch && CommonData.CurrentBranch != null && CommonData.CurrentBranch.ID != CommonData.ItemNullValue && CommonData.CurrentBranch.ID != CommonData.ItemAllValue)
             {
                 comboBoxSearchBranch.SelectedValue = CommonData.CurrentBranch.ID;
             }

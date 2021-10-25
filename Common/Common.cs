@@ -206,6 +206,24 @@ namespace Common
             set { currentBranch = value; }
         }
 
+        private static int applyCurrentProjectAndBranchToSearchGetTimes = 0;
+        private static bool applyCurrentProjectAndBranchToSearch = false;
+        /// <summary>
+        /// 是否把配置文件中的当前项目和当前分支应用到查询
+        /// </summary>
+        public static bool ApplyCurrentProjectAndBranchToSearch
+        {
+            get
+            {
+                if (applyCurrentProjectAndBranchToSearchGetTimes == 0)
+                {
+                    applyCurrentProjectAndBranchToSearchGetTimes++;
+                    applyCurrentProjectAndBranchToSearch = CommonData.IniHelper.Read("Common", "ApplyCurrentProjectAndBranchToSearch").ToLower() == "true" ? true : false;
+                }
+                return applyCurrentProjectAndBranchToSearch;
+            }
+        }
+
         private static int projectSearchTimes = 0;
         private static List<Project> projectList = null;
         /// <summary>
