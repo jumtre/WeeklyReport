@@ -51,6 +51,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxDict = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxTodoListAutoStartup = new System.Windows.Forms.CheckBox();
+            this.checkBoxWeeklyReportAutoStartup = new System.Windows.Forms.CheckBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.checkBoxApplyCurrentProjectAndBranchToSearch = new System.Windows.Forms.CheckBox();
             this.comboBoxCurrentBranch = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.buttonSetCurrentProjectAndBranch = new System.Windows.Forms.Button();
@@ -63,7 +67,6 @@
             this.buttonSetCurrentUser = new System.Windows.Forms.Button();
             this.comboBoxCurrentUser = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.checkBoxApplyCurrentProjectAndBranchToSearch = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewShow)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -287,6 +290,9 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.checkBoxTodoListAutoStartup);
+            this.groupBox1.Controls.Add(this.checkBoxWeeklyReportAutoStartup);
+            this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Controls.Add(this.checkBoxApplyCurrentProjectAndBranchToSearch);
             this.groupBox1.Controls.Add(this.comboBoxCurrentBranch);
             this.groupBox1.Controls.Add(this.label8);
@@ -307,6 +313,47 @@
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "功能";
+            // 
+            // checkBoxTodoListAutoStartup
+            // 
+            this.checkBoxTodoListAutoStartup.AutoSize = true;
+            this.checkBoxTodoListAutoStartup.Location = new System.Drawing.Point(453, 87);
+            this.checkBoxTodoListAutoStartup.Name = "checkBoxTodoListAutoStartup";
+            this.checkBoxTodoListAutoStartup.Size = new System.Drawing.Size(72, 16);
+            this.checkBoxTodoListAutoStartup.TabIndex = 17;
+            this.checkBoxTodoListAutoStartup.Text = "待办事项";
+            this.checkBoxTodoListAutoStartup.UseVisualStyleBackColor = true;
+            this.checkBoxTodoListAutoStartup.CheckedChanged += new System.EventHandler(this.checkBoxTodoListAutoStartup_CheckedChanged);
+            // 
+            // checkBoxWeeklyReportAutoStartup
+            // 
+            this.checkBoxWeeklyReportAutoStartup.AutoSize = true;
+            this.checkBoxWeeklyReportAutoStartup.Location = new System.Drawing.Point(375, 87);
+            this.checkBoxWeeklyReportAutoStartup.Name = "checkBoxWeeklyReportAutoStartup";
+            this.checkBoxWeeklyReportAutoStartup.Size = new System.Drawing.Size(72, 16);
+            this.checkBoxWeeklyReportAutoStartup.TabIndex = 16;
+            this.checkBoxWeeklyReportAutoStartup.Text = "个人周报";
+            this.checkBoxWeeklyReportAutoStartup.UseVisualStyleBackColor = true;
+            this.checkBoxWeeklyReportAutoStartup.CheckedChanged += new System.EventHandler(this.checkBoxWeeklyReportAutoStartup_CheckedChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(292, 88);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(77, 12);
+            this.label9.TabIndex = 15;
+            this.label9.Text = "随系统启动：";
+            // 
+            // checkBoxApplyCurrentProjectAndBranchToSearch
+            // 
+            this.checkBoxApplyCurrentProjectAndBranchToSearch.AutoSize = true;
+            this.checkBoxApplyCurrentProjectAndBranchToSearch.Location = new System.Drawing.Point(436, 56);
+            this.checkBoxApplyCurrentProjectAndBranchToSearch.Name = "checkBoxApplyCurrentProjectAndBranchToSearch";
+            this.checkBoxApplyCurrentProjectAndBranchToSearch.Size = new System.Drawing.Size(84, 16);
+            this.checkBoxApplyCurrentProjectAndBranchToSearch.TabIndex = 9;
+            this.checkBoxApplyCurrentProjectAndBranchToSearch.Text = "应用到查询";
+            this.checkBoxApplyCurrentProjectAndBranchToSearch.UseVisualStyleBackColor = true;
             // 
             // comboBoxCurrentBranch
             // 
@@ -427,16 +474,6 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "当前用户：";
             // 
-            // checkBoxApplyCurrentProjectAndBranchToSearch
-            // 
-            this.checkBoxApplyCurrentProjectAndBranchToSearch.AutoSize = true;
-            this.checkBoxApplyCurrentProjectAndBranchToSearch.Location = new System.Drawing.Point(436, 56);
-            this.checkBoxApplyCurrentProjectAndBranchToSearch.Name = "checkBoxApplyCurrentProjectAndBranchToSearch";
-            this.checkBoxApplyCurrentProjectAndBranchToSearch.Size = new System.Drawing.Size(84, 16);
-            this.checkBoxApplyCurrentProjectAndBranchToSearch.TabIndex = 9;
-            this.checkBoxApplyCurrentProjectAndBranchToSearch.Text = "应用到查询";
-            this.checkBoxApplyCurrentProjectAndBranchToSearch.UseVisualStyleBackColor = true;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -501,6 +538,9 @@
         private System.Windows.Forms.ComboBox comboBoxCurrentBranch;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.CheckBox checkBoxApplyCurrentProjectAndBranchToSearch;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.CheckBox checkBoxTodoListAutoStartup;
+        private System.Windows.Forms.CheckBox checkBoxWeeklyReportAutoStartup;
     }
 }
 

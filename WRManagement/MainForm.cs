@@ -44,6 +44,14 @@ namespace WRManagement
                 this.Close();
             }
             BindDict();
+            FileInfo fileInfoWeeklyReport = new FileInfo(Path.Combine(CommonData.ApplicationPath, "WeeklyReport.exe"));
+            checkBoxWeeklyReportAutoStartup.CheckedChanged -= checkBoxWeeklyReportAutoStartup_CheckedChanged;
+            checkBoxWeeklyReportAutoStartup.Checked = CommonFunc.IsStartup(fileInfoWeeklyReport);
+            checkBoxWeeklyReportAutoStartup.CheckedChanged += checkBoxWeeklyReportAutoStartup_CheckedChanged;
+            FileInfo fileInfoTodoList = new FileInfo(Path.Combine(CommonData.ApplicationPath, "ToDoList.exe"));
+            checkBoxTodoListAutoStartup.CheckedChanged -= checkBoxTodoListAutoStartup_CheckedChanged;
+            checkBoxTodoListAutoStartup.Checked = CommonFunc.IsStartup(fileInfoTodoList);
+            checkBoxTodoListAutoStartup.CheckedChanged += checkBoxTodoListAutoStartup_CheckedChanged;
         }
 
         private void BindDict()
@@ -593,6 +601,30 @@ namespace WRManagement
                     comboBoxCurrentProject.SelectedValue = branch.Project.ID;
                     comboBoxCurrentProject.SelectedIndexChanged += comboBoxCurrentProject_SelectedIndexChanged;
                 }
+            }
+        }
+
+        private void checkBoxWeeklyReportAutoStartup_CheckedChanged(object sender, EventArgs e)
+        {
+            FileInfo fileInfo = new FileInfo(Path.Combine(CommonData.ApplicationPath, "WeeklyReport.exe"));
+            if (!CommonFunc.SetStartup(fileInfo, checkBoxWeeklyReportAutoStartup.Checked, null, "个人周报"))
+            {
+                MessageBox.Show("设置失败", "提示");
+                checkBoxWeeklyReportAutoStartup.CheckedChanged -= checkBoxWeeklyReportAutoStartup_CheckedChanged;
+                checkBoxWeeklyReportAutoStartup.Checked = !checkBoxWeeklyReportAutoStartup.Checked;
+                checkBoxWeeklyReportAutoStartup.CheckedChanged += checkBoxWeeklyReportAutoStartup_CheckedChanged;
+            }
+        }
+
+        private void checkBoxTodoListAutoStartup_CheckedChanged(object sender, EventArgs e)
+        {
+            FileInfo fileInfo = new FileInfo(Path.Combine(CommonData.ApplicationPath, "ToDoList.exe"));
+            if (!CommonFunc.SetStartup(fileInfo, checkBoxTodoListAutoStartup.Checked, null, "待办事项"))
+            {
+                MessageBox.Show("设置失败", "提示");
+                checkBoxTodoListAutoStartup.CheckedChanged -= checkBoxTodoListAutoStartup_CheckedChanged;
+                checkBoxTodoListAutoStartup.Checked = !checkBoxTodoListAutoStartup.Checked;
+                checkBoxTodoListAutoStartup.CheckedChanged += checkBoxTodoListAutoStartup_CheckedChanged;
             }
         }
     }

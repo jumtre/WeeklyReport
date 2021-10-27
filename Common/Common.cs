@@ -1001,6 +1001,229 @@ namespace Common
             str = new Regex("restore", RegexOptions.IgnoreCase).Replace(str, "&#114;estore");
             return str;
         }
+
+        /// <summary>
+        /// 是否已在注册表设置自动启动
+        /// </summary>
+        /// <param name="fileInfo">要查询自动启动的文件信息</param>
+        /// <returns></returns>
+        public static bool IsStartupToReg(FileInfo fileInfo)
+        {
+            if (fileInfo == null)
+                return false;
+            try
+            {
+                //Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.Registry.LocalMachine;
+                var registryView = Environment.Is64BitOperatingSystem ? Microsoft.Win32.RegistryView.Registry64 : Microsoft.Win32.RegistryView.Registry32;
+                var localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, registryView);
+                string runPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+                Microsoft.Win32.RegistryKey registryKey = localMachine.OpenSubKey(runPath, true);
+                if (registryKey == null)
+                    return false;
+                //System.Diagnostics.ProcessModule processMainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule;
+                //string appName = "X" + processMainModule.ModuleName;
+                //string appPath = processMainModule.FileName;
+                string appName = "X" + fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length);
+                //string appPath = fileInfo.FullName;
+                if (registryKey.GetValueNames().Count(n => n.ToUpper() == appName.ToUpper()) == 0)
+                    return false;
+                else
+                    return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 是否已在系统启动目录设置自动启动
+        /// </summary>
+        /// <param name="fileInfo">要查询自动启动的文件信息</param>
+        /// <returns></returns>
+        public static bool IsStartupToDir(FileInfo fileInfo)
+        {
+            if (fileInfo == null)
+                return false;
+            try
+            {
+                string startupPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+                if (!Directory.Exists(startupPath))
+                    return false;
+                //System.Diagnostics.ProcessModule processMainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule;
+                //string appName = "X" + processMainModule.ModuleName;
+                //string appPath = processMainModule.FileName;
+                string appName = "X" + fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length);
+                string appPath = fileInfo.FullName;
+                string[] lnkFiles = Directory.GetFiles(startupPath, "*.lnk");
+                string appLnkPath = Path.Combine(startupPath, appName + ".lnk");
+                if (lnkFiles != null && lnkFiles.Length > 0 && lnkFiles.Contains(appLnkPath))
+                    return true;
+                else
+                    return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 是否已设置自动启动
+        /// </summary>
+        /// <param name="fileInfo">要查询自动启动的文件信息</param>
+        /// <returns></returns>
+        public static bool IsStartup(FileInfo fileInfo)
+        {
+            if (!IsStartupToReg(fileInfo))
+                return IsStartupToDir(fileInfo);
+            else
+                return true;
+        }
+
+        /// <summary>
+        /// 在注册表设置自动启动
+        /// </summary>
+        /// <param name="fileInfo">要设置自动启动的文件信息</param>
+        /// <param name="startup">创建或删除自动启动，true创建，false删除</param>
+        /// <returns></returns>
+        public static bool SetStartupToReg(FileInfo fileInfo, bool startup)
+        {
+            if (fileInfo == null)
+                return false;
+            try
+            {
+                //Microsoft.Win32.RegistryKey localMachine = Microsoft.Win32.Registry.LocalMachine;
+                var registryView = Environment.Is64BitOperatingSystem ? Microsoft.Win32.RegistryView.Registry64 : Microsoft.Win32.RegistryView.Registry32;
+                var localMachine = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, registryView);
+                string runPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+                Microsoft.Win32.RegistryKey registryKey = localMachine.OpenSubKey(runPath, true);
+                if (registryKey == null)
+                {
+                    if (startup)
+                        localMachine.CreateSubKey(runPath);
+                    else
+                        return true;
+                }
+                //System.Diagnostics.ProcessModule processMainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule;
+                //string appName = "X" + processMainModule.ModuleName;
+                //string appPath = processMainModule.FileName;
+                string appName = "X" + fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length);
+                if (registryKey.GetValueNames().Count(n => n.ToUpper() == appName.ToUpper()) == 0)
+                {
+                    if (startup)
+                    {
+                        registryKey.SetValue(appName, fileInfo.FullName);
+                        registryKey.Close();
+                        return true;
+                    }
+                    else
+                        return true;
+                }
+                else
+                {
+                    if (startup)
+                        return true;
+                    else
+                    {
+                        registryKey.DeleteValue(appName);
+                        registryKey.Close();
+                        return true;
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 在系统启动目录设置自动启动
+        /// </summary>
+        /// <param name="fileInfo">要设置自动启动的文件信息</param>
+        /// <param name="startup">开启或取消自动启动，true开启，false取消</param>
+        /// <param name="iconLocation">创建的快捷方式的图标路径</param>
+        /// <param name="description">创建的快捷方式的备注</param>
+        /// <returns></returns>
+        public static bool SetStartupToDir(FileInfo fileInfo, bool startup, string iconLocation = null, string description = null)
+        {
+            if (fileInfo == null)
+                return false;
+            try
+            {
+                //System.Diagnostics.ProcessModule processMainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule;
+                //string appName = "X" + processMainModule.ModuleName;
+                //string appPath = processMainModule.FileName;
+                string startupPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+                string appName = "X" + fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length);
+                string appLnkPath = Path.Combine(startupPath, appName + ".lnk");
+
+                string[] lnkFiles = null;
+                if (!Directory.Exists(startupPath))
+                    Directory.CreateDirectory(startupPath);
+                else
+                    lnkFiles = Directory.GetFiles(startupPath, "*.lnk");
+                if (startup)
+                {
+                    if (lnkFiles != null && lnkFiles.Length > 0 && lnkFiles.Contains(appLnkPath))
+                        return true;
+                    else
+                    {
+                        IWshRuntimeLibrary.WshShell shell = new IWshRuntimeLibrary.WshShell();
+                        IWshRuntimeLibrary.IWshShortcut shortcut = shell.CreateShortcut(appLnkPath);
+                        string appPath = fileInfo.FullName;
+                        shortcut.TargetPath = appPath;//目标路径
+                        shortcut.WorkingDirectory = Path.GetDirectoryName(appPath);//起始位置
+                        shortcut.WindowStyle = 1;//运行方式，设为常规窗口。1常规，3最大化，7最小化
+                        shortcut.Description = description;//备注
+                        shortcut.IconLocation = string.IsNullOrWhiteSpace(iconLocation) ? appPath : iconLocation;//图标路径
+                        shortcut.Save();
+                        return true;
+                    }
+                }
+                else
+                {
+                    if (lnkFiles == null || lnkFiles.Length == 0 || !lnkFiles.Contains(appLnkPath))
+                        return true;
+                    else
+                    {
+                        File.Delete(appLnkPath);
+                        return true;
+                    }
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 设置自动启动（先在注册表设置，若失败，在系统启动目录设置）
+        /// </summary>
+        /// <param name="fileInfo">要设置自动启动的文件信息</param>
+        /// <param name="startup">开启或取消自动启动，true开启，false取消</param>
+        /// <param name="iconLocation">创建的快捷方式的图标路径</param>
+        /// <param name="description">创建的快捷方式的备注</param>
+        /// <returns></returns>
+        public static bool SetStartup(FileInfo fileInfo, bool startup, string iconLocation = null, string description = null)
+        {
+            if (startup)//如果是开启自动启动，注册表或启动目录中任一位置有启动项就行
+            {
+                if (!SetStartupToReg(fileInfo, startup))
+                    return SetStartupToDir(fileInfo, startup, iconLocation, description);
+                else
+                    return true;
+            }
+            else//如果是取消自动启动，注册表和启动目录里都要取消
+            {
+                bool regResult = SetStartupToReg(fileInfo, startup);
+                bool dirResult = SetStartupToDir(fileInfo, startup);
+                return regResult && dirResult;
+            }
+        }
     }
 
     /// <summary>
