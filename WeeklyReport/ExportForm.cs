@@ -123,12 +123,17 @@ namespace WeeklyReport
                     sb.AppendLine();
                     continue;
                 }
+                //if (Common.Validator.IsInteger(str))//如果内容全部是数字，这个内容实际上应该就没有意义，所以就不对这种内容做特殊处理了，否则还会影响性能
+                //{
+
+                //}
+                //else if (Common.Validator.IsInteger(str.Substring(0, 1)))
                 if (Common.Validator.IsInteger(str.Substring(0, 1)))
                 {
                     integerLength++;
                     if (str.Length >= integerLength)
                     {
-                        while (Common.Validator.IsInteger(str.Substring(0, integerLength)))
+                        while (integerLength <= str.Length && Common.Validator.IsInteger(str.Substring(0, integerLength)))
                         {
                             integerLength++;
                         }

@@ -4,12 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0B99E15E-EF66-49DF-9AD8-54EC0373A0C2}</ProjectGuid>
+    <ProjectGuid>{6AFE504F-5A8A-464D-8649-874532231514}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>WRManagement</RootNamespace>
-    <AssemblyName>WRManagement</AssemblyName>
+    <RootNamespace>ReminderTile</RootNamespace>
+    <AssemblyName>ReminderTile</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,10 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Management.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>ReminderTile.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -70,7 +68,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -86,20 +83,16 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{121af49a-3143-4c9c-8fda-026b31b643fb}</Project>
+      <Project>{121AF49A-3143-4C9C-8FDA-026B31B643FB}</Project>
       <Name>Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
-      <Project>{f4c0b97a-4139-4d56-a37e-1df73d1f63ce}</Project>
+      <Project>{F4C0B97A-4139-4D56-A37E-1DF73D1F63CE}</Project>
       <Name>Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ReminderTile\ReminderTile.csproj">
-      <Project>{6afe504f-5a8a-464d-8649-874532231514}</Project>
-      <Name>ReminderTile</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Management.ico" />
+    <Content Include="ReminderTile.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

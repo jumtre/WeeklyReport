@@ -71,7 +71,7 @@ namespace ToDoList
                 MessageBox.Show("内容不能为空", "提示");
                 return;
             }
-            Dictionary<string, object> paramDict = new Dictionary<string, object>();
+            SqlParams paramDict = new SqlParams();
             paramDict.Add("UserID", CommonData.CurrentUser.ID);
             paramDict.Add("ProjectID", project.ID);
             paramDict.Add("Content", richTextBoxContent.Text.Trim());

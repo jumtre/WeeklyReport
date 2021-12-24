@@ -52,6 +52,10 @@ namespace WRManagement
             checkBoxTodoListAutoStartup.CheckedChanged -= checkBoxTodoListAutoStartup_CheckedChanged;
             checkBoxTodoListAutoStartup.Checked = CommonFunc.IsStartup(fileInfoTodoList);
             checkBoxTodoListAutoStartup.CheckedChanged += checkBoxTodoListAutoStartup_CheckedChanged;
+            FileInfo fileInfoReminderTile = new FileInfo(Path.Combine(CommonData.ApplicationPath, "ReminderTile.exe"));
+            checkBoxReminderTileAutoStartup.CheckedChanged -= checkBoxReminderTileAutoStartup_CheckedChanged;
+            checkBoxReminderTileAutoStartup.Checked = CommonFunc.IsStartup(fileInfoReminderTile);
+            checkBoxReminderTileAutoStartup.CheckedChanged += checkBoxReminderTileAutoStartup_CheckedChanged;
         }
 
         private void BindDict()
@@ -334,7 +338,7 @@ namespace WRManagement
         private bool BranchExists(int projectID, string branchName)
         {
             string sql = "select count(*) from Branch where ProjectID = @ProjectID and Name = @Name";
-            Dictionary<string, object> paramDict = new Dictionary<string, object>();
+            SqlParams paramDict = new SqlParams();
             paramDict.Add("ProjectID", projectID);
             paramDict.Add("Name", branchName);
             int i = -1;
@@ -353,18 +357,15 @@ namespace WRManagement
                 MessageBox.Show("名称不能为空", "提示");
                 return;
             }
-            //string sql = string.Empty;
             string table = string.Empty;
-            Dictionary<string, object> paramDict = new Dictionary<string, object>();
+            SqlParams paramDict = new SqlParams();
             if (currentDataType == CurrentDataType.User)
             {
-                //sql = "insert into [User] (Name) values ('" + textBoxItemName.Text.Trim() + "')";
                 table = "[User]";
                 paramDict.Add("Name", textBoxItemName.Text.Trim());
             }
             else if (currentDataType == CurrentDataType.Project)
             {
-                //sql = "insert into Project (Name) values ('" + textBoxItemName.Text.Trim() + "')";
                 table = "Project";
                 paramDict.Add("Name", textBoxItemName.Text.Trim());
             }
@@ -383,14 +384,11 @@ namespace WRManagement
                     MessageBox.Show("项目中已存在同名分支", "提示");
                     return;
                 }
-                //sql = "insert into Branch (Name, [Memo], ProjectID) values ('" + textBoxItemName.Text.Trim() + "', '" + textBoxMemo.Text.Trim() + "', " + projectID + ")";
                 table = "Branch";
                 paramDict.Add("Name", textBoxItemName.Text.Trim());
                 paramDict.Add("[Memo]", textBoxMemo.Text.Trim());
                 paramDict.Add("ProjectID", projectID);
             }
-            //if (!string.IsNullOrWhiteSpace(sql))
-            //    accessHelper.ExecuteNonQuery(sql);
             if (table.NotNullOrWhiteSpace() && paramDict.Count > 0)
                 CommonData.AccessHelper.Insert(table, paramDict);
             textBoxItemName.Text = string.Empty;
@@ -412,20 +410,17 @@ namespace WRManagement
                 MessageBox.Show("数据错误，请重新选择要修改的数据后重试", "提示");
                 return;
             }
-            //string sql = string.Empty;
             string table = string.Empty;
-            Dictionary<string, object> setParamDict = new Dictionary<string, object>();
-            Dictionary<string, object> whereParamDict = new Dictionary<string, object>();
+            SqlParams setParamDict = new SqlParams();
+            SqlParams whereParamDict = new SqlParams();
             if (currentDataType == CurrentDataType.User)
             {
-                //sql = string.Format("update [User] set Name = '{0}' where ID = {1}", textBoxItemName.Text.Trim(), textBoxItemName.Tag.ToString());
                 table = "[User]";
                 setParamDict.Add("Name", textBoxItemName.Text.Trim());
                 whereParamDict.Add("ID", textBoxItemName.Tag);
             }
             else if (currentDataType == CurrentDataType.Project)
             {
-                //sql = string.Format("update Project set Name = '{0}' where ID = {1}", textBoxItemName.Text.Trim(), textBoxItemName.Tag.ToString());
                 table = "Project";
                 setParamDict.Add("Name", textBoxItemName.Text.Trim());
                 whereParamDict.Add("ID", textBoxItemName.Tag);
@@ -445,15 +440,12 @@ namespace WRManagement
                 //    MessageBox.Show("项目中已存在同名分支", "提示");
                 //    return;
                 //}
-                //sql = string.Format("update Branch set Name = '{0}', [Memo] = '{1}', ProjectID = {2} where ID = {3}", textBoxItemName.Text.Trim(), textBoxMemo.Text.Trim(), projectID, textBoxItemName.Tag.ToString());
                 table = "Branch";
                 setParamDict.Add("Name", textBoxItemName.Text.Trim());
                 setParamDict.Add("Memo", textBoxMemo.Text.Trim());
                 setParamDict.Add("ProjectID", projectID);
                 whereParamDict.Add("ID", textBoxItemName.Tag);
             }
-            //if (!string.IsNullOrWhiteSpace(sql))
-            //    accessHelper.ExecuteNonQuery(sql);
             if (table.NotNullOrWhiteSpace() && setParamDict.Count > 0 && whereParamDict.Count > 0)
                 CommonData.AccessHelper.Update(table, setParamDict, whereParamDict);
             ShowMessageAskRefresh();
@@ -468,26 +460,20 @@ namespace WRManagement
                 MessageBox.Show("数据错误，请重新选择要修改的数据后重试", "提示");
                 return;
             }
-            //string sql = string.Empty;
             string table = string.Empty;
-            Dictionary<string, object> paramDict = new Dictionary<string, object>();
+            SqlParams paramDict = new SqlParams();
             if (currentDataType == CurrentDataType.User)
             {
-                //sql = "delete from [User] where ID = " + textBoxItemName.Tag.ToString();
                 table = "[User]";
             }
             else if (currentDataType == CurrentDataType.Project)
             {
-                //sql = "delete from Project where ID = " + textBoxItemName.Tag.ToString();
                 table = "Project";
             }
             else if (currentDataType == CurrentDataType.Branch)
             {
-                //sql = "delete from Branch where ID = " + textBoxItemName.Tag.ToString();
                 table = "Branch";
             }
-            //if (!string.IsNullOrWhiteSpace(sql))
-            //    accessHelper.ExecuteNonQuery(sql);
             if (table.NotNullOrWhiteSpace())
             {
                 paramDict.Add("ID", textBoxItemName.Tag);
@@ -626,6 +612,32 @@ namespace WRManagement
                 checkBoxTodoListAutoStartup.Checked = !checkBoxTodoListAutoStartup.Checked;
                 checkBoxTodoListAutoStartup.CheckedChanged += checkBoxTodoListAutoStartup_CheckedChanged;
             }
+        }
+
+        private void checkBoxReminderTileAutoStartup_CheckedChanged(object sender, EventArgs e)
+        {
+            FileInfo fileInfo = new FileInfo(Path.Combine(CommonData.ApplicationPath, "ReminderTile.exe"));
+            if (!CommonFunc.SetStartup(fileInfo, checkBoxReminderTileAutoStartup.Checked, null, "提醒磁贴"))
+            {
+                MessageBox.Show("设置失败", "提示");
+                checkBoxReminderTileAutoStartup.CheckedChanged -= checkBoxReminderTileAutoStartup_CheckedChanged;
+                checkBoxReminderTileAutoStartup.Checked = !checkBoxReminderTileAutoStartup.Checked;
+                checkBoxReminderTileAutoStartup.CheckedChanged += checkBoxReminderTileAutoStartup_CheckedChanged;
+            }
+        }
+
+        private void buttonSetReminderTile_Click(object sender, EventArgs e)
+        {
+            ReminderTile.MainForm reminderTile = new ReminderTile.MainForm();
+            reminderTile.IsSetting = true;
+            reminderTile.ShowDialog(this);
+
+            CommonData.IniHelper.Write("ReminderTile", "TopMost", reminderTile.SettingTopMost.ToString());
+            CommonData.IniHelper.Write("ReminderTile", "BackColor", reminderTile.SettingBackColor.ToArgb().ToString());
+            CommonData.IniHelper.Write("ReminderTile", "StartPosition", reminderTile.SettingStartPosition.X.ToString() + "," + reminderTile.SettingStartPosition.Y.ToString());
+            //reminderTile.Close();
+            reminderTile.Dispose();
+            reminderTile = null;
         }
     }
 }

@@ -89,42 +89,29 @@ namespace WeeklyReport
             if (reportAll != null && reportAll.Count > 0)
                 reportAll.Clear();
             StringBuilder sql = new StringBuilder("select r.ID, r.UserID, u.Name as UserName, r.ProjectID, p.Name as ProjectName, r.BranchID, b.Name as BranchName, r.RelatedID, r.Content, r.FinishTime, r.Source, r.ToDoID from ((Report r left join [User] u on r.UserID = u.ID) left join Project p on r.ProjectID = p.ID) left join Branch b on r.BranchID = b.ID where 1 = 1");
-            //Dictionary<string, object> paramDict = new Dictionary<string, object>();
             SqlParams paramDict = new SqlParams();
             if (dateTimePickerSearchFrom.Checked)
             {
-                //sql.Append(" and r.FinishTime >= @FinishTimeStart");
-                //paramDict.Add("FinishTimeStart", DataConvert.ToDateTimeValue(dateTimePickerSearchFrom, 0, 0, 0));
                 sql.Append(paramDict.AddToWhere("FinishTime", ">=", "FinishTimeStart", DataConvert.ToDateTimeValue(dateTimePickerSearchFrom, 0, 0, 0), "r"));
             }
             if (dateTimePickerSearchTo.Checked)
             {
-                //sql.Append(" and r.FinishTime <= @FinishTimeEnd");
-                //paramDict.Add("FinishTimeEnd", DataConvert.ToDateTimeValue(dateTimePickerSearchTo, 23, 59, 59));
                 sql.Append(paramDict.AddToWhere("FinishTime", "<=", "FinishTimeEnd", DataConvert.ToDateTimeValue(dateTimePickerSearchTo, 23, 59, 59), "r"));
             }
             if (comboBoxSearchProject.SelectedItem is Project project && project.ID != CommonData.ItemAllValue)
             {
-                //sql.Append(" and r.ProjectID = @ProjectID");
-                //paramDict.Add("ProjectID", comboBoxSearchProject.SelectedValue);
                 sql.Append(paramDict.AddToWhere("ProjectID", comboBoxSearchProject.SelectedValue, "r"));
             }
             if (comboBoxSearchBranch.SelectedItem is Branch branch && branch.ID != CommonData.ItemAllValue)
             {
-                //sql.Append(" and r.BranchID = @BranchID" + comboBoxSearchBranch.SelectedValue);
-                //paramDict.Add("BranchID", comboBoxSearchBranch.SelectedValue);
                 sql.Append(paramDict.AddToWhere("BranchID", comboBoxSearchBranch.SelectedValue, "r"));
             }
             if (!string.IsNullOrWhiteSpace(textBoxSearchRelatedID.Text))
             {
-                //sql.Append(" and r.RelatedID = @RelatedID");
-                //paramDict.Add("RelatedID", textBoxSearchRelatedID.Text.Trim());
                 sql.Append(paramDict.AddToWhere("RelatedID", textBoxSearchRelatedID, "r"));
             }
             if (!string.IsNullOrWhiteSpace(textBoxKeyWord.Text))
             {
-                //sql.Append(" and r.Content like @Content");
-                //paramDict.Add("Content", "%" + textBoxKeyWord.Text.Trim() + "%");
                 sql.Append(paramDict.AddLikeToWhere("Content", textBoxKeyWord, "r"));
             }
             sql.Append(" order by r.FinishTime, r.ID");
@@ -260,8 +247,6 @@ namespace WeeklyReport
                 MessageBox.Show("内容不能为空", "提示");
                 return;
             }
-            //string fields = "UserID, ProjectID, Content, Source";
-            //string values = CommonData.CurrentUser.ID + ", " + project.ID + ", " + "'" + richTextBoxOperateContent.Text.Trim() + "', " + (int)EnumReportSource.Manual;
             SqlParams paramDict = new SqlParams();
             paramDict.Add("UserID", CommonData.CurrentUser.ID);
             paramDict.Add("ProjectID", project.ID);
@@ -269,24 +254,16 @@ namespace WeeklyReport
             paramDict.Add("Source", (int)EnumReportSource.Manual);
             if (dateTimePickerOperateFinishTime.Checked && dateTimePickerOperateFinishTime.Value > DateTime.MinValue)
             {
-                //fields += ", FinishTime";
-                //values += ", #" + dateTimePickerOperateFinishTime.Value.ToString(CommonData.DateTimeFormat) + "#";
                 paramDict.Add("FinishTime", dateTimePickerOperateFinishTime.Value);
             }
             if (comboBoxOperateBranch.SelectedItem is Branch branch && branch.ID != CommonData.ItemAllValue)
             {
-                //fields += ", BranchID";
-                //values += ", "+ comboBoxOperateBranch.SelectedValue.ToString();
                 paramDict.Add("BranchID", comboBoxOperateBranch.SelectedValue);
             }
             if (!string.IsNullOrWhiteSpace(textBoxOperateRelatedID.Text))
             {
-                //fields += ", RelatedID";
-                //values += ", '" + textBoxOperateRelatedID.Text.Trim() + "'";
                 paramDict.Add("RelatedID", textBoxOperateRelatedID.Text.Trim());
             }
-            //string sql = "insert into Report (" + fields + ") values (" + values + ")";
-            //CommonData.AccessHelper.ExecuteNonQuery(sql);
             CommonData.AccessHelper.Insert("Report", paramDict);
             richTextBoxOperateContent.Text = string.Empty;
             ShowMessageAskRefresh();
@@ -314,8 +291,6 @@ namespace WeeklyReport
                 MessageBox.Show("内容不能为空", "提示");
                 return;
             }
-            //StringBuilder sql = new StringBuilder();
-            //sql.AppendFormat("update Report set ProjectID = {0}, RelatedID = {1}, Content = '{2}'", project.ID, string.IsNullOrWhiteSpace(textBoxOperateRelatedID.Text) ? "null" : "'" + textBoxOperateRelatedID.Text.Trim() + "'", richTextBoxOperateContent.Text.Trim());
             SqlParams setParamDict = new SqlParams();
             setParamDict.Add("ProjectID", project.ID);
             setParamDict.Add("RelatedID", string.IsNullOrWhiteSpace(textBoxOperateRelatedID.Text) ? null : textBoxOperateRelatedID.Text.Trim());
@@ -323,24 +298,15 @@ namespace WeeklyReport
             SqlParams whereParamDict = new SqlParams();
             if (dateTimePickerOperateFinishTime.Checked && dateTimePickerOperateFinishTime.Value > DateTime.MinValue)
             {
-                //sql.AppendFormat(", FinishTime = #{0}#", dateTimePickerOperateFinishTime.Value.ToString(CommonData.DateTimeFormat));
                 setParamDict.Add("FinishTime", dateTimePickerOperateFinishTime.Value);
             }
             if (comboBoxOperateBranch.SelectedItem is Branch branch)
             {
                 if (branch.ID == CommonData.ItemAllValue)
-                {
-                    //sql.Append(", BranchID = null");
                     setParamDict.Add("BranchID", null);
-                }
                 else
-                {
-                    //sql.AppendFormat(", BranchID = {0}", comboBoxOperateBranch.SelectedValue.ToString());
                     setParamDict.Add("BranchID", comboBoxOperateBranch.SelectedValue);
-                }
             }
-            //sql.AppendFormat(" where ID = {0}", report.ID);
-            //CommonData.AccessHelper.ExecuteNonQuery(sql.ToString());
             whereParamDict.Add("ID", report.ID);
             CommonData.AccessHelper.Update("Report", setParamDict, whereParamDict);
             //MessageBox.Show("修改完成", "提示");
@@ -359,7 +325,6 @@ namespace WeeklyReport
                 MessageBox.Show("报告数据错误", "提示");
                 return;
             }
-            //CommonData.AccessHelper.ExecuteNonQuery("delete from Report where ID = " + report.ID);
             CommonData.AccessHelper.Delete("Report", "ID", report.ID);
             //MessageBox.Show("删除完成", "提示");
             ShowMessageAskRefresh();
@@ -494,45 +459,10 @@ namespace WeeklyReport
             }
 
             int projectID = CommonData.ItemAllValue, branchID = CommonData.ItemAllValue;
-            //ToDo toDo;
             if (report.ToDoID.HasValue && report.ToDoID.Value != CommonData.ItemNullValue && report.ToDoID.Value != CommonData.ItemAllValue)
             {
-                //string sql = "select ID, ProjectID, BranchID, RelatedID, Priority, Severity, Title, Content, [Memo], UserID, PlannedStartTime, PlannedEndTime, PlannedHours, PlannedDays, Status, FinishTime, FinishUserID from ToDo where ID = " + report.ToDoID.Value;
-                //DataTable dt = CommonData.AccessHelper.GetDataTable(sql.ToString());
-                //if (dt != null && dt.Rows.Count > 0)
-                //{
-                //    DataRow row = dt.Rows[0];
-                //    toDo = new ToDo
-                //    {
-                //        ID = DataConvert.ToDecimal(row["ID"]),
-                //        RelatedID = DataConvert.ToString(row["RelatedID"]),
-                //        Priority = (EnumToDoPriority?)DataConvert.ToEnum<EnumToDoPriority>(row["Priority"]),
-                //        Severity = (EnumToDoSeverity?)DataConvert.ToEnum<EnumToDoSeverity>(row["Severity"]),
-                //        Title = DataConvert.ToString(row["Title"]),
-                //        Content = DataConvert.ToString(row["Content"]),
-                //        Memo = DataConvert.ToString(row["Memo"]),
-                //        PlannedStartTime = DataConvert.ToNullableDateTime(row["PlannedStartTime"]),
-                //        PlannedEndTime = DataConvert.ToNullableDateTime(row["PlannedEndTime"]),
-                //        PlannedHours = DataConvert.ToNullableDecimal(row["PlannedHours"]),
-                //        PlannedDays = DataConvert.ToNullableDecimal(row["PlannedDays"]),
-                //        Status = (EnumToDoStatus?)DataConvert.ToEnum<EnumToDoStatus>(row["Status"]),
-                //        FinishTime = DataConvert.ToNullableDateTime(row["FinishTime"])
-                //    };
-                //    projectID = DataConvert.ToInt(row["ProjectID"]);
-                //    if (projectID > 0)
-                //        toDo.Project = new Project() { ID = projectID };
-                //    branchID = DataConvert.ToInt(row["BranchID"]);
-                //    if (branchID > 0)
-                //        toDo.Branch = new Branch() { ID = branchID };//, Project = toDo.Project
-                //    int userID = DataConvert.ToInt(row["UserID"]);
-                //    if (userID > 0)
-                //        toDo.User = new User() { ID = userID };
-                //    int finishUserID = DataConvert.ToInt(row["FinishUserID"]);
-                //    if (finishUserID > 0)
-                //        toDo.FinishUser = new User() { ID = finishUserID };
-                //}
                 string sql = "select Title from ToDo where ID = @ID";
-                Dictionary<string, object> paramDict = new Dictionary<string, object>();
+                SqlParams paramDict = new SqlParams();
                 paramDict.Add("ID", report.ToDoID.Value);
                 object result = CommonData.AccessHelper.ExecuteScalar(sql, paramDict);
                 if (result != null)

@@ -45,6 +45,7 @@
     <Compile Include="Classes.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reminder.cs" />
     <Compile Include="Report.cs" />
     <Compile Include="ToDo.cs" />
     <Compile Include="Enums.cs" />

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RelateToToDo));
             this.panelButtons = new System.Windows.Forms.Panel();
             this.buttonClose = new System.Windows.Forms.Button();
             this.buttonRelate = new System.Windows.Forms.Button();
@@ -495,6 +496,7 @@
             this.Controls.Add(this.groupBoxToDoList);
             this.Controls.Add(this.panelButtons);
             this.Controls.Add(this.groupBoxSearch);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "RelateToToDo";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "关联待办项";

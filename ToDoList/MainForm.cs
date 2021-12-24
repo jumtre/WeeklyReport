@@ -178,83 +178,57 @@ namespace ToDoList
             if (toDoListAll != null && toDoListAll.Count > 0)
                 toDoListAll.Clear();
             StringBuilder sql = new StringBuilder("select t.ID, t.ProjectID, p.Name as ProjectName, t.BranchID, b.Name as BranchName, t.RelatedID, t.Priority, t.Severity, t.Title, t.Content, t.[Memo], t.UserID, u.Name as UserName, t.PlannedStartTime, t.PlannedEndTime, t.PlannedHours, t.PlannedDays, t.Status, t.FinishTime, t.FinishUserID, uf.Name as FinishUserName from (((ToDo t left join Project p on t.ProjectID = p.ID) left join Branch b on t.BranchID = b.ID) left join [User] u on t.UserID = u.ID) left join [User] uf on t.FinishUserID = uf.ID where 1 = 1");
-            //Dictionary<string, object> paramDict = new Dictionary<string, object>();
             SqlParams paramDict = new SqlParams();
             if (comboBoxSearchProject.SelectedItem is Project project && project.ID != CommonData.ItemAllValue)
             {
-                //sql.Append(" and t.ProjectID = @ProjectID");
-                //paramDict.Add("ProjectID", project.ID);
                 sql.Append(paramDict.AddToWhere("ProjectID", project.ID, "t"));
             }
             if (comboBoxSearchBranch.SelectedItem is Branch branch && branch.ID != CommonData.ItemAllValue)
             {
-                //sql.Append(" and t.BranchID = @BranchID");
-                //paramDict.Add("BranchID", branch.ID);
                 sql.Append(paramDict.AddToWhere("BranchID", branch.ID, "t"));
             }
             if (textBoxSearchTitle.Text.NotNullOrWhiteSpace())
             {
-                //sql.Append(" and t.Title like @Title");
-                //paramDict.Add("Title", "%" + textBoxSearchTitle.Text.Trim() + "%");
                 sql.Append(paramDict.AddLikeToWhere("Title", textBoxSearchTitle, "t"));
             }
             if (textBoxSearchContent.Text.NotNullOrWhiteSpace())
             {
-                //sql.Append(" and t.Content like @Content");
-                //paramDict.Add("Content", "%" + textBoxSearchContent.Text.Trim() + "%");
                 sql.Append(paramDict.AddLikeToWhere("Content", textBoxSearchContent, "t"));
             }
             if (textBoxSearchRelatedID.Text.NotNullOrWhiteSpace())
             {
-                //sql.Append(" and t.RelatedID = @RelatedID");
-                //paramDict.Add("RelatedID", textBoxSearchRelatedID.Text.Trim());
                 sql.Append(paramDict.AddToWhere("RelatedID", textBoxSearchRelatedID, "t"));
             }
             if (comboBoxSearchStatus.SelectedItem is ToDoStatus status && status.ID != CommonData.ItemAllValue)
             {
                 if (status.ID == CommonData.toDoStatusNotDoneID)
                 {
-                    //sql.Append(" and (t.Status = @Status1 or t.Status = @Status2)");
-                    //paramDict.Add("Status1", (int)EnumToDoStatus.Planning);
-                    //paramDict.Add("Status2", (int)EnumToDoStatus.Working);
                     List<object> paramValueList = new List<object> { (int)EnumToDoStatus.Planning, (int)EnumToDoStatus.Working };
                     sql.Append(paramDict.AddToWhere("Status", paramValueList, "t"));
                 }
                 else
                 {
-                    //sql.Append(" and t.Status = @Status");
-                    //paramDict.Add("Status", (int)status.Status);
                     sql.Append(paramDict.AddToWhere("Status", (int)status.Status, "t"));
                 }
             }
             if (dateTimePickerSearchPlannedStartFrom.Checked)
             {
-                //sql.Append(" and t.PlannedStartTime >= @PlannedStartTimeStart");//#" + dateTimePickerSearchPlannedStartFrom.Value.ToString(CommonData.DateTimeMinuteFormat + ":00") + "#
-                //paramDict.Add("PlannedStartTimeStart", DataConvert.ToDateTimeValue(dateTimePickerSearchPlannedStartFrom, 0));
                 sql.Append(paramDict.AddToWhere("PlannedStartTime", ">=", "PlannedStartTimeStart", DataConvert.ToDateTimeValue(dateTimePickerSearchPlannedStartFrom, 0), "t"));
             }
             if (dateTimePickerSearchPlannedStartTo.Checked)
             {
-                //sql.Append(" and t.PlannedStartTime <= @PlannedStartTimeEnd");//#" + dateTimePickerSearchPlannedStartTo.Value.ToString(CommonData.DateTimeMinuteFormat + ":59") + "#
-                //paramDict.Add("PlannedStartTimeEnd", DataConvert.ToDateTimeValue(dateTimePickerSearchPlannedStartTo, 59));
                 sql.Append(paramDict.AddToWhere("PlannedStartTime", "<=", "PlannedStartTimeEnd", DataConvert.ToDateTimeValue(dateTimePickerSearchPlannedStartTo, 59), "t"));
             }
             if (dateTimePickerSearchPlannedEndFrom.Checked)
             {
-                //sql.Append(" and t.PlannedEndTime >= @PlannedEndTimeStart");//#" + dateTimePickerSearchPlannedEndFrom.Value.ToString(CommonData.DateTimeMinuteFormat + ":00") + "#
-                //paramDict.Add("PlannedEndTimeStart", DataConvert.ToDateTimeValue(dateTimePickerSearchPlannedEndFrom, 0));
                 sql.Append(paramDict.AddToWhere("PlannedEndTime", ">=", "PlannedEndTimeStart", DataConvert.ToDateTimeValue(dateTimePickerSearchPlannedEndFrom, 0)));
             }
             if (dateTimePickerSearchPlannedEndTo.Checked)
             {
-                //sql.Append(" and t.PlannedEndTime <= @PlannedEndTimeEnd");//#" + dateTimePickerSearchPlannedEndTo.Value.ToString(CommonData.DateTimeMinuteFormat + ":59") + "#
-                //paramDict.Add("PlannedEndTimeEnd", DataConvert.ToDateTimeValue(dateTimePickerSearchPlannedEndTo, 59));
                 sql.Append(paramDict.AddToWhere("PlannedEndTime", "<=", "PlannedEndTimeEnd", DataConvert.ToDateTimeValue(dateTimePickerSearchPlannedEndTo, 59), "t"));
             }
             if (comboBoxSearchAssignedTo.SelectedItem is User user && user.ID != CommonData.ItemAllValue)
             {
-                //sql.Append(" and t.UserID = @UserID");
-                //paramDict.Add("UserID", user.ID);
                 sql.Append(paramDict.AddToWhere("UserID", user.ID, "t"));
             }
             sql.Append(" order by t.Priority, t.Severity, t.PlannedEndTime");
@@ -438,6 +412,9 @@ namespace ToDoList
             richTextBoxOperateMemo.Text = string.Empty;
             comboBoxOperateStatus.SelectedValue = EnumToDoStatus.Planning;
             comboBoxOperateAssignedTo.SelectedValue = CommonData.CurrentUser.ID;
+            checkBoxAddToReminder.CheckedChanged -= checkBoxAddToReminder_CheckedChanged;
+            checkBoxAddToReminder.Checked = false;
+            checkBoxAddToReminder.CheckedChanged += checkBoxAddToReminder_CheckedChanged;
         }
 
         private void dataGridViewToDoList_SelectionChanged(object sender, EventArgs e)
@@ -499,6 +476,13 @@ namespace ToDoList
                 comboBoxOperateAssignedTo.SelectedValue = todo.User.ID;
             else
                 comboBoxOperateAssignedTo.SelectedValue = CommonData.ItemNullValue;
+            Reminder reminder = GetReminderByToDo(todo.ID);
+            if (reminder != null && reminder.ID > 0)
+            {
+                checkBoxAddToReminder.CheckedChanged -= checkBoxAddToReminder_CheckedChanged;
+                checkBoxAddToReminder.Checked = true;
+                checkBoxAddToReminder.CheckedChanged += checkBoxAddToReminder_CheckedChanged;
+            }
         }
 
         private ToDo GetToDoFromOperateControls()
@@ -553,7 +537,7 @@ namespace ToDoList
                 MessageBox.Show("标题不能为空", "提示");
                 return;
             }
-            Dictionary<string, object> paramDict = new Dictionary<string, object>();
+            SqlParams paramDict = new SqlParams();
             paramDict.Add("Title", textBoxOperateTitle.Text.Trim());
             if (comboBoxOperateProject.SelectedItem is Project project && project.ID != CommonData.ItemAllValue)
             {
@@ -606,9 +590,24 @@ namespace ToDoList
             {
                 paramDict.Add("UserID", user.ID);
             }
-            //fields.Append(",FinishTime");
-            //fields.Append(",FinishUserID");
-            CommonData.AccessHelper.Insert("ToDo", paramDict);
+            //CommonData.AccessHelper.Insert("ToDo", paramDict);
+            if (checkBoxAddToReminder.Checked)
+            {
+                decimal toDoID = CommonData.AccessHelper.InsertAndReturnNewIdentity("ToDo", paramDict);
+                try
+                {
+                    CommonData.AccessHelper.Execute(AddToDoToReminderCommand(toDoID));
+                    SetAddToDoToReminderCheckState(true);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("待办事项添加成功，新增到提醒事项失败，请手动新增。" + Environment.NewLine + ex.Message, "提示");
+                }
+            }
+            else
+            {
+                CommonData.AccessHelper.Insert("ToDo", paramDict);
+            }
             richTextBoxOperateContent.Text = string.Empty;
             ShowMessageAskRefresh();
         }
@@ -631,7 +630,7 @@ namespace ToDoList
                 return;
             }
             ToDo toDoOperate = GetToDoFromOperateControls();
-            Dictionary<string, object> setParamDict = new Dictionary<string, object>();
+            SqlParams setParamDict = new SqlParams();
             setParamDict.Add("Title", toDoOperate.Title);
             setParamDict.Add("ProjectID", toDoOperate.Project.ID != CommonData.ItemAllValue ? (int?)toDoOperate.Project.ID : null);//test
             setParamDict.Add("BranchID", toDoOperate.Branch != null && toDoOperate.Branch.ID != CommonData.ItemAllValue ? (int?)toDoOperate.Branch.ID : null);
@@ -646,28 +645,26 @@ namespace ToDoList
             setParamDict.Add("PlannedDays", toDoOperate.PlannedDays);
             setParamDict.Add("Status", toDoOperate.Status.HasValue ? (int?)toDoOperate.Status.Value : null);
             setParamDict.Add("UserID", toDoOperate.User.ID != CommonData.ItemNullValue ? (int?)toDoOperate.User.ID : null);
-            Dictionary<string, object> whereParamDict = new Dictionary<string, object>();
+            SqlParams whereParamDict = new SqlParams();
             whereParamDict.Add("ID", toDoOriginal.ID);
-            CommonData.AccessHelper.Update("ToDo", setParamDict, whereParamDict);
+            //CommonData.AccessHelper.Update("ToDo", setParamDict, whereParamDict);
+            System.Data.OleDb.OleDbCommand updateToDoCommand = CommonData.AccessHelper.GetUpdateCommand("ToDo", setParamDict, whereParamDict);
+            System.Data.OleDb.OleDbCommand deleteReminderCommand = null;
+            if (toDoOperate.Status.HasValue && (toDoOperate.Status.Value == EnumToDoStatus.Cancelled || toDoOperate.Status.Value == EnumToDoStatus.Done))
+            {
+                deleteReminderCommand = DeleteReminderByToDoIDCommand(toDoOriginal.ID);
+            }
+            if (deleteReminderCommand == null)
+                CommonData.AccessHelper.Execute(updateToDoCommand);
+            else
+            {
+                List<System.Data.OleDb.OleDbCommand> commandList = new List<System.Data.OleDb.OleDbCommand>();
+                commandList.Add(updateToDoCommand);
+                commandList.Add(deleteReminderCommand);
+                CommonData.AccessHelper.ExecuteByTransaction(commandList);
+                SetAddToDoToReminderCheckState(false);
+            }
 
-            //StringBuilder sets = new StringBuilder("Title = " + DataConvert.ToAccessStringValue(toDoOperate.Title));
-            //sets.Append(", ProjectID = " + (toDoOperate.Project.ID != CommonData.ItemAllValue ? toDoOperate.Project.ID.ToString() : "null"));
-            //sets.Append(", BranchID = " + (toDoOperate.Branch != null && toDoOperate.Branch.ID != CommonData.ItemAllValue ? toDoOperate.Branch.ID.ToString() : "null"));
-            //sets.Append(", RelatedID = " + (textBoxOperateRelatedID.Text.NotNullOrWhiteSpace() ? DataConvert.ToAccessStringValue(textBoxOperateRelatedID.Text.Trim()) : "null"));
-            //sets.Append(", Priority = " + (toDoOperate.Priority.HasValue ? ((int)toDoOperate.Priority.Value).ToString() : "null"));
-            //sets.Append(", Severity = " + (toDoOperate.Severity.HasValue ? ((int)toDoOperate.Severity.Value).ToString() : "null"));
-            //sets.Append(", Content = " + DataConvert.ToAccessStringValue(toDoOperate.Content));
-            //sets.Append(", [Memo] = " + DataConvert.ToAccessStringValue(toDoOperate.Memo));
-            ////sets.Append(", UserID = " + CommonData.CurrentUser.ID);
-            //sets.Append(", PlannedStartTime = " + DataConvert.ToAccessDateTimeValue(toDoOperate.PlannedStartTime));
-            //sets.Append(", PlannedEndTime = " + DataConvert.ToAccessDateTimeValue(toDoOperate.PlannedEndTime));
-            //sets.Append(", PlannedHours = " + DataConvert.ToAccessDecimalValue(toDoOperate.PlannedHours));
-            //sets.Append(", PlannedDays = " + DataConvert.ToAccessDecimalValue(toDoOperate.PlannedDays));
-            //sets.Append(", Status = " + (toDoOperate.Status.HasValue ? ((int)toDoOperate.Status.Value).ToString() : "null"));
-            //sets.Append(", UserID = " + (toDoOperate.User.ID != CommonData.ItemNullValue ? toDoOperate.User.ID.ToString() : "null"));
-            ////sets.Append(", FinishTime = ");
-            ////sets.Append(", FinishUserID = ");
-            //CommonData.AccessHelper.ExecuteNonQuery("update ToDo set " + sets.ToString() + " where ID = " + toDoOriginal.ID);
             ShowMessageAskRefresh();
         }
 
@@ -683,8 +680,11 @@ namespace ToDoList
                 MessageBox.Show("待办事项数据错误", "提示");
                 return;
             }
-            CommonData.AccessHelper.Delete("ToDo", "ID", toDo.ID);
-            //CommonData.AccessHelper.ExecuteNonQuery("delete from ToDo where ID = " + toDo.ID);
+            List<System.Data.OleDb.OleDbCommand> commandList = new List<System.Data.OleDb.OleDbCommand>();
+            commandList.Add(CommonData.AccessHelper.GetDeleteCommand("ToDo", "ID", toDo.ID));
+            commandList.Add(DeleteReminderByToDoIDCommand(toDo.ID));
+            CommonData.AccessHelper.ExecuteByTransaction(commandList);
+            SetAddToDoToReminderCheckState(false);
             ////MessageBox.Show("删除完成", "提示");
             ShowMessageAskRefresh();
         }
@@ -701,7 +701,6 @@ namespace ToDoList
                 MessageBox.Show("待办事项数据错误", "提示");
                 return;
             }
-            //int i = CommonData.AccessHelper.ExecuteNonQuery("update ToDo set Status = " + (int)EnumToDoStatus.Working + " where ID = " + toDo.ID);
             int i = CommonData.AccessHelper.Update("ToDo", "Status", (int)EnumToDoStatus.Working, "ID", toDo.ID);
             //因为更新后有修改界面的逻辑，所以先判断是否更新成功，未更新成功就提示。避免更新失败后还是更新界面，导致界面显示与实际数据不同
             if (i == 0)
@@ -741,6 +740,70 @@ namespace ToDoList
             ToDoDone(toDo);
         }
 
+        private void UpdateToDo(ToDo toDo, EnumToDoStatus status)
+        {
+            if (status != EnumToDoStatus.Cancelled && status != EnumToDoStatus.Done)
+                return;
+            DateTime now = DateTime.Now;
+            SqlParams setParamDict = new SqlParams();
+            setParamDict.Add("Status", (int)status);
+            if (status == EnumToDoStatus.Cancelled)
+            {
+                setParamDict.Add("CancelTime", now);
+                setParamDict.Add("CancelUserID", CommonData.CurrentUser.ID);
+            }
+            else if (status == EnumToDoStatus.Done)
+            {
+                setParamDict.Add("FinishTime", now);
+                setParamDict.Add("FinishUserID", CommonData.CurrentUser.ID);
+            }
+            SqlParams whereParamDict = new SqlParams();
+            whereParamDict.Add("ID", toDo.ID);
+            //int i = CommonData.AccessHelper.Update("ToDo", setParamDict, whereParamDict);
+            List<System.Data.OleDb.OleDbCommand> commandList = new List<System.Data.OleDb.OleDbCommand>();
+            commandList.Add(CommonData.AccessHelper.GetUpdateCommand("ToDo", setParamDict, whereParamDict));
+            commandList.Add(DeleteReminderByToDoIDCommand(toDo.ID));
+            bool result = CommonData.AccessHelper.ExecuteByTransaction(commandList);
+
+            //因为更新后有修改界面的逻辑，所以先判断是否更新成功，未更新成功就提示。避免更新失败后还是更新界面，导致界面显示与实际数据不同
+            if (!result)//i == 0
+            {
+                MessageBox.Show("更新失败", "提示");
+                return;
+            }
+            SetAddToDoToReminderCheckState(false);
+
+            toDo.Status = status;
+            if (status == EnumToDoStatus.Cancelled)
+            {
+                toDo.CancelTime = now;
+                toDo.CancelUser = CommonData.CurrentUser;
+            }
+            else if (status == EnumToDoStatus.Done)
+            {
+                toDo.FinishTime = now;
+                toDo.FinishUser = CommonData.CurrentUser;
+            }
+            if (ShowMessageAskRefresh() == DialogResult.No)
+            {
+                foreach (DataGridViewRow row in dataGridViewToDoList.Rows)
+                {
+                    if (row.Tag is ToDo)
+                    {
+                        ToDo toDoRow = row.Tag as ToDo;
+                        if (toDoRow.ID == toDo.ID)
+                        {
+                            if (status == EnumToDoStatus.Cancelled)
+                                row.Cells[ColumnDone.Index].Value = "false";
+                            else if(status==EnumToDoStatus.Done)
+                                row.Cells[ColumnDone.Index].Value = "true";
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         private void buttonCancelled_Click(object sender, EventArgs e)
         {
             if (dataGridViewToDoList.SelectedRows.Count != 1)
@@ -753,39 +816,7 @@ namespace ToDoList
                 MessageBox.Show("待办事项数据错误", "提示");
                 return;
             }
-            DateTime now = DateTime.Now;
-            //int i = CommonData.AccessHelper.ExecuteNonQuery("update ToDo set Status = " + (int)EnumToDoStatus.Cancelled + " where ID = " + toDo.ID);
-            SqlParams setParamDict = new SqlParams();
-            setParamDict.Add("Status", (int)EnumToDoStatus.Cancelled);
-            setParamDict.Add("CancelTime", now);
-            setParamDict.Add("CancelUserID", CommonData.CurrentUser.ID);
-            SqlParams whereParamDict = new SqlParams();
-            whereParamDict.Add("ID", toDo.ID);
-            int i = CommonData.AccessHelper.Update("ToDo", setParamDict, whereParamDict);
-            //因为更新后有修改界面的逻辑，所以先判断是否更新成功，未更新成功就提示。避免更新失败后还是更新界面，导致界面显示与实际数据不同
-            if (i == 0)
-            {
-                MessageBox.Show("更新失败", "提示");
-                return;
-            }
-            toDo.Status = EnumToDoStatus.Cancelled;
-            toDo.CancelTime = now;
-            toDo.CancelUser = CommonData.CurrentUser;
-            if (ShowMessageAskRefresh() == DialogResult.No)
-            {
-                foreach (DataGridViewRow row in dataGridViewToDoList.Rows)
-                {
-                    if (row.Tag is ToDo)
-                    {
-                        ToDo toDoRow = row.Tag as ToDo;
-                        if (toDoRow.ID == toDo.ID)
-                        {
-                            row.Cells[ColumnDone.Index].Value = "false";
-                            break;
-                        }
-                    }
-                }
-            }
+            UpdateToDo(toDo, EnumToDoStatus.Cancelled);
         }
 
         private void ToDoDone(ToDo toDo)
@@ -795,40 +826,7 @@ namespace ToDoList
                 MessageBox.Show("待办事项数据错误", "提示");
                 return;
             }
-            DateTime now = DateTime.Now;
-            //int i = CommonData.AccessHelper.ExecuteNonQuery("update ToDo set Status = " + (int)EnumToDoStatus.Done + ", FinishTime = " + DataConvert.ToAccessDateTimeValue(now) + ", FinishUserID = " + CommonData.CurrentUser.ID + " where ID = " + toDo.ID);
-            SqlParams setParamDict = new SqlParams();
-            //Dictionary<string, object> setParamDict = new Dictionary<string, object>();
-            setParamDict.Add("Status", (int)EnumToDoStatus.Done);
-            setParamDict.Add("FinishTime", now);
-            setParamDict.Add("FinishUserID", CommonData.CurrentUser.ID);
-            Dictionary<string, object> whereParamDict = new Dictionary<string, object>();
-            whereParamDict.Add("ID", toDo.ID);
-            int i = CommonData.AccessHelper.Update("ToDo", setParamDict, whereParamDict);
-            //因为更新后有修改界面的逻辑，所以先判断是否更新成功，未更新成功就提示。避免更新失败后还是更新界面，导致界面显示与实际数据不同
-            if (i == 0)
-            {
-                MessageBox.Show("更新失败", "提示");
-                return;
-            }
-            toDo.Status = EnumToDoStatus.Done;
-            toDo.FinishTime = now;
-            toDo.FinishUser = CommonData.CurrentUser;
-            if (ShowMessageAskRefresh() == DialogResult.No)
-            {
-                foreach (DataGridViewRow row in dataGridViewToDoList.Rows)
-                {
-                    if (row.Tag is ToDo)
-                    {
-                        ToDo toDoRow = row.Tag as ToDo;
-                        if (toDoRow.ID == toDo.ID)
-                        {
-                            row.Cells[ColumnDone.Index].Value = "true";
-                            break;
-                        }
-                    }
-                }
-            }
+            UpdateToDo(toDo, EnumToDoStatus.Done);
             AddToReport(toDo);
         }
 
@@ -1064,6 +1062,85 @@ namespace ToDoList
             //export.ShowDialog();
             //export.Show(this);
             export.Show();
+        }
+
+        /// <summary>
+        /// 根据待办事项获取提醒事项
+        /// </summary>
+        /// <param name="id">待办事项ID</param>
+        /// <returns></returns>
+        private Reminder GetReminderByToDo(decimal id)
+        {
+            if (id <= 0)
+                return null;
+            StringBuilder sql = new StringBuilder("select ID, Content, ToDoID, Status from Reminder where Status = 0");
+            SqlParams paramDict = new SqlParams();
+            sql.Append(paramDict.AddToWhere("ToDoID", id));
+            Reminder reminder = null;
+            DataTable dt = CommonData.AccessHelper.GetDataTable(sql.ToString(), paramDict);
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                DataRow row = dt.Rows[0];
+                reminder = new Reminder
+                {
+                    ID = DataConvert.ToDecimal(row["ID"]),
+                    Content = DataConvert.ToString(row["Content"]),
+                    ToDo = new ToDo() { ID = DataConvert.ToDecimal(row["ToDoID"]) },
+                    Status = DataConvert.ToNullableInt(row["Status"])
+                };
+            }
+            return reminder;
+        }
+
+        /// <summary>
+        /// 根据待办事项ID删除提醒事项的命令
+        /// </summary>
+        /// <param name="toDoID">待办事项ID</param>
+        /// <returns></returns>
+        private System.Data.OleDb.OleDbCommand DeleteReminderByToDoIDCommand(decimal toDoID)
+        {
+            return CommonData.AccessHelper.GetUpdateCommand("Reminder", "Status", 1, "ToDoID", toDoID);
+        }
+
+        /// <summary>
+        /// 把待办事项新增到提醒事项的命令
+        /// </summary>
+        /// <param name="toDoID">待办事项ID</param>
+        /// <returns></returns>
+        private System.Data.OleDb.OleDbCommand AddToDoToReminderCommand(decimal toDoID)
+        {
+            SqlParams paramDict = new SqlParams();
+            paramDict.Add("ToDoID", toDoID);
+            paramDict.Add("Status", 0);
+            return CommonData.AccessHelper.GetInsertCommand("Reminder", paramDict);
+        }
+
+        private void checkBoxAddToReminder_CheckedChanged(object sender, EventArgs e)
+        {
+            //如果是编辑状态，直接添加；如果是新增状态，标记后在新增的时候新增完后添加
+            if (dataGridViewToDoList.SelectedRows.Count == 1)
+            {
+                if (!(dataGridViewToDoList.SelectedRows[0].Tag is ToDo toDoOriginal) || toDoOriginal.ID <= 0)
+                {
+                    MessageBox.Show("待办事项数据错误", "提示");
+                    return;
+                }
+                if (checkBoxAddToReminder.Checked)
+                {
+                    CommonData.AccessHelper.Execute(AddToDoToReminderCommand(toDoOriginal.ID));
+                }
+                else
+                {
+                    CommonData.AccessHelper.Execute(DeleteReminderByToDoIDCommand(toDoOriginal.ID));
+                }
+            }
+        }
+
+        private void SetAddToDoToReminderCheckState(bool checkState)
+        {
+            checkBoxAddToReminder.CheckedChanged -= checkBoxAddToReminder_CheckedChanged;
+            checkBoxAddToReminder.Checked = checkState;
+            checkBoxAddToReminder.CheckedChanged += checkBoxAddToReminder_CheckedChanged;
         }
     }
 }

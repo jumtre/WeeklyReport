@@ -51,6 +51,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxDict = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonSetReminderTile = new System.Windows.Forms.Button();
+            this.checkBoxReminderTileAutoStartup = new System.Windows.Forms.CheckBox();
             this.checkBoxTodoListAutoStartup = new System.Windows.Forms.CheckBox();
             this.checkBoxWeeklyReportAutoStartup = new System.Windows.Forms.CheckBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -290,6 +292,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.buttonSetReminderTile);
+            this.groupBox1.Controls.Add(this.checkBoxReminderTileAutoStartup);
             this.groupBox1.Controls.Add(this.checkBoxTodoListAutoStartup);
             this.groupBox1.Controls.Add(this.checkBoxWeeklyReportAutoStartup);
             this.groupBox1.Controls.Add(this.label9);
@@ -314,10 +318,31 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "功能";
             // 
+            // buttonSetReminderTile
+            // 
+            this.buttonSetReminderTile.Location = new System.Drawing.Point(293, 19);
+            this.buttonSetReminderTile.Name = "buttonSetReminderTile";
+            this.buttonSetReminderTile.Size = new System.Drawing.Size(75, 23);
+            this.buttonSetReminderTile.TabIndex = 19;
+            this.buttonSetReminderTile.Text = "磁贴设置";
+            this.buttonSetReminderTile.UseVisualStyleBackColor = true;
+            this.buttonSetReminderTile.Click += new System.EventHandler(this.buttonSetReminderTile_Click);
+            // 
+            // checkBoxReminderTileAutoStartup
+            // 
+            this.checkBoxReminderTileAutoStartup.AutoSize = true;
+            this.checkBoxReminderTileAutoStartup.Location = new System.Drawing.Point(519, 87);
+            this.checkBoxReminderTileAutoStartup.Name = "checkBoxReminderTileAutoStartup";
+            this.checkBoxReminderTileAutoStartup.Size = new System.Drawing.Size(72, 16);
+            this.checkBoxReminderTileAutoStartup.TabIndex = 18;
+            this.checkBoxReminderTileAutoStartup.Text = "提醒磁贴";
+            this.checkBoxReminderTileAutoStartup.UseVisualStyleBackColor = true;
+            this.checkBoxReminderTileAutoStartup.CheckedChanged += new System.EventHandler(this.checkBoxReminderTileAutoStartup_CheckedChanged);
+            // 
             // checkBoxTodoListAutoStartup
             // 
             this.checkBoxTodoListAutoStartup.AutoSize = true;
-            this.checkBoxTodoListAutoStartup.Location = new System.Drawing.Point(453, 87);
+            this.checkBoxTodoListAutoStartup.Location = new System.Drawing.Point(445, 87);
             this.checkBoxTodoListAutoStartup.Name = "checkBoxTodoListAutoStartup";
             this.checkBoxTodoListAutoStartup.Size = new System.Drawing.Size(72, 16);
             this.checkBoxTodoListAutoStartup.TabIndex = 17;
@@ -328,7 +353,7 @@
             // checkBoxWeeklyReportAutoStartup
             // 
             this.checkBoxWeeklyReportAutoStartup.AutoSize = true;
-            this.checkBoxWeeklyReportAutoStartup.Location = new System.Drawing.Point(375, 87);
+            this.checkBoxWeeklyReportAutoStartup.Location = new System.Drawing.Point(371, 87);
             this.checkBoxWeeklyReportAutoStartup.Name = "checkBoxWeeklyReportAutoStartup";
             this.checkBoxWeeklyReportAutoStartup.Size = new System.Drawing.Size(72, 16);
             this.checkBoxWeeklyReportAutoStartup.TabIndex = 16;
@@ -376,7 +401,7 @@
             // 
             // buttonSetCurrentProjectAndBranch
             // 
-            this.buttonSetCurrentProjectAndBranch.Location = new System.Drawing.Point(526, 52);
+            this.buttonSetCurrentProjectAndBranch.Location = new System.Drawing.Point(530, 52);
             this.buttonSetCurrentProjectAndBranch.Name = "buttonSetCurrentProjectAndBranch";
             this.buttonSetCurrentProjectAndBranch.Size = new System.Drawing.Size(56, 23);
             this.buttonSetCurrentProjectAndBranch.TabIndex = 10;
@@ -541,6 +566,8 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.CheckBox checkBoxTodoListAutoStartup;
         private System.Windows.Forms.CheckBox checkBoxWeeklyReportAutoStartup;
+        private System.Windows.Forms.CheckBox checkBoxReminderTileAutoStartup;
+        private System.Windows.Forms.Button buttonSetReminderTile;
     }
 }
 

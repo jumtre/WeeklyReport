@@ -79,6 +79,8 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.labelHideInfo = new System.Windows.Forms.Label();
             this.groupBoxDataOperation = new System.Windows.Forms.GroupBox();
+            this.checkBoxAddToReminder = new System.Windows.Forms.CheckBox();
+            this.buttonCancelled = new System.Windows.Forms.Button();
             this.buttonOperateNextWeek = new System.Windows.Forms.Button();
             this.buttonOperateLastWeek = new System.Windows.Forms.Button();
             this.buttonOperateThisWeek = new System.Windows.Forms.Button();
@@ -122,7 +124,6 @@
             this.comboBoxOperateProject = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
             this.toolTipInfo = new System.Windows.Forms.ToolTip(this.components);
-            this.buttonCancelled = new System.Windows.Forms.Button();
             this.groupBoxSearch.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
@@ -638,6 +639,7 @@
             // 
             // groupBoxDataOperation
             // 
+            this.groupBoxDataOperation.Controls.Add(this.checkBoxAddToReminder);
             this.groupBoxDataOperation.Controls.Add(this.buttonCancelled);
             this.groupBoxDataOperation.Controls.Add(this.buttonOperateNextWeek);
             this.groupBoxDataOperation.Controls.Add(this.buttonOperateLastWeek);
@@ -684,6 +686,29 @@
             this.groupBoxDataOperation.TabIndex = 4;
             this.groupBoxDataOperation.TabStop = false;
             this.groupBoxDataOperation.Text = "数据/操作";
+            // 
+            // checkBoxAddToReminder
+            // 
+            this.checkBoxAddToReminder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxAddToReminder.AutoSize = true;
+            this.checkBoxAddToReminder.Location = new System.Drawing.Point(196, 449);
+            this.checkBoxAddToReminder.Name = "checkBoxAddToReminder";
+            this.checkBoxAddToReminder.Size = new System.Drawing.Size(84, 16);
+            this.checkBoxAddToReminder.TabIndex = 39;
+            this.checkBoxAddToReminder.Text = "新增到提醒";
+            this.checkBoxAddToReminder.UseVisualStyleBackColor = true;
+            this.checkBoxAddToReminder.CheckedChanged += new System.EventHandler(this.checkBoxAddToReminder_CheckedChanged);
+            // 
+            // buttonCancelled
+            // 
+            this.buttonCancelled.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonCancelled.Location = new System.Drawing.Point(230, 508);
+            this.buttonCancelled.Name = "buttonCancelled";
+            this.buttonCancelled.Size = new System.Drawing.Size(50, 23);
+            this.buttonCancelled.TabIndex = 33;
+            this.buttonCancelled.Text = "已取消";
+            this.buttonCancelled.UseVisualStyleBackColor = true;
+            this.buttonCancelled.Click += new System.EventHandler(this.buttonCancelled_Click);
             // 
             // buttonOperateNextWeek
             // 
@@ -1114,17 +1139,6 @@
             this.label11.TabIndex = 0;
             this.label11.Text = "项    目：";
             // 
-            // buttonCancelled
-            // 
-            this.buttonCancelled.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonCancelled.Location = new System.Drawing.Point(230, 508);
-            this.buttonCancelled.Name = "buttonCancelled";
-            this.buttonCancelled.Size = new System.Drawing.Size(50, 23);
-            this.buttonCancelled.TabIndex = 33;
-            this.buttonCancelled.Text = "已取消";
-            this.buttonCancelled.UseVisualStyleBackColor = true;
-            this.buttonCancelled.Click += new System.EventHandler(this.buttonCancelled_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1257,5 +1271,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnSeverity;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPlannedEndTime;
         private System.Windows.Forms.Button buttonCancelled;
+        private System.Windows.Forms.CheckBox checkBoxAddToReminder;
     }
 }

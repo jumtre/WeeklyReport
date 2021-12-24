@@ -59,8 +59,7 @@ namespace Common
                     }
                     catch (Exception ex)
                     {
-                        CommonInfoException infoEx = new CommonInfoException("读取数据库出错。", ex);
-                        throw infoEx;
+                        throw new CommonInfoException("读取数据库出错。", ex);
                     }
                 }
                 return accessHelper;
@@ -83,8 +82,7 @@ namespace Common
                     }
                     catch (Exception ex)
                     {
-                        CommonInfoException infoEx = new CommonInfoException("读取配置文件出错。", ex);
-                        throw infoEx;
+                        throw new CommonInfoException("读取配置文件出错。", ex);
                     }
                 }
                 return iniHelper;
@@ -1753,7 +1751,7 @@ namespace Common
     {
         public CommonInfoException() : base() { }
         public CommonInfoException(string message) : base(message) { }
-        public CommonInfoException(string message, System.Exception inner) : base(message, inner) { }
+        public CommonInfoException(string message, System.Exception innerException) : base(message, innerException) { }
 
         //当异常从远程服务器传播到客户端时，需要序列化构造函数。
         protected CommonInfoException(System.Runtime.Serialization.SerializationInfo info,
