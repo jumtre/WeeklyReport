@@ -53,6 +53,7 @@
     <Compile Include="AddToReport.Designer.cs">
       <DependentUpon>AddToReport.cs</DependentUpon>
     </Compile>
+    <Compile Include="Common.cs" />
     <Compile Include="ExportForm.cs">
       <SubType>Form</SubType>
     </Compile>

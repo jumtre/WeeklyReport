@@ -90,6 +90,10 @@
       <Project>{F4C0B97A-4139-4D56-A37E-1DF73D1F63CE}</Project>
       <Name>Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ToDoList\ToDoList.csproj">
+      <Project>{575faa64-1937-49ec-a9e9-45730b747c70}</Project>
+      <Name>ToDoList</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="ReminderTile.ico" />

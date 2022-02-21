@@ -652,7 +652,7 @@ namespace ToDoList
             System.Data.OleDb.OleDbCommand deleteReminderCommand = null;
             if (toDoOperate.Status.HasValue && (toDoOperate.Status.Value == EnumToDoStatus.Cancelled || toDoOperate.Status.Value == EnumToDoStatus.Done))
             {
-                deleteReminderCommand = DeleteReminderByToDoIDCommand(toDoOriginal.ID);
+                deleteReminderCommand = ToDoCommon.DeleteReminderByToDoIDCommand(toDoOriginal.ID);
             }
             if (deleteReminderCommand == null)
                 CommonData.AccessHelper.Execute(updateToDoCommand);
@@ -682,7 +682,7 @@ namespace ToDoList
             }
             List<System.Data.OleDb.OleDbCommand> commandList = new List<System.Data.OleDb.OleDbCommand>();
             commandList.Add(CommonData.AccessHelper.GetDeleteCommand("ToDo", "ID", toDo.ID));
-            commandList.Add(DeleteReminderByToDoIDCommand(toDo.ID));
+            commandList.Add(ToDoCommon.DeleteReminderByToDoIDCommand(toDo.ID));
             CommonData.AccessHelper.ExecuteByTransaction(commandList);
             SetAddToDoToReminderCheckState(false);
             ////MessageBox.Show("删除完成", "提示");
@@ -737,33 +737,34 @@ namespace ToDoList
                 MessageBox.Show("待办事项数据错误", "提示");
                 return;
             }
-            ToDoDone(toDo);
+            ToDoCommon.ToDoDone(toDo, this);
         }
 
         private void UpdateToDo(ToDo toDo, EnumToDoStatus status)
         {
             if (status != EnumToDoStatus.Cancelled && status != EnumToDoStatus.Done)
                 return;
-            DateTime now = DateTime.Now;
-            SqlParams setParamDict = new SqlParams();
-            setParamDict.Add("Status", (int)status);
-            if (status == EnumToDoStatus.Cancelled)
-            {
-                setParamDict.Add("CancelTime", now);
-                setParamDict.Add("CancelUserID", CommonData.CurrentUser.ID);
-            }
-            else if (status == EnumToDoStatus.Done)
-            {
-                setParamDict.Add("FinishTime", now);
-                setParamDict.Add("FinishUserID", CommonData.CurrentUser.ID);
-            }
-            SqlParams whereParamDict = new SqlParams();
-            whereParamDict.Add("ID", toDo.ID);
-            //int i = CommonData.AccessHelper.Update("ToDo", setParamDict, whereParamDict);
-            List<System.Data.OleDb.OleDbCommand> commandList = new List<System.Data.OleDb.OleDbCommand>();
-            commandList.Add(CommonData.AccessHelper.GetUpdateCommand("ToDo", setParamDict, whereParamDict));
-            commandList.Add(DeleteReminderByToDoIDCommand(toDo.ID));
-            bool result = CommonData.AccessHelper.ExecuteByTransaction(commandList);
+            //DateTime now = DateTime.Now;
+            //SqlParams setParamDict = new SqlParams();
+            //setParamDict.Add("Status", (int)status);
+            //if (status == EnumToDoStatus.Cancelled)
+            //{
+            //    setParamDict.Add("CancelTime", now);
+            //    setParamDict.Add("CancelUserID", CommonData.CurrentUser.ID);
+            //}
+            //else if (status == EnumToDoStatus.Done)
+            //{
+            //    setParamDict.Add("FinishTime", now);
+            //    setParamDict.Add("FinishUserID", CommonData.CurrentUser.ID);
+            //}
+            //SqlParams whereParamDict = new SqlParams();
+            //whereParamDict.Add("ID", toDo.ID);
+            ////int i = CommonData.AccessHelper.Update("ToDo", setParamDict, whereParamDict);
+            //List<System.Data.OleDb.OleDbCommand> commandList = new List<System.Data.OleDb.OleDbCommand>();
+            //commandList.Add(CommonData.AccessHelper.GetUpdateCommand("ToDo", setParamDict, whereParamDict));
+            //commandList.Add(Common.DeleteReminderByToDoIDCommand(toDo.ID));
+            //bool result = CommonData.AccessHelper.ExecuteByTransaction(commandList);
+            bool result = ToDoCommon.UpdateToDo(toDo, status, true);
 
             //因为更新后有修改界面的逻辑，所以先判断是否更新成功，未更新成功就提示。避免更新失败后还是更新界面，导致界面显示与实际数据不同
             if (!result)//i == 0
@@ -773,17 +774,17 @@ namespace ToDoList
             }
             SetAddToDoToReminderCheckState(false);
 
-            toDo.Status = status;
-            if (status == EnumToDoStatus.Cancelled)
-            {
-                toDo.CancelTime = now;
-                toDo.CancelUser = CommonData.CurrentUser;
-            }
-            else if (status == EnumToDoStatus.Done)
-            {
-                toDo.FinishTime = now;
-                toDo.FinishUser = CommonData.CurrentUser;
-            }
+            //toDo.Status = status;
+            //if (status == EnumToDoStatus.Cancelled)
+            //{
+            //    toDo.CancelTime = now;
+            //    toDo.CancelUser = CommonData.CurrentUser;
+            //}
+            //else if (status == EnumToDoStatus.Done)
+            //{
+            //    toDo.FinishTime = now;
+            //    toDo.FinishUser = CommonData.CurrentUser;
+            //}
             if (ShowMessageAskRefresh() == DialogResult.No)
             {
                 foreach (DataGridViewRow row in dataGridViewToDoList.Rows)
@@ -819,27 +820,27 @@ namespace ToDoList
             UpdateToDo(toDo, EnumToDoStatus.Cancelled);
         }
 
-        private void ToDoDone(ToDo toDo)
-        {
-            if (toDo == null || toDo.ID <= 0)
-            {
-                MessageBox.Show("待办事项数据错误", "提示");
-                return;
-            }
-            UpdateToDo(toDo, EnumToDoStatus.Done);
-            AddToReport(toDo);
-        }
+        //private void ToDoDone(ToDo toDo)
+        //{
+        //    if (toDo == null || toDo.ID <= 0)
+        //    {
+        //        MessageBox.Show("待办事项数据错误", "提示");
+        //        return;
+        //    }
+        //    UpdateToDo(toDo, EnumToDoStatus.Done);
+        //    AddToReport(toDo);
+        //}
 
-        private void AddToReport(ToDo toDo)
-        {
-            if (toDo == null)
-                return;
-            if (MessageBox.Show("是否新增到个人周报中？", "询问", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
-            {
-                AddToReport add = new AddToReport(toDo);
-                add.Show();
-            }
-        }
+        //private void AddToReport(ToDo toDo)
+        //{
+        //    if (toDo == null)
+        //        return;
+        //    if (MessageBox.Show("是否新增到个人周报中？", "询问", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
+        //    {
+        //        AddToReport add = new AddToReport(toDo);
+        //        add.Show();
+        //    }
+        //}
 
         private void dataGridViewToDoList_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -850,7 +851,7 @@ namespace ToDoList
                     return;
                 if (!toDo.Status.HasValue || toDo.Status.Value == EnumToDoStatus.Planning || toDo.Status.Value == EnumToDoStatus.Working)
                 {
-                    ToDoDone(toDo);
+                    ToDoCommon.ToDoDone(toDo, this);
                 }
             }
         }
@@ -1092,15 +1093,15 @@ namespace ToDoList
             return reminder;
         }
 
-        /// <summary>
-        /// 根据待办事项ID删除提醒事项的命令
-        /// </summary>
-        /// <param name="toDoID">待办事项ID</param>
-        /// <returns></returns>
-        private System.Data.OleDb.OleDbCommand DeleteReminderByToDoIDCommand(decimal toDoID)
-        {
-            return CommonData.AccessHelper.GetUpdateCommand("Reminder", "Status", 1, "ToDoID", toDoID);
-        }
+        ///// <summary>
+        ///// 根据待办事项ID删除提醒事项的命令
+        ///// </summary>
+        ///// <param name="toDoID">待办事项ID</param>
+        ///// <returns></returns>
+        //private System.Data.OleDb.OleDbCommand DeleteReminderByToDoIDCommand(decimal toDoID)
+        //{
+        //    return CommonData.AccessHelper.GetUpdateCommand("Reminder", "Status", 1, "ToDoID", toDoID);
+        //}
 
         /// <summary>
         /// 把待办事项新增到提醒事项的命令
@@ -1131,7 +1132,7 @@ namespace ToDoList
                 }
                 else
                 {
-                    CommonData.AccessHelper.Execute(DeleteReminderByToDoIDCommand(toDoOriginal.ID));
+                    CommonData.AccessHelper.Execute(ToDoCommon.DeleteReminderByToDoIDCommand(toDoOriginal.ID));
                 }
             }
         }

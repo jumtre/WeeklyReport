@@ -121,7 +121,7 @@ namespace ReminderTile
             toolTipInfo.SetToolTip(buttonNext, "下一个");
             toolTipInfo.SetToolTip(buttonAdd, "新增");
             toolTipInfo.SetToolTip(buttonSave, "保存");
-            toolTipInfo.SetToolTip(buttonDelete, "删除");
+            toolTipInfo.SetToolTip(buttonDelete, "完成/删除");
             toolTipInfo.SetToolTip(buttonTop, this.TopMost ? "拔出(取消置顶)" : "钉住(置顶)");
             toolTipInfo.SetToolTip(buttonColor, "颜色");
             toolTipInfo.SetToolTip(buttonClose, "关闭");
@@ -428,8 +428,13 @@ namespace ReminderTile
                 else
                     currentIndex--;
                 BindReminder(currentIndex);
-                if (reminder.ToDo != null && reminder.ToDo.ID > 0)
-                    MessageBox.Show("如有需要，请手动在待办事项程序中修改状态。", "提示");
+                //if (reminder.ToDo != null && reminder.ToDo.ID > 0)
+                //    MessageBox.Show("如有需要，请手动在待办事项程序中修改状态。", "提示");
+                if (reminder.ToDo == null || reminder.ToDo.ID <= 0)
+                    return;
+                if (MessageBox.Show(this, "待办事项是否已完成？" + Environment.NewLine + "若选择【是】，会更新待办事项状态为【已完成】。", "待办事项", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Asterisk) != DialogResult.Yes)
+                    return;
+                ToDoList.ToDoCommon.ToDoDone(reminder.ToDo, this);
             }
         }
 
