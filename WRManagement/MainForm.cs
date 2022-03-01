@@ -67,6 +67,29 @@ namespace WRManagement
             BindProjectDict();
             BindBranchDict();
             checkBoxApplyCurrentProjectAndBranchToSearch.Checked = CommonData.IniHelper.Read("Common", "ApplyCurrentProjectAndBranchToSearch").ToLower() == "true" ? true : false;
+            string tileCommand = CommonData.IniHelper.Read("ReminderTile", "StartupCommandWhenNoItem");
+            if (tileCommand.IsNullOrWhiteSpace())
+            {
+                radioButtonTileNoCommand.Checked = true;
+            }
+            else
+            {
+                switch (tileCommand.ToLower())
+                {
+                    case "nocommand":
+                        radioButtonTileNoCommand.Checked = true;
+                        break;
+                    case "hide":
+                        radioButtonTileHide.Checked = true;
+                        break;
+                    case "exit":
+                        radioButtonTileExit.Checked = true;
+                        break;
+                    default:
+                        radioButtonTileNoCommand.Checked = true;
+                        break;
+                }
+            }
         }
 
         private void BindUserDict(bool lazyLoad = true)
@@ -638,6 +661,16 @@ namespace WRManagement
             //reminderTile.Close();
             reminderTile.Dispose();
             reminderTile = null;
+        }
+
+        private void radioButtonTileCommand_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonTileHide.Checked)
+                CommonData.IniHelper.Write("ReminderTile", "StartupCommandWhenNoItem", "Hide");
+            else if (radioButtonTileExit.Checked)
+                CommonData.IniHelper.Write("ReminderTile", "StartupCommandWhenNoItem", "Exit");
+            else
+                CommonData.IniHelper.Write("ReminderTile", "StartupCommandWhenNoItem", "NoCommand");
         }
     }
 }

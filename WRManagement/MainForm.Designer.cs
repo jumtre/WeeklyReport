@@ -51,6 +51,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxDict = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.radioButtonTileExit = new System.Windows.Forms.RadioButton();
+            this.radioButtonTileHide = new System.Windows.Forms.RadioButton();
+            this.radioButtonTileNoCommand = new System.Windows.Forms.RadioButton();
+            this.label10 = new System.Windows.Forms.Label();
             this.buttonSetReminderTile = new System.Windows.Forms.Button();
             this.checkBoxReminderTileAutoStartup = new System.Windows.Forms.CheckBox();
             this.checkBoxTodoListAutoStartup = new System.Windows.Forms.CheckBox();
@@ -96,7 +101,7 @@
             this.dataGridViewShow.RowHeadersVisible = false;
             this.dataGridViewShow.RowTemplate.Height = 23;
             this.dataGridViewShow.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewShow.Size = new System.Drawing.Size(604, 199);
+            this.dataGridViewShow.Size = new System.Drawing.Size(604, 223);
             this.dataGridViewShow.TabIndex = 1;
             this.dataGridViewShow.SelectionChanged += new System.EventHandler(this.dataGridViewShow_SelectionChanged);
             // 
@@ -138,9 +143,9 @@
             // 
             this.groupBox3.Controls.Add(this.dataGridViewShow);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox3.Location = new System.Drawing.Point(5, 333);
+            this.groupBox3.Location = new System.Drawing.Point(5, 356);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(610, 219);
+            this.groupBox3.Size = new System.Drawing.Size(610, 243);
             this.groupBox3.TabIndex = 5;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "显示";
@@ -194,7 +199,7 @@
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.comboBoxDict);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox2.Location = new System.Drawing.Point(5, 121);
+            this.groupBox2.Location = new System.Drawing.Point(5, 144);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(610, 212);
             this.groupBox2.TabIndex = 4;
@@ -292,6 +297,11 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label11);
+            this.groupBox1.Controls.Add(this.radioButtonTileExit);
+            this.groupBox1.Controls.Add(this.radioButtonTileHide);
+            this.groupBox1.Controls.Add(this.radioButtonTileNoCommand);
+            this.groupBox1.Controls.Add(this.label10);
             this.groupBox1.Controls.Add(this.buttonSetReminderTile);
             this.groupBox1.Controls.Add(this.checkBoxReminderTileAutoStartup);
             this.groupBox1.Controls.Add(this.checkBoxTodoListAutoStartup);
@@ -313,14 +323,69 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(5, 5);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(610, 116);
+            this.groupBox1.Size = new System.Drawing.Size(610, 139);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "功能";
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.ForeColor = System.Drawing.Color.DimGray;
+            this.label11.Location = new System.Drawing.Point(92, 114);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(173, 12);
+            this.label11.TabIndex = 20;
+            this.label11.Text = "弹出窗体设置，关闭时保存设置";
+            // 
+            // radioButtonTileExit
+            // 
+            this.radioButtonTileExit.AutoSize = true;
+            this.radioButtonTileExit.Location = new System.Drawing.Point(543, 113);
+            this.radioButtonTileExit.Name = "radioButtonTileExit";
+            this.radioButtonTileExit.Size = new System.Drawing.Size(47, 16);
+            this.radioButtonTileExit.TabIndex = 24;
+            this.radioButtonTileExit.TabStop = true;
+            this.radioButtonTileExit.Text = "退出";
+            this.radioButtonTileExit.UseVisualStyleBackColor = true;
+            this.radioButtonTileExit.CheckedChanged += new System.EventHandler(this.radioButtonTileCommand_CheckedChanged);
+            // 
+            // radioButtonTileHide
+            // 
+            this.radioButtonTileHide.AutoSize = true;
+            this.radioButtonTileHide.Location = new System.Drawing.Point(481, 113);
+            this.radioButtonTileHide.Name = "radioButtonTileHide";
+            this.radioButtonTileHide.Size = new System.Drawing.Size(47, 16);
+            this.radioButtonTileHide.TabIndex = 23;
+            this.radioButtonTileHide.TabStop = true;
+            this.radioButtonTileHide.Text = "隐藏";
+            this.radioButtonTileHide.UseVisualStyleBackColor = true;
+            this.radioButtonTileHide.CheckedChanged += new System.EventHandler(this.radioButtonTileCommand_CheckedChanged);
+            // 
+            // radioButtonTileNoCommand
+            // 
+            this.radioButtonTileNoCommand.AutoSize = true;
+            this.radioButtonTileNoCommand.Location = new System.Drawing.Point(410, 113);
+            this.radioButtonTileNoCommand.Name = "radioButtonTileNoCommand";
+            this.radioButtonTileNoCommand.Size = new System.Drawing.Size(59, 16);
+            this.radioButtonTileNoCommand.TabIndex = 22;
+            this.radioButtonTileNoCommand.TabStop = true;
+            this.radioButtonTileNoCommand.Text = "无操作";
+            this.radioButtonTileNoCommand.UseVisualStyleBackColor = true;
+            this.radioButtonTileNoCommand.CheckedChanged += new System.EventHandler(this.radioButtonTileCommand_CheckedChanged);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(292, 114);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(113, 12);
+            this.label10.TabIndex = 21;
+            this.label10.Text = "启动磁贴无数据时：";
+            // 
             // buttonSetReminderTile
             // 
-            this.buttonSetReminderTile.Location = new System.Drawing.Point(293, 19);
+            this.buttonSetReminderTile.Location = new System.Drawing.Point(11, 109);
             this.buttonSetReminderTile.Name = "buttonSetReminderTile";
             this.buttonSetReminderTile.Size = new System.Drawing.Size(75, 23);
             this.buttonSetReminderTile.TabIndex = 19;
@@ -503,7 +568,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(620, 557);
+            this.ClientSize = new System.Drawing.Size(620, 604);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -568,6 +633,11 @@
         private System.Windows.Forms.CheckBox checkBoxWeeklyReportAutoStartup;
         private System.Windows.Forms.CheckBox checkBoxReminderTileAutoStartup;
         private System.Windows.Forms.Button buttonSetReminderTile;
+        private System.Windows.Forms.RadioButton radioButtonTileExit;
+        private System.Windows.Forms.RadioButton radioButtonTileHide;
+        private System.Windows.Forms.RadioButton radioButtonTileNoCommand;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
     }
 }
 

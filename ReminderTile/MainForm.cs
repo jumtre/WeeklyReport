@@ -507,5 +507,29 @@ namespace ReminderTile
             }
             BindReminder(index);
         }
+
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            if (reminderDict == null || reminderDict.Count == 0)
+            {
+                string tileCommand = CommonData.IniHelper.Read("ReminderTile", "StartupCommandWhenNoItem");
+                if (!tileCommand.IsNullOrWhiteSpace())
+                {
+                    switch (tileCommand.ToLower())
+                    {
+                        case "hide":
+                            buttonClose.PerformClick();
+                            break;
+                        case "exit":
+                            //Application.Exit();
+                            ToolStripMenuItemExit_Click(sender, e);
+                            break;
+                        case "nocommand":
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
     }
 }
