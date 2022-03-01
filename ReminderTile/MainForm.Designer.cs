@@ -289,6 +289,7 @@
             this.Text = "提醒磁贴";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.contextMenuStripNotify.ResumeLayout(false);
             this.ResumeLayout(false);
 
