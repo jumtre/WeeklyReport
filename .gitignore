@@ -18,3 +18,10 @@
 /ToDoList/obj
 /ReminderTile/bin
 /ReminderTile/obj
+/Common/.vs
+/Common/Common.csproj.user
+/Model/.vs
+/ReminderTile/.vs
+/ToDoList/.vs
+/WeeklyReport/.vs
+/WRManagement/.vs
