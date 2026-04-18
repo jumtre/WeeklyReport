@@ -20,3 +20,4 @@
 /XControls/bin
 /XControls/obj
 .vs
+/Common/Common.csproj.user
