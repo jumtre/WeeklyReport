@@ -20,10 +20,12 @@ namespace WeeklyReport
         /// 所有报告
         /// </summary>
         private List<Report> reportAll;
+        ToolTip toolTip = new ToolTip();
 
         public MainForm()
         {
             InitializeComponent();
+            comboBoxOperateBranch.DrawMode = DrawMode.OwnerDrawFixed;
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -64,20 +66,29 @@ namespace WeeklyReport
             comboBoxOperateBranch.SelectedIndexChanged -= comboBoxOperateBranch_SelectedIndexChanged;
             CommonFunc.BindProjectListToComboBox(comboBoxSearchProject, null, true);
             CommonFunc.BindProjectListToComboBox(comboBoxOperateProject, null, true);
+            List<Branch> branchListForSearch = CommonFunc.GetBranchListForSearch();
+            List<Branch> branchListForOperate = CommonFunc.GetBranchListForSearch();
             if (CommonData.CurrentProject != null && CommonData.CurrentProject.ID != CommonData.ItemNullValue && CommonData.CurrentProject.ID != CommonData.ItemAllValue)
             {
                 comboBoxOperateProject.SelectedValue = CommonData.CurrentProject.ID;
+                branchListForOperate = CommonFunc.GetBranchListForSearchByProjectID(CommonData.CurrentProject.ID);
+                comboBoxOperateBranch.SelectedValue = CommonData.ItemAllValue;
                 if (CommonData.ApplyCurrentProjectAndBranchToSearch)
+                {
                     comboBoxSearchProject.SelectedValue = CommonData.CurrentProject.ID;
+                    branchListForSearch = CommonFunc.GetBranchListForSearchByProjectID(CommonData.CurrentProject.ID);
+                }
+                if (CommonData.CurrentBranch != null && CommonData.CurrentBranch.ID != CommonData.ItemNullValue && CommonData.CurrentBranch.ID != CommonData.ItemAllValue)
+                {
+                    comboBoxOperateBranch.SelectedValue = CommonData.CurrentBranch.ID;
+                    if (CommonData.ApplyCurrentProjectAndBranchToSearch)
+                        comboBoxSearchBranch.SelectedValue = CommonData.CurrentBranch.ID;
+                }
             }
-            CommonFunc.BindBranchListToComboBox(comboBoxSearchBranch, null, true);
-            CommonFunc.BindBranchListToComboBox(comboBoxOperateBranch, null, true);
-            if (CommonData.CurrentBranch != null && CommonData.CurrentBranch.ID != CommonData.ItemNullValue && CommonData.CurrentBranch.ID != CommonData.ItemAllValue)
-            {
-                comboBoxOperateBranch.SelectedValue = CommonData.CurrentBranch.ID;
-                if (CommonData.ApplyCurrentProjectAndBranchToSearch)
-                    comboBoxSearchBranch.SelectedValue = CommonData.CurrentBranch.ID;
-            }
+            //CommonFunc.BindBranchListToComboBox(comboBoxSearchBranch, null, true);
+            //CommonFunc.BindBranchListToComboBox(comboBoxOperateBranch, null, true);
+            CommonFunc.BindBranchListToComboBox(comboBoxSearchBranch, branchListForSearch, true);
+            CommonFunc.BindBranchListToComboBox(comboBoxOperateBranch, branchListForOperate, true);
             comboBoxSearchProject.SelectedIndexChanged += comboBoxSearchProject_SelectedIndexChanged;
             comboBoxOperateProject.SelectedIndexChanged += comboBoxOperateProject_SelectedIndexChanged;
             comboBoxSearchBranch.SelectedIndexChanged += comboBoxSearchBranch_SelectedIndexChanged;
@@ -86,6 +97,7 @@ namespace WeeklyReport
 
         private void GetReport()
         {
+            ClearOperateControls();
             if (reportAll != null && reportAll.Count > 0)
                 reportAll.Clear();
             StringBuilder sql = new StringBuilder("select r.ID, r.UserID, u.Name as UserName, r.ProjectID, p.Name as ProjectName, r.BranchID, b.Name as BranchName, r.RelatedID, r.Content, r.FinishTime, r.Source, r.ToDoID from ((Report r left join [User] u on r.UserID = u.ID) left join Project p on r.ProjectID = p.ID) left join Branch b on r.BranchID = b.ID where 1 = 1");
@@ -108,11 +120,11 @@ namespace WeeklyReport
             }
             if (!string.IsNullOrWhiteSpace(textBoxSearchRelatedID.Text))
             {
-                sql.Append(paramDict.AddToWhere("RelatedID", textBoxSearchRelatedID, "r"));
+                sql.Append(paramDict.AddLikeToWhere("RelatedID", textBoxSearchRelatedID.Text.Trim(), "r"));
             }
             if (!string.IsNullOrWhiteSpace(textBoxKeyWord.Text))
             {
-                sql.Append(paramDict.AddLikeToWhere("Content", textBoxKeyWord, "r"));
+                sql.Append(paramDict.AddLikeToWhere("Content", textBoxKeyWord.Text.Trim(), "r"));
             }
             sql.Append(" order by r.FinishTime, r.ID");
 
@@ -121,7 +133,7 @@ namespace WeeklyReport
             else if (reportAll.Count > 0)
                 reportAll.Clear();
             reportAll.Clear();
-            DataTable dt = CommonData.AccessHelper.GetDataTable(sql.ToString(), paramDict);
+            DataTable dt = CommonData.SQLiteHelper.GetDataTable(sql.ToString(), paramDict);
             if (dt != null && dt.Rows.Count > 0)
             {
                 foreach (DataRow row in dt.Rows)
@@ -219,6 +231,20 @@ namespace WeeklyReport
             textBoxOperateRelatedID.Text = report.RelatedID;
             richTextBoxOperateContent.Text = report.Content;
             richTextBoxOperateContent.Tag = report;
+            string keyWord = textBoxKeyWord.Text.Trim();
+            if (keyWord.Length > 0)
+            {
+                string subContent = richTextBoxOperateContent.Text;
+                int lastIndex = -1;
+                while (subContent.Contains(keyWord))
+                {
+                    lastIndex = lastIndex > -1 ? (lastIndex + keyWord.Length + subContent.IndexOf(keyWord)) : subContent.IndexOf(keyWord);
+                    richTextBoxOperateContent.Select(lastIndex, keyWord.Length);
+                    richTextBoxOperateContent.SelectionBackColor = Color.FromArgb(239, 182, 69);
+                    richTextBoxOperateContent.Select(0, 0);
+                    subContent = richTextBoxOperateContent.Text.Substring(lastIndex + keyWord.Length);
+                }
+            }
         }
 
         private void buttonSearch_Click(object sender, EventArgs e)
@@ -264,7 +290,7 @@ namespace WeeklyReport
             {
                 paramDict.Add("RelatedID", textBoxOperateRelatedID.Text.Trim());
             }
-            CommonData.AccessHelper.Insert("Report", paramDict);
+            CommonData.SQLiteHelper.Insert("Report", paramDict);
             richTextBoxOperateContent.Text = string.Empty;
             ShowMessageAskRefresh();
         }
@@ -308,7 +334,7 @@ namespace WeeklyReport
                     setParamDict.Add("BranchID", comboBoxOperateBranch.SelectedValue);
             }
             whereParamDict.Add("ID", report.ID);
-            CommonData.AccessHelper.Update("Report", setParamDict, whereParamDict);
+            CommonData.SQLiteHelper.Update("Report", setParamDict, whereParamDict);
             //MessageBox.Show("修改完成", "提示");
             ShowMessageAskRefresh();
         }
@@ -325,7 +351,7 @@ namespace WeeklyReport
                 MessageBox.Show("报告数据错误", "提示");
                 return;
             }
-            CommonData.AccessHelper.Delete("Report", "ID", report.ID);
+            CommonData.SQLiteHelper.Delete("Report", "ID", report.ID);
             //MessageBox.Show("删除完成", "提示");
             ShowMessageAskRefresh();
         }
@@ -464,7 +490,7 @@ namespace WeeklyReport
                 string sql = "select Title from ToDo where ID = @ID";
                 SqlParams paramDict = new SqlParams();
                 paramDict.Add("ID", report.ToDoID.Value);
-                object result = CommonData.AccessHelper.ExecuteScalar(sql, paramDict);
+                object result = CommonData.SQLiteHelper.ExecuteScalar(sql, paramDict);
                 if (result != null)
                 {
                     if (DialogResult.No == MessageBox.Show("已关联【" + result.ToString() + "】，是否重新关联？", "提示", MessageBoxButtons.YesNo))
@@ -477,6 +503,219 @@ namespace WeeklyReport
                 int.TryParse(comboBoxOperateBranch.SelectedValue.ToString(), out branchID);
             RelateToToDo relate = new RelateToToDo(projectID, branchID, report);
             relate.ShowDialog();
+        }
+
+        private void buttonRelateToGit_Click(object sender, EventArgs e)
+        {
+            bool noBranch = false;
+            if (comboBoxOperateBranch.SelectedIndex == -1 || comboBoxOperateBranch.SelectedItem == null)
+                noBranch = true;
+            Branch branch = null;
+            if (comboBoxOperateBranch.SelectedItem is Branch)
+                branch = comboBoxOperateBranch.SelectedItem as Branch;
+            else
+                noBranch = true;
+            if (branch == null || branch.ID == CommonData.ItemNullValue || branch.ID == CommonData.ItemAllValue)
+                noBranch = true;
+            if (noBranch)
+            {
+                MessageBox.Show("没有选择分支或分支数据错误", "提示");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(branch.WorkingDirectory) || !Directory.Exists(branch.WorkingDirectory))
+            {
+                MessageBox.Show("分支未设置工作目录或工作目录不存在", "提示");
+                return;
+            }
+            string gitLogStr = CommonFunc.ExecCmd("git log", branch.WorkingDirectory);
+            if (!gitLogStr.StartsWith("commit "))
+            {
+                MessageBox.Show("获取Git日志错误，可能未安装Git或未为Git设置环境变量", "提示");
+                return;
+            }
+            //string[] logArray = gitLogStr.Split(Environment.NewLine.ToCharArray());
+            string[] logArray = gitLogStr.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            if (logArray.Length == 0)
+            {
+                MessageBox.Show("未查询到Git日志", "提示");
+                return;
+            }
+            List<GitLog> gitLogList = new List<GitLog>();
+            GitLog gitLog = null;
+            bool commitGot = false;
+            bool authorGot = false;
+            bool contentStart = false;
+            bool dateGot = false;
+            bool contentGot = false;
+            StringBuilder content = null;
+            foreach (string log in logArray)
+            {
+                if (!commitGot && !authorGot && !dateGot && !contentGot && log.StartsWith("commit "))//加上前面各种Got的判断，避免日志内容以"commit "开头时错误当作hash
+                {
+                    gitLog = new GitLog();
+                    gitLog.Commit = log.Substring("commit ".Length);
+                    commitGot = true;
+                }
+                else if (commitGot && !authorGot && gitLog != null && log.StartsWith("Author: "))
+                {
+                    gitLog.Author = log.Substring("Author: ".Length);
+                    authorGot = true;
+                }
+                else if (commitGot && authorGot && !dateGot && gitLog != null && log.StartsWith("Date:   "))
+                {
+                    string dateStr = log.Substring("Date:   ".Length);//Wed May 29 16:50:14 2024 +0800
+                    string[] dateArray = dateStr.Split(' ');
+                    DateTime dateTime = DateTime.MinValue;
+                    if (dateArray.Length == 6)
+                    {
+                        bool parseError = false;
+                        int year = 0;
+                        if (!int.TryParse(dateArray[4], out year))
+                            parseError = true;
+                        int month = 0;
+                        string m = dateArray[1];
+                        if (m.StartsWith("Jan"))
+                            month = 1;
+                        else if (m.StartsWith("Feb"))
+                            month = 2;
+                        else if (m.StartsWith("Mar"))
+                            month = 3;
+                        else if (m.StartsWith("Apr"))
+                            month = 4;
+                        else if (m.StartsWith("May"))
+                            month = 5;
+                        else if (m.StartsWith("Jun"))
+                            month = 6;
+                        else if (m.StartsWith("Jul"))
+                            month = 7;
+                        else if (m.StartsWith("Aug"))
+                            month = 8;
+                        else if (m.StartsWith("Sep"))
+                            month = 9;
+                        else if (m.StartsWith("Oct"))
+                            month = 10;
+                        else if (m.StartsWith("Nov"))
+                            month = 11;
+                        else if (m.StartsWith("Dec"))
+                            month = 12;
+                        else
+                            parseError = true;
+                        int day = 0;
+                        if (!int.TryParse(dateArray[2], out day))
+                            parseError = true;
+                        string time = dateArray[3];
+                        int hour = 0;
+                        int minute = 0;
+                        int second = 0;
+                        if (time.Contains(":"))
+                        {
+                            string[] timeArray = time.Split(':');
+                            if (timeArray.Length != 3)
+                                parseError = true;
+                            else
+                            {
+                                if (!int.TryParse(timeArray[0], out hour))
+                                    parseError = true;
+                                if (!int.TryParse(timeArray[1], out minute))
+                                    parseError = true;
+                                if (!int.TryParse(timeArray[2], out second))
+                                    parseError = true;
+                            }
+                        }
+                        else
+                            parseError = true;
+                        if (parseError)
+                        {
+                            MessageBox.Show("Git日志时间转换错误", "提示");
+                            return;
+                        }
+                        try
+                        {
+                            dateTime = new DateTime(year, month, day, hour, minute, second);
+                        }
+                        catch
+                        {
+                            MessageBox.Show("Git日志时间转换错误", "提示");
+                            return;
+                        }
+                    }
+                    gitLog.Date = dateTime;
+                    dateGot = true;
+                }
+                else if (commitGot && authorGot && dateGot && !contentGot && !contentStart && gitLog != null && string.IsNullOrWhiteSpace(log))
+                {
+                    if (content == null)
+                        content = new StringBuilder();
+                    else
+                        content.Clear();
+                    contentStart = true;
+                }
+                else if (commitGot && authorGot && dateGot && contentStart && !contentGot && gitLog != null)
+                {
+                    content.AppendLine(log.TrimStart());
+                    contentGot = true;
+                }
+                else if (commitGot && authorGot && dateGot && contentStart && contentGot && gitLog != null)
+                {
+                    if (log.StartsWith("commit "))
+                    {
+                        if (content.Length > 0)
+                        {
+                            content.Remove(content.Length - (Environment.NewLine.Length) * 2, Environment.NewLine.Length * 2);
+                            gitLog.Content = content.ToString();
+                        }
+                        gitLogList.Add(gitLog);
+                        commitGot = false;
+                        authorGot = false;
+                        dateGot = false;
+                        contentStart = false;
+                        contentGot = false;
+                        if (gitLogList.Count >= 30)//只取30条
+                            break;
+                        gitLog = new GitLog();
+                        gitLog.Commit = log.Substring("commit ".Length);
+                        commitGot = true;
+                    }
+                    else
+                    {
+                        content.AppendLine(log.TrimStart());
+                        contentGot = true;
+                    }
+                }
+            }
+            using (RelateToGitLog relate = new RelateToGitLog(gitLogList))
+            {
+                if (relate.ShowDialog() == DialogResult.OK)
+                {
+                    GitLog log = relate.GitLog;
+                    if (log != null)
+                    {
+                        dateTimePickerOperateFinishTime.Value = log.Date;
+                        dateTimePickerOperateFinishTime.Checked = true;
+                        richTextBoxOperateContent.Text = log.Content;
+                        textBoxOperateRelatedID.Text = string.Empty;
+                    }
+                }
+            }
+        }
+
+        private void comboBoxOperateBranch_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (!(comboBoxOperateBranch.Items[e.Index] is Branch branch))
+                return;
+            //绘制背景
+            e.DrawBackground();
+            //绘制列表项目
+            e.Graphics.DrawString(branch.Display, e.Font, System.Drawing.Brushes.Black, e.Bounds);
+            //将高亮的列表项目的文字传递到toolTip1
+            if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+                toolTip.Show(branch.Display, comboBoxOperateBranch, e.Bounds.X + e.Bounds.Width, e.Bounds.Y + e.Bounds.Height);
+            e.DrawFocusRectangle();
+        }
+
+        private void comboBoxOperateBranch_DropDownClosed(object sender, EventArgs e)
+        {
+            toolTip.Hide(comboBoxOperateBranch);
         }
     }
 }

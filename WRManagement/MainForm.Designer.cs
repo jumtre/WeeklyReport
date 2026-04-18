@@ -30,11 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.dataGridViewShow = new System.Windows.Forms.DataGridView();
-            this.ColumnSortNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnProjectName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnMemo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.buttonDelete = new System.Windows.Forms.Button();
             this.buttonEdit = new System.Windows.Forms.Button();
@@ -42,6 +37,9 @@
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.buttonBrowseWorkingDirectory = new System.Windows.Forms.Button();
+            this.textBoxWorkingDirectory = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.comboBoxProject = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.textBoxMemo = new System.Windows.Forms.TextBox();
@@ -74,6 +72,12 @@
             this.buttonSetCurrentUser = new System.Windows.Forms.Button();
             this.comboBoxCurrentUser = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.ColumnSortNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnProjectName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnMemo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnWorkingDirectory = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewShow)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -92,7 +96,8 @@
             this.ColumnID,
             this.ColumnName,
             this.ColumnProjectName,
-            this.ColumnMemo});
+            this.ColumnMemo,
+            this.ColumnWorkingDirectory});
             this.dataGridViewShow.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewShow.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewShow.MultiSelect = false;
@@ -101,58 +106,24 @@
             this.dataGridViewShow.RowHeadersVisible = false;
             this.dataGridViewShow.RowTemplate.Height = 23;
             this.dataGridViewShow.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewShow.Size = new System.Drawing.Size(604, 223);
+            this.dataGridViewShow.Size = new System.Drawing.Size(604, 192);
             this.dataGridViewShow.TabIndex = 1;
             this.dataGridViewShow.SelectionChanged += new System.EventHandler(this.dataGridViewShow_SelectionChanged);
-            // 
-            // ColumnSortNo
-            // 
-            this.ColumnSortNo.HeaderText = "序号";
-            this.ColumnSortNo.Name = "ColumnSortNo";
-            this.ColumnSortNo.ReadOnly = true;
-            this.ColumnSortNo.Width = 60;
-            // 
-            // ColumnID
-            // 
-            this.ColumnID.HeaderText = "ID";
-            this.ColumnID.Name = "ColumnID";
-            this.ColumnID.ReadOnly = true;
-            this.ColumnID.Width = 60;
-            // 
-            // ColumnName
-            // 
-            this.ColumnName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ColumnName.HeaderText = "名称";
-            this.ColumnName.Name = "ColumnName";
-            this.ColumnName.ReadOnly = true;
-            // 
-            // ColumnProjectName
-            // 
-            this.ColumnProjectName.HeaderText = "项目名称";
-            this.ColumnProjectName.Name = "ColumnProjectName";
-            this.ColumnProjectName.ReadOnly = true;
-            this.ColumnProjectName.Width = 120;
-            // 
-            // ColumnMemo
-            // 
-            this.ColumnMemo.HeaderText = "备注";
-            this.ColumnMemo.Name = "ColumnMemo";
-            this.ColumnMemo.ReadOnly = true;
             // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.dataGridViewShow);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox3.Location = new System.Drawing.Point(5, 356);
+            this.groupBox3.Location = new System.Drawing.Point(5, 387);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(610, 243);
+            this.groupBox3.Size = new System.Drawing.Size(610, 212);
             this.groupBox3.TabIndex = 5;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "显示";
             // 
             // buttonDelete
             // 
-            this.buttonDelete.Location = new System.Drawing.Point(339, 179);
+            this.buttonDelete.Location = new System.Drawing.Point(335, 214);
             this.buttonDelete.Name = "buttonDelete";
             this.buttonDelete.Size = new System.Drawing.Size(75, 23);
             this.buttonDelete.TabIndex = 4;
@@ -162,7 +133,7 @@
             // 
             // buttonEdit
             // 
-            this.buttonEdit.Location = new System.Drawing.Point(217, 179);
+            this.buttonEdit.Location = new System.Drawing.Point(213, 214);
             this.buttonEdit.Name = "buttonEdit";
             this.buttonEdit.Size = new System.Drawing.Size(75, 23);
             this.buttonEdit.TabIndex = 3;
@@ -172,7 +143,7 @@
             // 
             // buttonAdd
             // 
-            this.buttonAdd.Location = new System.Drawing.Point(84, 179);
+            this.buttonAdd.Location = new System.Drawing.Point(80, 214);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(75, 23);
             this.buttonAdd.TabIndex = 2;
@@ -201,7 +172,7 @@
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox2.Location = new System.Drawing.Point(5, 144);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(610, 212);
+            this.groupBox2.Size = new System.Drawing.Size(610, 243);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "数据/操作";
@@ -210,16 +181,45 @@
             // 
             this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox5.Controls.Add(this.buttonBrowseWorkingDirectory);
+            this.groupBox5.Controls.Add(this.textBoxWorkingDirectory);
+            this.groupBox5.Controls.Add(this.label12);
             this.groupBox5.Controls.Add(this.comboBoxProject);
             this.groupBox5.Controls.Add(this.label6);
             this.groupBox5.Controls.Add(this.textBoxMemo);
             this.groupBox5.Controls.Add(this.label5);
             this.groupBox5.Location = new System.Drawing.Point(3, 96);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(604, 73);
+            this.groupBox5.Size = new System.Drawing.Size(604, 112);
             this.groupBox5.TabIndex = 1;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "分支";
+            // 
+            // buttonBrowseWorkingDirectory
+            // 
+            this.buttonBrowseWorkingDirectory.Location = new System.Drawing.Point(487, 71);
+            this.buttonBrowseWorkingDirectory.Name = "buttonBrowseWorkingDirectory";
+            this.buttonBrowseWorkingDirectory.Size = new System.Drawing.Size(56, 23);
+            this.buttonBrowseWorkingDirectory.TabIndex = 6;
+            this.buttonBrowseWorkingDirectory.Text = "浏览";
+            this.buttonBrowseWorkingDirectory.UseVisualStyleBackColor = true;
+            this.buttonBrowseWorkingDirectory.Click += new System.EventHandler(this.buttonBrowseWorkingDirectory_Click);
+            // 
+            // textBoxWorkingDirectory
+            // 
+            this.textBoxWorkingDirectory.Location = new System.Drawing.Point(53, 72);
+            this.textBoxWorkingDirectory.Name = "textBoxWorkingDirectory";
+            this.textBoxWorkingDirectory.Size = new System.Drawing.Size(428, 21);
+            this.textBoxWorkingDirectory.TabIndex = 5;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(6, 75);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(41, 12);
+            this.label12.TabIndex = 4;
+            this.label12.Text = "目录：";
             // 
             // comboBoxProject
             // 
@@ -564,6 +564,46 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "当前用户：";
             // 
+            // ColumnSortNo
+            // 
+            this.ColumnSortNo.HeaderText = "序号";
+            this.ColumnSortNo.Name = "ColumnSortNo";
+            this.ColumnSortNo.ReadOnly = true;
+            this.ColumnSortNo.Width = 60;
+            // 
+            // ColumnID
+            // 
+            this.ColumnID.HeaderText = "ID";
+            this.ColumnID.Name = "ColumnID";
+            this.ColumnID.ReadOnly = true;
+            this.ColumnID.Width = 60;
+            // 
+            // ColumnName
+            // 
+            this.ColumnName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ColumnName.HeaderText = "名称";
+            this.ColumnName.Name = "ColumnName";
+            this.ColumnName.ReadOnly = true;
+            // 
+            // ColumnProjectName
+            // 
+            this.ColumnProjectName.HeaderText = "项目名称";
+            this.ColumnProjectName.Name = "ColumnProjectName";
+            this.ColumnProjectName.ReadOnly = true;
+            this.ColumnProjectName.Width = 120;
+            // 
+            // ColumnMemo
+            // 
+            this.ColumnMemo.HeaderText = "备注";
+            this.ColumnMemo.Name = "ColumnMemo";
+            this.ColumnMemo.ReadOnly = true;
+            // 
+            // ColumnWorkingDirectory
+            // 
+            this.ColumnWorkingDirectory.HeaderText = "工作目录";
+            this.ColumnWorkingDirectory.Name = "ColumnWorkingDirectory";
+            this.ColumnWorkingDirectory.ReadOnly = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -617,11 +657,6 @@
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.ComboBox comboBoxProject;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnSortNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnProjectName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnMemo;
         private System.Windows.Forms.Button buttonSetCurrentProjectAndBranch;
         private System.Windows.Forms.ComboBox comboBoxCurrentProject;
         private System.Windows.Forms.Label label7;
@@ -638,6 +673,15 @@
         private System.Windows.Forms.RadioButton radioButtonTileNoCommand;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Button buttonBrowseWorkingDirectory;
+        private System.Windows.Forms.TextBox textBoxWorkingDirectory;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnSortNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnProjectName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnMemo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnWorkingDirectory;
     }
 }
 

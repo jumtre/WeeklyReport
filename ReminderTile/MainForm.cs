@@ -104,7 +104,7 @@ namespace ReminderTile
             //注意，如果有"SizeChanged"事件，先"-="避免触发事件，然后在finally中"+="避免出现异常后丢失事件
             //this.SizeChanged -= MainForm_SizeChanged;
             try
-            {
+                {
                 string strSize = CommonData.IniHelper.Read("ReminderTile", "Size");
                 if (!string.IsNullOrWhiteSpace(strSize) && strSize.Contains(","))
                 {
@@ -123,11 +123,11 @@ namespace ReminderTile
                         else if (height > Screen.PrimaryScreen.WorkingArea.Height - startPositionTop)
                             height = Screen.PrimaryScreen.WorkingArea.Height - startPositionTop;
                         this.Size = new Size(width, height);
-                    }
+                }
                     //默认设置有值，这里可以不需要
                     //else
                     //    this.Size = new Size(330, 200);
-                }
+            }
             }
             catch { }
             this.Location = new Point(Screen.PrimaryScreen.WorkingArea.Width - startPositionRight - this.Width, startPositionTop);
@@ -312,30 +312,30 @@ namespace ReminderTile
             richTextBoxContent.TextChanged -= richTextBoxContent_TextChanged;
             try
             {
-                richTextBoxContent.Text = string.Empty;
-                originalContent = string.Empty;
-                richTextBoxContent.Tag = null;
-                if (index < 0 || index >= reminderDict?.Count)
-                {
-                    isAdding = true;
-                    return;
-                }
-                Reminder reminder = reminderDict[index];
-                if (reminder == null)
-                    return;
-                richTextBoxContent.Text = reminder.Content;
-                originalContent = reminder.Content;
-                richTextBoxContent.Tag = reminder;
-                currentIndex = index;
-                isAdding = false;
-                if (reminder.ToDo?.ID > 0 && richTextBoxContent.Text.Contains("延期时长："))
-                {
-                    //简单判断，只找最前面的对应文字，如果对应文字有多个，后面的可能是正常内容
-                    richTextBoxContent.Select(richTextBoxContent.Text.IndexOf("延期时长："), "延期时长：".Length);
-                    richTextBoxContent.SelectionColor = Color.Red;
-                    richTextBoxContent.Select(0, 0);
-                }
+            richTextBoxContent.Text = string.Empty;
+            originalContent = string.Empty;
+            richTextBoxContent.Tag = null;
+            if (index < 0 || index >= reminderDict?.Count)
+            {
+                isAdding = true;
+                return;
             }
+            Reminder reminder = reminderDict[index];
+            if (reminder == null)
+                return;
+            richTextBoxContent.Text = reminder.Content;
+            originalContent = reminder.Content;
+            richTextBoxContent.Tag = reminder;
+            currentIndex = index;
+            isAdding = false;
+            if (reminder.ToDo?.ID > 0 && richTextBoxContent.Text.Contains("延期时长："))
+            {
+                //简单判断，只找最前面的对应文字，如果对应文字有多个，后面的可能是正常内容
+                richTextBoxContent.Select(richTextBoxContent.Text.IndexOf("延期时长："), "延期时长：".Length);
+                richTextBoxContent.SelectionColor = Color.Red;
+                richTextBoxContent.Select(0, 0);
+            }
+        }
             catch (Exception ex)
             {
                 MessageBox.Show(this, "提醒事项绑定出错" + Environment.NewLine + ex.Message, "绑定出错");

@@ -37,52 +37,103 @@ namespace WeeklyReport
                 return;
             }
             IEnumerable<Report> reports = reportList.OrderBy(r => r.FinishTime).ThenBy(r => r.ID);
-            Dictionary<Project, List<Report>> reportDict = new Dictionary<Project, List<Report>>();
+            Dictionary<Project, Dictionary<Branch, List<Report>>> reportDict = new Dictionary<Project, Dictionary<Branch, List<Report>>>();
             List<Project> projects = new List<Project>();
+            List<Branch> branches = new List<Branch>();
             Project project = null;
+            Branch branch = null;
+            Branch emptyBrach = new Branch()
+            {
+                ID = -1,
+                Name = string.Empty
+            };
             foreach (Report report in reports)
             {
                 if (project == null || project.ID != report.Project.ID)
                 {
-                    if (projects.Count > 0 && projects.Exists(p => p.ID == report.Project.ID))
+                    if (projects.Count > 0)
+                    {
                         project = projects.FirstOrDefault(p => p.ID == report.Project.ID);
+                        if (project == null)
+                        {
+                            project = report.Project;
+                            projects.Add(project);
+                        }
+                    }
                     else
                     {
                         project = report.Project;
                         projects.Add(project);
                     }
                 }
-                if (reportDict.ContainsKey(project))
-                    reportDict[project].Add(report);
+                if (report.Branch != null && report.Branch.ID >= 0)
+                {
+                    if (branch == null || branch.ID != report.Branch.ID)
+                    {
+                        if (branches.Count > 0)
+                        {
+                            branch = branches.FirstOrDefault(b => b.ID == report.Branch.ID);
+                            if (branch == null)
+                            {
+                                branch = report.Branch;
+                                branches.Add(branch);
+                            }
+                        }
+                        else
+                        {
+                            branch = report.Branch;
+                            branches.Add(branch);
+                        }
+                    }
+                }
                 else
-                    reportDict.Add(project, new List<Report> { report});
+                {
+                    branch = emptyBrach;
+                }
+                if (reportDict.ContainsKey(project))
+                {
+                    if (reportDict[project].ContainsKey(branch))
+                        reportDict[project][branch].Add(report);
+                    else
+                        reportDict[project].Add(branch, new List<Report> { report });
+                }
+                else
+                {
+                    Dictionary<Branch, List<Report>> d = new Dictionary<Branch, List<Report>>();
+                    d.Add(branch, new List<Report> { report });
+                    reportDict.Add(project, d);
+                }
             }
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("本"+ reportType + "工作：");
             int index = 1;
-            foreach (KeyValuePair<Project,List<Report>> pair in reportDict)
+            foreach (KeyValuePair<Project, Dictionary<Branch, List<Report>>> projectPair in reportDict)
             {
-                sb.AppendLine(pair.Key.Name + "：");
-                index = 1;
-                foreach (Report report in pair.Value)
+                foreach (KeyValuePair<Branch, List<Report>> branchPair in reportDict[projectPair.Key])
                 {
-                    if (report.Content.Contains("\n") || report.Content.Contains(Environment.NewLine))
+                    sb.AppendLine(projectPair.Key.Name + (string.IsNullOrWhiteSpace(branchPair.Key.Name) ? string.Empty : ("-" + branchPair.Key.Name)) + "：");
+                    index = 1;
+                    foreach (Report report in branchPair.Value)
                     {
-                        List<string> contentList = report.Content.Replace(Environment.NewLine, "\n").Split("\n".ToCharArray()).ToList();
-                        //如果用Environment.NewLine来Split，会有空字符串加到List
-                        //while (contentList.Contains(string.Empty))
-                        //{
-                        //    contentList.Remove(string.Empty);
-                        //}
-                        foreach (string content in contentList)
+                        if (report.Content.Contains("\n") || report.Content.Contains(Environment.NewLine))
                         {
-                            sb.AppendLine((index++) + "、" + content);
+                            List<string> contentList = report.Content.Replace(Environment.NewLine, "\n").Split("\n".ToCharArray()).ToList();
+                            //如果用Environment.NewLine来Split，会有空字符串加到List
+                            //while (contentList.Contains(string.Empty))
+                            //{
+                            //    contentList.Remove(string.Empty);
+                            //}
+                            foreach (string content in contentList)
+                            {
+                                sb.AppendLine((index++) + "、" + content);
+                            }
+                        }
+                        else
+                        {
+                            sb.AppendLine((index++) + "、" + report.Content);
                         }
                     }
-                    else
-                    {
-                        sb.AppendLine((index++) + "、" + report.Content);
-                    }
+                    sb.AppendLine();
                 }
             }
             sb.AppendLine();
@@ -98,6 +149,7 @@ namespace WeeklyReport
             sfd.Filter = "文本文件|*.txt";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
+                //File.WriteAllText(sfd.FileName, richTextBoxContent.Text);
                 using (StreamWriter sw = new StreamWriter(sfd.FileName))
                 {
                     sw.Write(richTextBoxContent.Text);
@@ -153,7 +205,7 @@ namespace WeeklyReport
                     sb.AppendLine(str);
                 }
             }
-            richTextBoxContent.Text = sb.ToString();
+            richTextBoxContent.Text = sb.ToString().TrimEnd(Environment.NewLine.ToCharArray());
         }
 
         private void buttonReorder_Click(object sender, EventArgs e)

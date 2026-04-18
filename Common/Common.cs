@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -24,9 +25,9 @@ namespace Common
         public static readonly string ApplicationPath = AppDomain.CurrentDomain.BaseDirectory;
 
         /// <summary>
-        /// 数据库文件名：DB.mdb
+        /// 数据库文件名：DB.db
         /// </summary>
-        public const string DBFileName = "DB.mdb";
+        public const string DBFileName = "DB.db"; //"DB.mdb";
 
         /// <summary>
         /// 数据库路径
@@ -63,6 +64,29 @@ namespace Common
                     }
                 }
                 return accessHelper;
+            }
+        }
+
+        private static SQLiteHelper sqliteHelper = null;
+        /// <summary>
+        /// 数据库帮助对象
+        /// </summary>
+        public static SQLiteHelper SQLiteHelper
+        {
+            get
+            {
+                if (sqliteHelper == null)
+                {
+                    try
+                    {
+                        sqliteHelper = new SQLiteHelper(CommonData.DBPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new CommonInfoException("读取数据库出错。", ex);
+                    }
+                }
+                return sqliteHelper;
             }
         }
 
@@ -540,7 +564,7 @@ namespace Common
             if (CommonData.ProjectList != null && lazyLoad)
                 return CommonData.ProjectList;
             List<Project> projectList = new List<Project>();
-            DataTable dtProject = CommonData.AccessHelper.GetDataTable("select ID, Name from Project");
+            DataTable dtProject = CommonData.SQLiteHelper.GetDataTable("select ID, Name from Project");
             if (dtProject != null && dtProject.Rows.Count > 0)
             {
                 projectList = new List<Project>();
@@ -611,7 +635,7 @@ namespace Common
             if (CommonData.BranchList != null && lazyLoad)
                 return CommonData.BranchList;
             List<Branch> branchList = new List<Branch>();
-            DataTable dtBranch = CommonData.AccessHelper.GetDataTable("select b.ID, b.Name, b.[Memo], b.ProjectID, p.Name as ProjectName from Branch b left join Project p on b.ProjectID = p.ID");
+            DataTable dtBranch = CommonData.SQLiteHelper.GetDataTable("select b.ID, b.Name, b.[Memo], b.ProjectID, b.WorkingDirectory, p.Name as ProjectName from Branch b left join Project p on b.ProjectID = p.ID");
             if (dtBranch != null && dtBranch.Rows.Count > 0)
             {
                 branchList = new List<Branch>();
@@ -622,6 +646,7 @@ namespace Common
                         ID = DataConvert.ToInt(row["ID"]),
                         Name = DataConvert.ToString(row["Name"]),
                         Memo = DataConvert.ToString(row["Memo"]),
+                        WorkingDirectory = DataConvert.ToString(row["WorkingDirectory"]),
                         Project = new Project()
                         {
                             ID = DataConvert.ToInt(row["ProjectID"]),
@@ -648,7 +673,7 @@ namespace Common
             List<Branch> branchList = new List<Branch>();
             Dictionary<string, object> paramDict = new Dictionary<string, object>();
             paramDict.Add("ProjectID", projectID);
-            DataTable dtBranch = CommonData.AccessHelper.GetDataTable("select b.ID, b.Name, b.[Memo], b.ProjectID, p.Name as ProjectName from Branch b left join Project p on b.ProjectID = p.ID where ProjectID = @ProjectID", paramDict);
+            DataTable dtBranch = CommonData.SQLiteHelper.GetDataTable("select b.ID, b.Name, b.[Memo], b.ProjectID, b.WorkingDirectory, p.Name as ProjectName from Branch b left join Project p on b.ProjectID = p.ID where ProjectID = @ProjectID", paramDict);
             if (dtBranch != null && dtBranch.Rows.Count > 0)
             {
                 branchList = new List<Branch>();
@@ -659,6 +684,7 @@ namespace Common
                         ID = DataConvert.ToInt(row["ID"]),
                         Name = DataConvert.ToString(row["Name"]),
                         Memo = DataConvert.ToString(row["Memo"]),
+                        WorkingDirectory = DataConvert.ToString(row["WorkingDirectory"]),
                         Project = new Project()
                         {
                             ID = DataConvert.ToInt(row["ProjectID"]),
@@ -730,7 +756,7 @@ namespace Common
             {
                 comboBox.DataSource = branchList;
                 comboBox.ValueMember = "ID";
-                comboBox.DisplayMember = "Name";
+                comboBox.DisplayMember = "Display";
             }
         }
 
@@ -755,7 +781,7 @@ namespace Common
             {
                 comboBox.DataSource = branchList;
                 comboBox.ValueMember = "ID";
-                comboBox.DisplayMember = "Name";
+                comboBox.DisplayMember = "Display";
             }
         }
 
@@ -769,7 +795,7 @@ namespace Common
             if (CommonData.UserList != null && lazyLoad)
                 return CommonData.UserList;
             List<User> userList = new List<User>();
-            DataTable dtUser = CommonData.AccessHelper.GetDataTable("select ID, Name from [User]");
+            DataTable dtUser = CommonData.SQLiteHelper.GetDataTable("select ID, Name from [User]");
             if (dtUser != null && dtUser.Rows.Count > 0)
             {
                 userList = new List<User>();
@@ -1220,6 +1246,54 @@ namespace Common
                 bool regResult = SetStartupToReg(fileInfo, startup);
                 bool dirResult = SetStartupToDir(fileInfo, startup);
                 return regResult && dirResult;
+            }
+        }
+
+        /// <summary>
+        /// 执行命令
+        /// </summary>
+        /// <param name="command">要执行的命令</param>
+        /// <param name="workingDirectory">要启动进程的工作目录，默认不设置</param>
+        /// <param name="trim">是否移除结果字符串前后的空白字符，默认否</param>
+        /// <returns></returns>
+        public static string ExecCmd(string command, string workingDirectory = "", bool trim = false)
+        {
+            try
+            {
+                command = command.Trim().TrimEnd('&') + "&exit";//无论命令是否执行成功，都执行exit，否则调用ReadToEnd时，程序会假死
+                using (Process process = new Process())
+                {
+                    //设置参数
+                    process.StartInfo.FileName = "cmd.exe";
+                    process.StartInfo.UseShellExecute = false;//是否使用操作系统shell启动进程
+                    process.StartInfo.RedirectStandardInput = true;//是否接受从调用程序输入
+                    process.StartInfo.RedirectStandardOutput = true;//是否从调用程序输出
+                    process.StartInfo.RedirectStandardError = true;//是否将程序的错误输出
+                    process.StartInfo.CreateNoWindow = true;//是否隐藏程序窗口
+                    process.StartInfo.StandardOutputEncoding = Encoding.UTF8;//解决中文乱码
+                    if (!string.IsNullOrWhiteSpace(workingDirectory))
+                        process.StartInfo.WorkingDirectory = workingDirectory;
+                    process.Start();
+                    //写命令
+                    process.StandardInput.WriteLine(command);
+                    process.StandardInput.AutoFlush = true;
+                    //获取输出信息
+                    string result = process.StandardOutput.ReadToEnd();
+                    result = result.Substring(result.LastIndexOf(command) + command.Length);//只取命令执行后的结果部分     //Encoding.Default.GetString(Encoding.UTF8.GetBytes(result))
+                    if (result.StartsWith(Environment.NewLine))
+                        result = result.Substring(Environment.NewLine.Length);
+                    if (trim)
+                        result = result.Trim();
+                    process.WaitForExit();//等待命令执行完成并退出
+                    process.Close();
+                    process.Dispose();
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                //return "Exception: " + ex.Message;
+                throw ex;
             }
         }
     }

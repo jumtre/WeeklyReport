@@ -58,19 +58,39 @@ namespace ToDoList
             else
                 labelHideInfo.Text = infoHidingText;
             comboBoxSearchProject.SelectedIndexChanged -= comboBoxSearchProject_SelectedIndexChanged;
+            comboBoxOperateProject.SelectedIndexChanged -= comboBoxOperateProject_SelectedIndexChanged;
             comboBoxSearchBranch.SelectedIndexChanged -= comboBoxSearchBranch_SelectedIndexChanged;
+            comboBoxOperateBranch.SelectedIndexChanged -= comboBoxOperateBranch_SelectedIndexChanged;
             CommonFunc.BindProjectListToComboBox(comboBoxSearchProject, null, true);
-            if (CommonData.ApplyCurrentProjectAndBranchToSearch && CommonData.CurrentProject != null && CommonData.CurrentProject.ID != CommonData.ItemNullValue && CommonData.CurrentProject.ID != CommonData.ItemAllValue)
+            CommonFunc.BindProjectListToComboBox(comboBoxOperateProject, null, true);
+            List<Branch> branchListForSearch = CommonFunc.GetBranchListForSearch();
+            List<Branch> branchListForOperate = CommonFunc.GetBranchListForSearch();
+            if (CommonData.CurrentProject != null && CommonData.CurrentProject.ID != CommonData.ItemNullValue && CommonData.CurrentProject.ID != CommonData.ItemAllValue)
             {
-                comboBoxSearchProject.SelectedValue = CommonData.CurrentProject.ID;
+                comboBoxOperateProject.SelectedValue = CommonData.CurrentProject.ID;
+                branchListForOperate = CommonFunc.GetBranchListForSearchByProjectID(CommonData.CurrentProject.ID);
+                comboBoxOperateBranch.SelectedValue = CommonData.ItemAllValue;
+                if (CommonData.ApplyCurrentProjectAndBranchToSearch)
+                {
+                    comboBoxSearchProject.SelectedValue = CommonData.CurrentProject.ID;
+                    branchListForSearch = CommonFunc.GetBranchListForSearchByProjectID(CommonData.CurrentProject.ID);
+                }
+                if (CommonData.CurrentBranch != null && CommonData.CurrentBranch.ID != CommonData.ItemNullValue && CommonData.CurrentBranch.ID != CommonData.ItemAllValue)
+                {
+                    comboBoxOperateBranch.SelectedValue = CommonData.CurrentBranch.ID;
+                    if (CommonData.ApplyCurrentProjectAndBranchToSearch)
+                        comboBoxSearchBranch.SelectedValue = CommonData.CurrentBranch.ID;
+                }
             }
-            CommonFunc.BindBranchListToComboBox(comboBoxSearchBranch, null, true);
-            if (CommonData.ApplyCurrentProjectAndBranchToSearch && CommonData.CurrentBranch != null && CommonData.CurrentBranch.ID != CommonData.ItemNullValue && CommonData.CurrentBranch.ID != CommonData.ItemAllValue)
-            {
-                comboBoxSearchBranch.SelectedValue = CommonData.CurrentBranch.ID;
-            }
+            //CommonFunc.BindBranchListToComboBox(comboBoxSearchBranch, null, true);
+            //CommonFunc.BindBranchListToComboBox(comboBoxOperateBranch, null, true);
+            CommonFunc.BindBranchListToComboBox(comboBoxSearchBranch, branchListForSearch, true);
+            CommonFunc.BindBranchListToComboBox(comboBoxOperateBranch, branchListForOperate, true);
             comboBoxSearchProject.SelectedIndexChanged += comboBoxSearchProject_SelectedIndexChanged;
+            comboBoxOperateProject.SelectedIndexChanged += comboBoxOperateProject_SelectedIndexChanged;
             comboBoxSearchBranch.SelectedIndexChanged += comboBoxSearchBranch_SelectedIndexChanged;
+            comboBoxOperateBranch.SelectedIndexChanged += comboBoxOperateBranch_SelectedIndexChanged;
+            CommonFunc.BindUserListToComboBox(comboBoxSearchAssignedTo, null, true);
             List<ToDoStatus> toDoList = CommonFunc.GetToDoStatusListForSearch();
             toDoList.Add(CommonData.toDoStatusNotDone);
             CommonFunc.BindToDoStatusListToComboBox(comboBoxSearchStatus, toDoList, true);
@@ -85,13 +105,6 @@ namespace ToDoList
             dateTimePickerSearchPlannedStartTo.Checked = false;
             dateTimePickerSearchPlannedEndFrom.Checked = false;
             dateTimePickerSearchPlannedEndTo.Checked = false;
-            CommonFunc.BindUserListToComboBox(comboBoxSearchAssignedTo, null, true);
-            comboBoxOperateProject.SelectedIndexChanged -= comboBoxOperateProject_SelectedIndexChanged;
-            comboBoxOperateBranch.SelectedIndexChanged -= comboBoxOperateBranch_SelectedIndexChanged;
-            CommonFunc.BindProjectListToComboBox(comboBoxOperateProject, null, true);
-            CommonFunc.BindBranchListToComboBox(comboBoxOperateBranch, null, true);
-            comboBoxOperateProject.SelectedIndexChanged += comboBoxOperateProject_SelectedIndexChanged;
-            comboBoxOperateBranch.SelectedIndexChanged += comboBoxOperateBranch_SelectedIndexChanged;
             CommonFunc.BindToDoPriorityListToComboBox(comboBoxOperatePriority, null, true);
             CommonFunc.BindToDoSeverityListToComboBox(comboBoxOperateSeverity, null, true);
             CommonFunc.BindToDoStatusListToComboBox(comboBoxOperateStatus, null, true);
@@ -189,11 +202,11 @@ namespace ToDoList
             }
             if (textBoxSearchTitle.Text.NotNullOrWhiteSpace())
             {
-                sql.Append(paramDict.AddLikeToWhere("Title", textBoxSearchTitle, "t"));
+                sql.Append(paramDict.AddLikeToWhere("Title", textBoxSearchTitle.Text.Trim(), "t"));
             }
             if (textBoxSearchContent.Text.NotNullOrWhiteSpace())
             {
-                sql.Append(paramDict.AddLikeToWhere("Content", textBoxSearchContent, "t"));
+                sql.Append(paramDict.AddLikeToWhere("Content", textBoxSearchContent.Text.Trim(), "t"));
             }
             if (textBoxSearchRelatedID.Text.NotNullOrWhiteSpace())
             {
@@ -238,7 +251,7 @@ namespace ToDoList
             else if (toDoListAll.Count > 0)
                 toDoListAll.Clear();
             toDoListAll.Clear();
-            DataTable dt = CommonData.AccessHelper.GetDataTable(sql.ToString(), paramDict);
+            DataTable dt = CommonData.SQLiteHelper.GetDataTable(sql.ToString(), paramDict);
             if (dt != null && dt.Rows.Count > 0)
             {
                 foreach (DataRow row in dt.Rows)
@@ -590,13 +603,13 @@ namespace ToDoList
             {
                 paramDict.Add("UserID", user.ID);
             }
-            //CommonData.AccessHelper.Insert("ToDo", paramDict);
+            //CommonData.SQLiteHelper.Insert("ToDo", paramDict);
             if (checkBoxAddToReminder.Checked)
             {
-                decimal toDoID = CommonData.AccessHelper.InsertAndReturnNewIdentity("ToDo", paramDict);
+                decimal toDoID = CommonData.SQLiteHelper.InsertAndReturnNewIdentity("ToDo", paramDict);
                 try
                 {
-                    CommonData.AccessHelper.Execute(AddToDoToReminderCommand(toDoID));
+                    CommonData.SQLiteHelper.Execute(AddToDoToReminderCommand(toDoID));
                     SetAddToDoToReminderCheckState(true);
                 }
                 catch (Exception ex)
@@ -606,7 +619,7 @@ namespace ToDoList
             }
             else
             {
-                CommonData.AccessHelper.Insert("ToDo", paramDict);
+                CommonData.SQLiteHelper.Insert("ToDo", paramDict);
             }
             richTextBoxOperateContent.Text = string.Empty;
             ShowMessageAskRefresh();
@@ -647,21 +660,21 @@ namespace ToDoList
             setParamDict.Add("UserID", toDoOperate.User.ID != CommonData.ItemNullValue ? (int?)toDoOperate.User.ID : null);
             SqlParams whereParamDict = new SqlParams();
             whereParamDict.Add("ID", toDoOriginal.ID);
-            //CommonData.AccessHelper.Update("ToDo", setParamDict, whereParamDict);
-            System.Data.OleDb.OleDbCommand updateToDoCommand = CommonData.AccessHelper.GetUpdateCommand("ToDo", setParamDict, whereParamDict);
-            System.Data.OleDb.OleDbCommand deleteReminderCommand = null;
+            //CommonData.SQLiteHelper.Update("ToDo", setParamDict, whereParamDict);
+            System.Data.SQLite.SQLiteCommand updateToDoCommand = CommonData.SQLiteHelper.GetUpdateCommand("ToDo", setParamDict, whereParamDict);
+            System.Data.SQLite.SQLiteCommand deleteReminderCommand = null;
             if (toDoOperate.Status.HasValue && (toDoOperate.Status.Value == EnumToDoStatus.Cancelled || toDoOperate.Status.Value == EnumToDoStatus.Done))
             {
                 deleteReminderCommand = ToDoCommon.DeleteReminderByToDoIDCommand(toDoOriginal.ID);
             }
             if (deleteReminderCommand == null)
-                CommonData.AccessHelper.Execute(updateToDoCommand);
+                CommonData.SQLiteHelper.Execute(updateToDoCommand);
             else
             {
-                List<System.Data.OleDb.OleDbCommand> commandList = new List<System.Data.OleDb.OleDbCommand>();
+                List<System.Data.SQLite.SQLiteCommand> commandList = new List<System.Data.SQLite.SQLiteCommand>();
                 commandList.Add(updateToDoCommand);
                 commandList.Add(deleteReminderCommand);
-                CommonData.AccessHelper.ExecuteByTransaction(commandList);
+                CommonData.SQLiteHelper.ExecuteByTransaction(commandList);
                 SetAddToDoToReminderCheckState(false);
             }
 
@@ -680,10 +693,10 @@ namespace ToDoList
                 MessageBox.Show("待办事项数据错误", "提示");
                 return;
             }
-            List<System.Data.OleDb.OleDbCommand> commandList = new List<System.Data.OleDb.OleDbCommand>();
-            commandList.Add(CommonData.AccessHelper.GetDeleteCommand("ToDo", "ID", toDo.ID));
+            List<System.Data.SQLite.SQLiteCommand> commandList = new List<System.Data.SQLite.SQLiteCommand>();
+            commandList.Add(CommonData.SQLiteHelper.GetDeleteCommand("ToDo", "ID", toDo.ID));
             commandList.Add(ToDoCommon.DeleteReminderByToDoIDCommand(toDo.ID));
-            CommonData.AccessHelper.ExecuteByTransaction(commandList);
+            CommonData.SQLiteHelper.ExecuteByTransaction(commandList);
             SetAddToDoToReminderCheckState(false);
             ////MessageBox.Show("删除完成", "提示");
             ShowMessageAskRefresh();
@@ -701,7 +714,7 @@ namespace ToDoList
                 MessageBox.Show("待办事项数据错误", "提示");
                 return;
             }
-            int i = CommonData.AccessHelper.Update("ToDo", "Status", (int)EnumToDoStatus.Working, "ID", toDo.ID);
+            int i = CommonData.SQLiteHelper.Update("ToDo", "Status", (int)EnumToDoStatus.Working, "ID", toDo.ID);
             //因为更新后有修改界面的逻辑，所以先判断是否更新成功，未更新成功就提示。避免更新失败后还是更新界面，导致界面显示与实际数据不同
             if (i == 0)
             {
@@ -759,11 +772,11 @@ namespace ToDoList
             //}
             //SqlParams whereParamDict = new SqlParams();
             //whereParamDict.Add("ID", toDo.ID);
-            ////int i = CommonData.AccessHelper.Update("ToDo", setParamDict, whereParamDict);
+            ////int i = CommonData.SQLiteHelper.Update("ToDo", setParamDict, whereParamDict);
             //List<System.Data.OleDb.OleDbCommand> commandList = new List<System.Data.OleDb.OleDbCommand>();
-            //commandList.Add(CommonData.AccessHelper.GetUpdateCommand("ToDo", setParamDict, whereParamDict));
+            //commandList.Add(CommonData.SQLiteHelper.GetUpdateCommand("ToDo", setParamDict, whereParamDict));
             //commandList.Add(Common.DeleteReminderByToDoIDCommand(toDo.ID));
-            //bool result = CommonData.AccessHelper.ExecuteByTransaction(commandList);
+            //bool result = CommonData.SQLiteHelper.ExecuteByTransaction(commandList);
             bool result = ToDoCommon.UpdateToDo(toDo, status, true);
 
             //因为更新后有修改界面的逻辑，所以先判断是否更新成功，未更新成功就提示。避免更新失败后还是更新界面，导致界面显示与实际数据不同
@@ -1078,7 +1091,7 @@ namespace ToDoList
             SqlParams paramDict = new SqlParams();
             sql.Append(paramDict.AddToWhere("ToDoID", id));
             Reminder reminder = null;
-            DataTable dt = CommonData.AccessHelper.GetDataTable(sql.ToString(), paramDict);
+            DataTable dt = CommonData.SQLiteHelper.GetDataTable(sql.ToString(), paramDict);
             if (dt != null && dt.Rows.Count > 0)
             {
                 DataRow row = dt.Rows[0];
@@ -1100,7 +1113,7 @@ namespace ToDoList
         ///// <returns></returns>
         //private System.Data.OleDb.OleDbCommand DeleteReminderByToDoIDCommand(decimal toDoID)
         //{
-        //    return CommonData.AccessHelper.GetUpdateCommand("Reminder", "Status", 1, "ToDoID", toDoID);
+        //    return CommonData.SQLiteHelper.GetUpdateCommand("Reminder", "Status", 1, "ToDoID", toDoID);
         //}
 
         /// <summary>
@@ -1108,12 +1121,12 @@ namespace ToDoList
         /// </summary>
         /// <param name="toDoID">待办事项ID</param>
         /// <returns></returns>
-        private System.Data.OleDb.OleDbCommand AddToDoToReminderCommand(decimal toDoID)
+        private System.Data.SQLite.SQLiteCommand AddToDoToReminderCommand(decimal toDoID)
         {
             SqlParams paramDict = new SqlParams();
             paramDict.Add("ToDoID", toDoID);
             paramDict.Add("Status", 0);
-            return CommonData.AccessHelper.GetInsertCommand("Reminder", paramDict);
+            return CommonData.SQLiteHelper.GetInsertCommand("Reminder", paramDict);
         }
 
         private void checkBoxAddToReminder_CheckedChanged(object sender, EventArgs e)
@@ -1128,11 +1141,11 @@ namespace ToDoList
                 }
                 if (checkBoxAddToReminder.Checked)
                 {
-                    CommonData.AccessHelper.Execute(AddToDoToReminderCommand(toDoOriginal.ID));
+                    CommonData.SQLiteHelper.Execute(AddToDoToReminderCommand(toDoOriginal.ID));
                 }
                 else
                 {
-                    CommonData.AccessHelper.Execute(ToDoCommon.DeleteReminderByToDoIDCommand(toDoOriginal.ID));
+                    CommonData.SQLiteHelper.Execute(ToDoCommon.DeleteReminderByToDoIDCommand(toDoOriginal.ID));
                 }
             }
         }

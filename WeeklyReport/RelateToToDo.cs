@@ -108,11 +108,11 @@ namespace WeeklyReport
             }
             if (!string.IsNullOrWhiteSpace(textBoxSearchTitle.Text.Trim()))
             {
-                sql.Append(paramDict.AddLikeToWhere("Title", textBoxSearchTitle, "t"));
+                sql.Append(paramDict.AddLikeToWhere("Title", textBoxSearchTitle.Text.Trim(), "t"));
             }
             if (!string.IsNullOrWhiteSpace(textBoxSearchContent.Text.Trim()))
             {
-                sql.Append(paramDict.AddLikeToWhere("Content", textBoxSearchContent, "t"));
+                sql.Append(paramDict.AddLikeToWhere("Content", textBoxSearchContent.Text.Trim(), "t"));
             }
             if (textBoxSearchRelatedID.Text.NotNullOrWhiteSpace())
             {
@@ -149,7 +149,7 @@ namespace WeeklyReport
             else if (toDoListAll.Count > 0)
                 toDoListAll.Clear();
             toDoListAll.Clear();
-            DataTable dt = CommonData.AccessHelper.GetDataTable(sql.ToString(), paramDict);
+            DataTable dt = CommonData.SQLiteHelper.GetDataTable(sql.ToString(), paramDict);
             if (dt != null && dt.Rows.Count > 0)
             {
                 foreach (DataRow row in dt.Rows)
@@ -369,7 +369,7 @@ namespace WeeklyReport
             if (dataGridViewToDoList.SelectedRows[0].Tag is ToDo toDo && toDo != null)
             {
                 relatedReport.ToDoID = toDo.ID;
-                CommonData.AccessHelper.Update("Report", "ToDoID", relatedReport.ToDoID, "ID", relatedReport.ID);
+                CommonData.SQLiteHelper.Update("Report", "ToDoID", relatedReport.ToDoID, "ID", relatedReport.ID);
                 this.Close();
             }
             else

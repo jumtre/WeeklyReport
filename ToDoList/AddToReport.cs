@@ -89,7 +89,7 @@ namespace ToDoList
             {
                 paramDict.Add("RelatedID", textBoxRelatedID.Text.ToString());
             }
-            int i = CommonData.AccessHelper.Insert("Report", paramDict);
+            int i = CommonData.SQLiteHelper.Insert("Report", paramDict);
             //避免新增失败后用户不知道，此处进行提醒
             if (i > 0)
                 this.Close();

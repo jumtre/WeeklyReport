@@ -98,6 +98,8 @@
             this.richTextBoxContent.TabIndex = 0;
             this.richTextBoxContent.Text = "";
             this.richTextBoxContent.BackColorChanged += new System.EventHandler(this.richTextBoxContent_BackColorChanged);
+            this.richTextBoxContent.TextChanged += new System.EventHandler(this.richTextBoxContent_TextChanged);
+            this.richTextBoxContent.Leave += new System.EventHandler(this.richTextBoxContent_Leave);
             // 
             // buttonTop
             // 
@@ -209,6 +211,8 @@
             // 
             // panelBar
             // 
+            this.panelBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panelBar.Location = new System.Drawing.Point(0, 180);
             this.panelBar.Name = "panelBar";
             this.panelBar.Size = new System.Drawing.Size(165, 18);
@@ -284,12 +288,14 @@
             this.Controls.Add(this.richTextBoxContent);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.Name = "MainForm";
             this.ShowInTaskbar = false;
             this.Text = "提醒磁贴";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
             this.contextMenuStripNotify.ResumeLayout(false);
             this.ResumeLayout(false);
 
