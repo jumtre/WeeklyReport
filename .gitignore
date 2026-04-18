@@ -2,7 +2,6 @@
 # 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
 ################################################################################
 
-/.vs/WeeklyReport
 /Common/bin
 /Common/obj
 /Management/bin
@@ -13,8 +12,11 @@
 /WeeklyReport/obj
 /WRManagement/bin
 /WRManagement/obj
-/WeeklyReport/bin/Debug/Settings.ini
+#/WeeklyReport/bin/Debug/Settings.ini
 /ToDoList/bin
 /ToDoList/obj
 /ReminderTile/bin
 /ReminderTile/obj
+/XControls/bin
+/XControls/obj
+.vs

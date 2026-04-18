@@ -46,6 +46,8 @@
             this.dateTimePickerSearchFrom = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.buttonRelateToGit = new System.Windows.Forms.Button();
+            this.buttonRelateToToDo = new System.Windows.Forms.Button();
             this.textBoxOperateRelatedID = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.comboBoxOperateBranch = new System.Windows.Forms.ComboBox();
@@ -68,7 +70,6 @@
             this.ColumnBranch = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnContent = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnFinishTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.buttonRelateToToDo = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -177,7 +178,7 @@
             this.buttonSearch.Name = "buttonSearch";
             this.buttonSearch.Size = new System.Drawing.Size(93, 77);
             this.buttonSearch.TabIndex = 14;
-            this.buttonSearch.Text = "查  询";
+            this.buttonSearch.Text = "查  询(&S)";
             this.buttonSearch.UseVisualStyleBackColor = true;
             this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
             // 
@@ -236,6 +237,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.buttonRelateToGit);
             this.groupBox2.Controls.Add(this.buttonRelateToToDo);
             this.groupBox2.Controls.Add(this.textBoxOperateRelatedID);
             this.groupBox2.Controls.Add(this.label10);
@@ -259,6 +261,26 @@
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "数据/操作";
+            // 
+            // buttonRelateToGit
+            // 
+            this.buttonRelateToGit.Location = new System.Drawing.Point(517, 25);
+            this.buttonRelateToGit.Name = "buttonRelateToGit";
+            this.buttonRelateToGit.Size = new System.Drawing.Size(75, 23);
+            this.buttonRelateToGit.TabIndex = 16;
+            this.buttonRelateToGit.Text = "关联Git";
+            this.buttonRelateToGit.UseVisualStyleBackColor = true;
+            this.buttonRelateToGit.Click += new System.EventHandler(this.buttonRelateToGit_Click);
+            // 
+            // buttonRelateToToDo
+            // 
+            this.buttonRelateToToDo.Location = new System.Drawing.Point(517, 56);
+            this.buttonRelateToToDo.Name = "buttonRelateToToDo";
+            this.buttonRelateToToDo.Size = new System.Drawing.Size(75, 23);
+            this.buttonRelateToToDo.TabIndex = 15;
+            this.buttonRelateToToDo.Text = "关联待办项";
+            this.buttonRelateToToDo.UseVisualStyleBackColor = true;
+            this.buttonRelateToToDo.Click += new System.EventHandler(this.buttonRelateToToDo_Click);
             // 
             // textBoxOperateRelatedID
             // 
@@ -284,7 +306,9 @@
             this.comboBoxOperateBranch.Name = "comboBoxOperateBranch";
             this.comboBoxOperateBranch.Size = new System.Drawing.Size(160, 20);
             this.comboBoxOperateBranch.TabIndex = 3;
+            this.comboBoxOperateBranch.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboBoxOperateBranch_DrawItem);
             this.comboBoxOperateBranch.SelectedIndexChanged += new System.EventHandler(this.comboBoxOperateBranch_SelectedIndexChanged);
+            this.comboBoxOperateBranch.DropDownClosed += new System.EventHandler(this.comboBoxOperateBranch_DropDownClosed);
             // 
             // label8
             // 
@@ -307,46 +331,56 @@
             // 
             // buttonDelete
             // 
+            this.buttonDelete.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDelete.Location = new System.Drawing.Point(627, 112);
             this.buttonDelete.Name = "buttonDelete";
             this.buttonDelete.Size = new System.Drawing.Size(75, 33);
             this.buttonDelete.TabIndex = 11;
-            this.buttonDelete.Text = "删除";
+            this.buttonDelete.Text = "删除(&D)";
             this.buttonDelete.UseVisualStyleBackColor = true;
             this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
             // 
             // buttonExport
             // 
+            this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonExport.Location = new System.Drawing.Point(627, 154);
             this.buttonExport.Name = "buttonExport";
             this.buttonExport.Size = new System.Drawing.Size(75, 33);
             this.buttonExport.TabIndex = 12;
-            this.buttonExport.Text = "导出";
+            this.buttonExport.Text = "导出(&E)";
             this.buttonExport.UseVisualStyleBackColor = true;
             this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
             // 
             // buttonEdit
             // 
+            this.buttonEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonEdit.Location = new System.Drawing.Point(627, 70);
             this.buttonEdit.Name = "buttonEdit";
             this.buttonEdit.Size = new System.Drawing.Size(75, 33);
             this.buttonEdit.TabIndex = 10;
-            this.buttonEdit.Text = "修改";
+            this.buttonEdit.Text = "修改(&E)";
             this.buttonEdit.UseVisualStyleBackColor = true;
             this.buttonEdit.Click += new System.EventHandler(this.buttonEdit_Click);
             // 
             // buttonAdd
             // 
+            this.buttonAdd.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAdd.Location = new System.Drawing.Point(627, 26);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(75, 33);
             this.buttonAdd.TabIndex = 9;
-            this.buttonAdd.Text = "新增";
+            this.buttonAdd.Text = "新增(&A)";
             this.buttonAdd.UseVisualStyleBackColor = true;
             this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
             // 
             // richTextBoxOperateContent
             // 
+            this.richTextBoxOperateContent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBoxOperateContent.Location = new System.Drawing.Point(71, 87);
             this.richTextBoxOperateContent.Name = "richTextBoxOperateContent";
             this.richTextBoxOperateContent.Size = new System.Drawing.Size(521, 100);
@@ -468,16 +502,6 @@
             this.ColumnFinishTime.ReadOnly = true;
             this.ColumnFinishTime.Width = 120;
             // 
-            // buttonRelateToToDo
-            // 
-            this.buttonRelateToToDo.Location = new System.Drawing.Point(517, 56);
-            this.buttonRelateToToDo.Name = "buttonRelateToToDo";
-            this.buttonRelateToToDo.Size = new System.Drawing.Size(75, 23);
-            this.buttonRelateToToDo.TabIndex = 15;
-            this.buttonRelateToToDo.Text = "关联待办项";
-            this.buttonRelateToToDo.UseVisualStyleBackColor = true;
-            this.buttonRelateToToDo.Click += new System.EventHandler(this.buttonRelateToToDo_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -544,6 +568,7 @@
         private System.Windows.Forms.TextBox textBoxSearchRelatedID;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Button buttonRelateToToDo;
+        private System.Windows.Forms.Button buttonRelateToGit;
     }
 }
 

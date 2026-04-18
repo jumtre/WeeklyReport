@@ -61,6 +61,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RelateToGitLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RelateToGitLog.Designer.cs">
+      <DependentUpon>RelateToGitLog.cs</DependentUpon>
+    </Compile>
     <Compile Include="RelateToToDo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -82,6 +88,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="RelateToGitLog.resx">
+      <DependentUpon>RelateToGitLog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="RelateToToDo.resx">
       <DependentUpon>RelateToToDo.cs</DependentUpon>
     </EmbeddedResource>

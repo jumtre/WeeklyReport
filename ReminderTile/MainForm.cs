@@ -89,42 +89,62 @@ namespace ReminderTile
                     richTextBoxContent.BackColor = Color.FromArgb(intBackColor);
             }
             catch { }
+            int startPositionRight = 33, startPositionTop = 30;
             try
             {
                 string strStartPosition = CommonData.IniHelper.Read("ReminderTile", "StartPosition");
                 if (!string.IsNullOrWhiteSpace(strStartPosition) && strStartPosition.Contains(","))
                 {
                     string[] positionArray = strStartPosition.Split(',');
-                    int x, y;
-                    if (int.TryParse(positionArray[0], out x) && int.TryParse(positionArray[1], out y))
-                        this.Location = new Point(Screen.PrimaryScreen.WorkingArea.Width - x - this.Width, y);
-                    else
-                        this.Location = new Point(Screen.PrimaryScreen.WorkingArea.Width - this.Width - 10, 20); //从配置读取到的值错误，则设置默认位置
+                    int.TryParse(positionArray[0], out startPositionRight);
+                    int.TryParse(positionArray[1], out startPositionTop);
                 }
-                else
+            }
+            catch { }
+            //注意，如果有"SizeChanged"事件，先"-="避免触发事件，然后在finally中"+="避免出现异常后丢失事件
+            //this.SizeChanged -= MainForm_SizeChanged;
+            try
                 {
-                    //没有配置或配置格式错误，则设置默认位置
-                    this.Location = new Point(Screen.PrimaryScreen.WorkingArea.Width - this.Width - 10, 20);
+                string strSize = CommonData.IniHelper.Read("ReminderTile", "Size");
+                if (!string.IsNullOrWhiteSpace(strSize) && strSize.Contains(","))
+                {
+                    string[] sizeArray = strSize.Split(',');
+                    int width, height;
+                    if (int.TryParse(sizeArray[0], out width) && int.TryParse(sizeArray[1], out height))
+                    {
+                        //容错，避免数据设置太大或太小出现显示问题
+                        //程序初次显示在主屏，所以这里用Screen.PrimaryScreen就行了 //获取当前屏幕对象 Screen CurrentScreen = Screen.FromControl(this);
+                        if (width < 100)
+                            width = 100;
+                        else if (width > Screen.PrimaryScreen.WorkingArea.Width - startPositionRight)
+                            width = Screen.PrimaryScreen.WorkingArea.Width - startPositionRight;
+                        if (height < 60)
+                            height = 60;
+                        else if (height > Screen.PrimaryScreen.WorkingArea.Height - startPositionTop)
+                            height = Screen.PrimaryScreen.WorkingArea.Height - startPositionTop;
+                        this.Size = new Size(width, height);
                 }
+                    //默认设置有值，这里可以不需要
+                    //else
+                    //    this.Size = new Size(330, 200);
             }
-            catch
-            {
-                //如果读取配置失败，设置默认位置
-                this.Location = new Point(Screen.PrimaryScreen.WorkingArea.Width - this.Width - 10, 20);
             }
+            catch { }
+            this.Location = new Point(Screen.PrimaryScreen.WorkingArea.Width - startPositionRight - this.Width, startPositionTop);
+
             formPoint = this.Location;
             richTextBoxContent.BackColorChanged -= richTextBoxContent_BackColorChanged;
             richTextBoxContent_BackColorChanged(sender, e);
             richTextBoxContent.BackColorChanged += richTextBoxContent_BackColorChanged;
-            toolTipInfo.SetToolTip(buttonRefresh, "刷新");
-            toolTipInfo.SetToolTip(buttonPrevious, "上一个");
-            toolTipInfo.SetToolTip(buttonNext, "下一个");
-            toolTipInfo.SetToolTip(buttonAdd, "新增");
-            toolTipInfo.SetToolTip(buttonSave, "保存");
-            toolTipInfo.SetToolTip(buttonDelete, "完成/删除");
-            toolTipInfo.SetToolTip(buttonTop, this.TopMost ? "拔出(取消置顶)" : "钉住(置顶)");
-            toolTipInfo.SetToolTip(buttonColor, "颜色");
-            toolTipInfo.SetToolTip(buttonClose, "关闭");
+            toolTipInfo.SetToolTip(buttonRefresh, "刷新(Ctrl+R)");
+            toolTipInfo.SetToolTip(buttonPrevious, "上一个(Ctrl+←)");
+            toolTipInfo.SetToolTip(buttonNext, "下一个(Ctrl+→)");
+            toolTipInfo.SetToolTip(buttonAdd, "新增(Ctrl+N)");
+            toolTipInfo.SetToolTip(buttonSave, "保存(Ctrl+S)");
+            toolTipInfo.SetToolTip(buttonDelete, "完成/删除(Ctrl+D)");
+            toolTipInfo.SetToolTip(buttonTop, this.TopMost ? "拔出(Ctrl+↑)" : "钉住(Ctrl+↓)");
+            toolTipInfo.SetToolTip(buttonColor, "颜色(Ctrl+L)");
+            toolTipInfo.SetToolTip(buttonClose, "关闭(Ctrl+W)");
 
             if (IsSetting)
             {
@@ -190,14 +210,14 @@ namespace ReminderTile
             {
                 this.TopMost = false;
                 buttonTop.Text = "↓";
-                toolTipInfo.SetToolTip(buttonTop, "钉住(置顶)");
+                toolTipInfo.SetToolTip(buttonTop, "钉住(Ctrl+↓)");
                 ToolStripMenuItemTop.Text = "钉住(置顶)";
             }
             else
             {
                 this.TopMost = true;
                 buttonTop.Text = "↑";
-                toolTipInfo.SetToolTip(buttonTop, "拔出(取消置顶)");
+                toolTipInfo.SetToolTip(buttonTop, "拔出(Ctrl+↑)");
                 ToolStripMenuItemTop.Text = "拔出(取消置顶)";
             }
         }
@@ -232,7 +252,7 @@ namespace ReminderTile
             else if (reminderDict.Count > 0)
                 reminderDict.Clear();
             string sql = "select r.ID, r.Content, r.Status, t.ID as ToDoID, t.ProjectID, p.Name as ProjectName, t.BranchID, b.Name as BranchName, t.RelatedID, t.Priority, t.Severity, t.Title, t.Content as ToDoContent, t.[Memo], t.UserID, u.Name as UserName, t.PlannedStartTime, t.PlannedEndTime, t.PlannedHours, t.PlannedDays, t.Status as ToDoStatus, t.FinishTime, t.FinishUserID, uf.Name as FinishUserName from ((((Reminder r left join ToDo t on r.ToDoID = t.ID) left join Project p on t.ProjectID = p.ID) left join Branch b on t.BranchID = b.ID) left join [User] u on t.UserID = u.ID) left join [User] uf on t.FinishUserID = uf.ID where r.Status = 0 order by r.ID desc";
-            DataTable dt = CommonData.AccessHelper.GetDataTable(sql);
+            DataTable dt = CommonData.SQLiteHelper.GetDataTable(sql);
             if (dt != null && dt.Rows.Count > 0)
             {
                 for (int i = 0; i < dt.Rows.Count; i++)
@@ -289,6 +309,9 @@ namespace ReminderTile
 
         private void BindReminder(int index = 0)
         {
+            richTextBoxContent.TextChanged -= richTextBoxContent_TextChanged;
+            try
+            {
             richTextBoxContent.Text = string.Empty;
             originalContent = string.Empty;
             richTextBoxContent.Tag = null;
@@ -313,9 +336,33 @@ namespace ReminderTile
                 richTextBoxContent.Select(0, 0);
             }
         }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, "提醒事项绑定出错" + Environment.NewLine + ex.Message, "绑定出错");
+            }
+            finally
+            {
+                richTextBoxContent.TextChanged += richTextBoxContent_TextChanged;
+            }
+        }
+
+        private void reminderChangedToSave()
+        {
+            if (richTextBoxContent.Text == originalContent)
+            {
+                setSaveButtonColorByContentChanged(false);
+                return;
+            }
+            if (MessageBox.Show(this, "内容已变更，是否保存？", "待办事项", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Asterisk) != DialogResult.Yes)
+            {
+                return;
+            }
+            buttonSave.PerformClick();
+        }
 
         private void buttonPrevious_Click(object sender, EventArgs e)
         {
+            reminderChangedToSave();
             if (reminderDict?.Count == 0)
                 return;
             int index = currentIndex;
@@ -328,6 +375,7 @@ namespace ReminderTile
 
         private void buttonNext_Click(object sender, EventArgs e)
         {
+            reminderChangedToSave();
             if (reminderDict?.Count == 0)
                 return;
             int index = currentIndex;
@@ -340,8 +388,23 @@ namespace ReminderTile
 
         private void buttonAdd_Click(object sender, EventArgs e)
         {
+            reminderChangedToSave();
             BindReminder(-1);
             isAdding = true;
+        }
+
+        private void setSaveButtonColorByContentChanged(bool contentChanged = true)
+        {
+            if (contentChanged)
+            {
+                if (buttonSave.ForeColor != Color.Red)
+                    buttonSave.ForeColor = Color.Red;
+            }
+            else
+            {
+                if (buttonSave.ForeColor != SystemColors.ControlText)
+                    buttonSave.ForeColor = SystemColors.ControlText;
+            }
         }
 
         private void buttonSave_Click(object sender, EventArgs e)
@@ -351,7 +414,8 @@ namespace ReminderTile
                 SqlParams paramDict = new SqlParams();
                 paramDict.Add("Content", richTextBoxContent.Text);
                 paramDict.Add("Status", 0);
-                decimal id = CommonData.AccessHelper.InsertAndReturnNewIdentity("Reminder", paramDict);
+                decimal id = CommonData.SQLiteHelper.InsertAndReturnNewIdentity("Reminder", paramDict);
+                setSaveButtonColorByContentChanged(false);
                 isAdding = false;
                 originalContent = richTextBoxContent.Text;
                 int index = reminderDict.Count;
@@ -363,7 +427,10 @@ namespace ReminderTile
             else
             {
                 if (richTextBoxContent.Text == originalContent)
+                {
+                    setSaveButtonColorByContentChanged(false);
                     return;
+                }
                 if (richTextBoxContent.Tag == null || !(richTextBoxContent.Tag is Reminder reminder) || reminder == null || reminder.ID <= 0)
                 {
                     MessageBox.Show("数据错误。", "提示");
@@ -380,7 +447,8 @@ namespace ReminderTile
                 SqlParams whereParamDict = new SqlParams();
                 //whereParamDict.Add("ID", id);
                 whereParamDict.Add("ID", reminder.ID); 
-                CommonData.AccessHelper.Update("Reminder", setParamDict, whereParamDict);
+                CommonData.SQLiteHelper.Update("Reminder", setParamDict, whereParamDict);
+                setSaveButtonColorByContentChanged(false);
                 originalContent = richTextBoxContent.Text;
                 //KeyValuePair<int, Reminder> pair = reminderDict.FirstOrDefault(r => r.Value.ID == id);
                 KeyValuePair<int, Reminder> pair = reminderDict.FirstOrDefault(r => r.Value.ID == reminder.ID);
@@ -391,6 +459,9 @@ namespace ReminderTile
 
         private void buttonDelete_Click(object sender, EventArgs e)
         {
+            if (MessageBox.Show(this, "确认完成/删除此事项？", "待办事项", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Asterisk) != DialogResult.Yes)
+                return;
+            reminderChangedToSave();
             if (isAdding)
                 BindReminder(-1);
             else
@@ -411,7 +482,7 @@ namespace ReminderTile
                 SqlParams whereParamDict = new SqlParams();
                 //whereParamDict.Add("ID", id);
                 whereParamDict.Add("ID", reminder.ID);
-                CommonData.AccessHelper.Update("Reminder", setParamDict, whereParamDict);
+                CommonData.SQLiteHelper.Update("Reminder", setParamDict, whereParamDict);
                 reminderDict.Remove(currentIndex);
                 Dictionary<int, Reminder> newDict = new Dictionary<int, Reminder>();
                 foreach (KeyValuePair<int, Reminder> pair in reminderDict)
@@ -486,6 +557,7 @@ namespace ReminderTile
 
         private void buttonRefresh_Click(object sender, EventArgs e)
         {
+            reminderChangedToSave();
             //List<Reminder> reminders = reminderDict.Values.ToList();
             //reminders.IndexOf();
             //reminders.FindIndex();
@@ -529,6 +601,77 @@ namespace ReminderTile
                             break;
                     }
                 }
+            }
+        }
+
+        private void richTextBoxContent_Leave(object sender, EventArgs e)
+        {
+            //reminderChangedToSave();
+        }
+
+        private void richTextBoxContent_TextChanged(object sender, EventArgs e)
+        {
+            setSaveButtonColorByContentChanged();
+        }
+
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            //注意需设置窗体KeyPreview属性为True，避免焦点落到子控件后不触发此事件
+            if (e.KeyCode == Keys.R && e.Control)//刷新
+            {
+                buttonRefresh.PerformClick();
+                e.Handled = true;//不再触发KeyPress事件
+            }
+            else if (e.KeyCode == Keys.Left && e.Control)//上一个
+            {
+                buttonPrevious.PerformClick();
+                e.Handled = true;
+            }
+            else if (e.KeyCode == Keys.Right && e.Control)//下一个
+            {
+                buttonNext.PerformClick();
+                e.Handled = true;
+            }
+            else if (e.KeyCode == Keys.N && e.Control)//新增
+            {
+                buttonAdd.PerformClick();
+                e.Handled = true;
+            }
+            else if (e.KeyCode == Keys.S && e.Control)//保存
+            {
+                buttonSave.PerformClick();
+                e.Handled = true;
+            }
+            else if (e.KeyCode == Keys.D && e.Control)//完成/删除
+            {
+                buttonDelete.PerformClick();
+                e.Handled = true;
+            }
+            else if (e.KeyCode == Keys.Up && e.Control)//拔出(取消置顶)
+            {
+                if (this.TopMost)
+                {
+                    buttonTop.PerformClick();
+                    e.Handled = true;
+                }
+            }
+            else if (e.KeyCode == Keys.Down && e.Control)//钉住(置顶)
+            {
+                if (!this.TopMost)
+                {
+                    buttonTop.PerformClick();
+                    e.Handled = true;
+                }
+            }
+            else if (e.KeyCode == Keys.L && e.Control)//颜色
+            {
+                buttonColor.PerformClick();
+                e.Handled = true;
+            }
+            else if (e.KeyCode == Keys.W && e.Control)//关闭
+            {
+                buttonClose.PerformClick();
+                e.Handled = true;
             }
         }
     }

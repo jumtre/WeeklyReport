@@ -82,12 +82,12 @@ namespace ToDoList
             }
             SqlParams whereParamDict = new SqlParams();
             whereParamDict.Add("ID", toDo.ID);
-            //int i = CommonData.AccessHelper.Update("ToDo", setParamDict, whereParamDict);
-            List<System.Data.OleDb.OleDbCommand> commandList = new List<System.Data.OleDb.OleDbCommand>();
-            commandList.Add(CommonData.AccessHelper.GetUpdateCommand("ToDo", setParamDict, whereParamDict));
+            //int i = CommonData.SQLiteHelper.Update("ToDo", setParamDict, whereParamDict);
+            List<System.Data.SQLite.SQLiteCommand> commandList = new List<System.Data.SQLite.SQLiteCommand>();
+            commandList.Add(CommonData.SQLiteHelper.GetUpdateCommand("ToDo", setParamDict, whereParamDict));
             if (deleteReminder)
                 commandList.Add(DeleteReminderByToDoIDCommand(toDo.ID));
-            bool result = CommonData.AccessHelper.ExecuteByTransaction(commandList);
+            bool result = CommonData.SQLiteHelper.ExecuteByTransaction(commandList);
             toDo.Status = status;
             if (status == EnumToDoStatus.Cancelled)
             {
@@ -107,9 +107,9 @@ namespace ToDoList
         /// </summary>
         /// <param name="toDoID">待办事项ID</param>
         /// <returns></returns>
-        public static System.Data.OleDb.OleDbCommand DeleteReminderByToDoIDCommand(decimal toDoID)
+        public static System.Data.SQLite.SQLiteCommand DeleteReminderByToDoIDCommand(decimal toDoID)
         {
-            return CommonData.AccessHelper.GetUpdateCommand("Reminder", "Status", 1, "ToDoID", toDoID);
+            return CommonData.SQLiteHelper.GetUpdateCommand("Reminder", "Status", 1, "ToDoID", toDoID);
         }
     }
 }

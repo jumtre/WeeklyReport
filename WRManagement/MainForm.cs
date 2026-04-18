@@ -148,7 +148,13 @@ namespace WRManagement
         private void BindBranchDict(bool lazyLoad = true)
         {
             comboBoxCurrentBranch.SelectedIndexChanged -= comboBoxCurrentBranch_SelectedIndexChanged;
-            CommonFunc.BindBranchListToComboBox(comboBoxCurrentBranch, null, false, lazyLoad, true);
+            List<Branch> branchList = CommonFunc.GetBranchListForSearch(lazyLoad, true);
+            Project project = comboBoxCurrentProject.SelectedItem as Project;
+            if (project != null && project.ID != CommonData.ItemAllValue && project.ID != CommonData.ItemNullValue)
+            {
+                branchList = CommonFunc.GetBranchListForSearchByProjectID(project.ID, lazyLoad, true);
+            }
+            CommonFunc.BindBranchListToComboBox(comboBoxCurrentBranch, branchList, false, lazyLoad, true);
             List<Branch> branches = comboBoxCurrentBranch.DataSource as List<Branch>;
             if (branches == null)
             {
@@ -175,6 +181,7 @@ namespace WRManagement
             dataGridViewShow.Rows.Clear();
             ColumnProjectName.Visible = false;
             ColumnMemo.Visible = false;
+            ColumnWorkingDirectory.Visible = false;
             if (list == null)
                 list = CommonFunc.GetUserList(false);
             if (list == null || list.Count == 0)
@@ -198,6 +205,7 @@ namespace WRManagement
             dataGridViewShow.Rows.Clear();
             ColumnProjectName.Visible = false;
             ColumnMemo.Visible = false;
+            ColumnWorkingDirectory.Visible = false;
             if (list == null)
                 list = CommonFunc.GetProjectList(false);
             if (list == null || list.Count == 0)
@@ -221,6 +229,7 @@ namespace WRManagement
             dataGridViewShow.Rows.Clear();
             ColumnProjectName.Visible = true;
             ColumnMemo.Visible = true;
+            ColumnWorkingDirectory.Visible = true;
             if (list == null)
             {
                 //if (comboBoxProject.SelectedItem is Project project && project.ID != CommonData.ItemAllValue)
@@ -240,6 +249,7 @@ namespace WRManagement
                 row.Cells[ColumnProjectName.Index].Value = branch.Project?.Name;
                 row.Cells[ColumnProjectName.Index].Tag = branch.Project;
                 row.Cells[ColumnMemo.Index].Value = branch.Memo;
+                row.Cells[ColumnWorkingDirectory.Index].Value = branch.WorkingDirectory;
                 row.Tag = branch;
             }
             dataGridViewShow.ClearSelection();
@@ -262,13 +272,20 @@ namespace WRManagement
                 BindBranchList();
         }
 
+        private void ClearControlValue()
+        {
+            textBoxItemName.Text = string.Empty;
+            textBoxItemName.Tag = null;
+            textBoxMemo.Text = string.Empty;
+            textBoxWorkingDirectory.Text = string.Empty;
+        }
+
         private void comboBoxDict_SelectedIndexChanged(object sender, EventArgs e)
         {
             fireSelectionChanged = false;
             //dataGridViewShow.SelectionChanged -= dataGridViewShow_SelectionChanged;
             dataGridViewShow.Rows.Clear();
-            textBoxItemName.Text = string.Empty;
-            textBoxItemName.Tag = null;
+            ClearControlValue();
             currentDataType = CurrentDataType.None;
             if (comboBoxDict.SelectedValue?.ToString() == "用户")
                 currentDataType = CurrentDataType.User;
@@ -285,8 +302,7 @@ namespace WRManagement
         {
             if (!fireSelectionChanged)
                 return;
-            textBoxItemName.Text = string.Empty;
-            textBoxItemName.Tag = null;
+            ClearControlValue();
             if (dataGridViewShow.SelectedRows.Count == 0)
                 return;
             switch (dataGridViewShow.SelectedRows[0].Tag?.GetType().Name)
@@ -317,6 +333,7 @@ namespace WRManagement
                         textBoxItemName.Text = branch.Name;
                         textBoxItemName.Tag = branch.ID;
                         textBoxMemo.Text = branch.Memo;
+                        textBoxWorkingDirectory.Text = branch.WorkingDirectory;
                         if (branch.Project != null)
                             comboBoxProject.SelectedValue = branch.Project.ID;
                         else
@@ -352,8 +369,7 @@ namespace WRManagement
         {
             if (MessageBox.Show("操作完成，是否刷新列表？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
-                textBoxItemName.Text = string.Empty;
-                textBoxItemName.Tag = null;
+                ClearControlValue();
                 RefreshData();
             }
         }
@@ -365,7 +381,7 @@ namespace WRManagement
             paramDict.Add("ProjectID", projectID);
             paramDict.Add("Name", branchName);
             int i = -1;
-            if (int.TryParse(CommonData.AccessHelper.ExecuteScalar(sql, paramDict).ToString(), out i) && i > 0)
+            if (int.TryParse(CommonData.SQLiteHelper.ExecuteScalar(sql, paramDict).ToString(), out i) && i > 0)
                 return true;
             else
                 return false;
@@ -411,11 +427,23 @@ namespace WRManagement
                 paramDict.Add("Name", textBoxItemName.Text.Trim());
                 paramDict.Add("[Memo]", textBoxMemo.Text.Trim());
                 paramDict.Add("ProjectID", projectID);
+                string workingDirectory = textBoxWorkingDirectory.Text.Trim();
+                if (!string.IsNullOrWhiteSpace(workingDirectory))
+                {
+                    if (Directory.Exists(workingDirectory))
+                    {
+                        paramDict.Add("WorkingDirectory", workingDirectory);
+                    }
+                    else
+                    {
+                        MessageBox.Show("工作目录不存在", "提示");
+                        return;
+                    }
+                }
             }
             if (table.NotNullOrWhiteSpace() && paramDict.Count > 0)
-                CommonData.AccessHelper.Insert(table, paramDict);
-            textBoxItemName.Text = string.Empty;
-            textBoxMemo.Text = string.Empty;
+                CommonData.SQLiteHelper.Insert(table, paramDict);
+            ClearControlValue();
             ShowMessageAskRefresh();
         }
 
@@ -467,10 +495,17 @@ namespace WRManagement
                 setParamDict.Add("Name", textBoxItemName.Text.Trim());
                 setParamDict.Add("Memo", textBoxMemo.Text.Trim());
                 setParamDict.Add("ProjectID", projectID);
+                string workingDirectory = textBoxWorkingDirectory.Text.Trim();
+                if (!string.IsNullOrWhiteSpace(workingDirectory) && !Directory.Exists(workingDirectory))
+                {
+                    MessageBox.Show("工作目录不存在", "提示");
+                    return;
+                }
+                setParamDict.Add("WorkingDirectory", workingDirectory);
                 whereParamDict.Add("ID", textBoxItemName.Tag);
             }
             if (table.NotNullOrWhiteSpace() && setParamDict.Count > 0 && whereParamDict.Count > 0)
-                CommonData.AccessHelper.Update(table, setParamDict, whereParamDict);
+                CommonData.SQLiteHelper.Update(table, setParamDict, whereParamDict);
             ShowMessageAskRefresh();
         }
 
@@ -500,7 +535,7 @@ namespace WRManagement
             if (table.NotNullOrWhiteSpace())
             {
                 paramDict.Add("ID", textBoxItemName.Tag);
-                CommonData.AccessHelper.Delete(table, paramDict);
+                CommonData.SQLiteHelper.Delete(table, paramDict);
             }
             ShowMessageAskRefresh();
         }
@@ -671,6 +706,16 @@ namespace WRManagement
                 CommonData.IniHelper.Write("ReminderTile", "StartupCommandWhenNoItem", "Exit");
             else
                 CommonData.IniHelper.Write("ReminderTile", "StartupCommandWhenNoItem", "NoCommand");
+        }
+
+        private void buttonBrowseWorkingDirectory_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            folderBrowserDialog.ShowNewFolderButton = false;
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+            {
+                textBoxWorkingDirectory.Text = folderBrowserDialog.SelectedPath;
+            }
         }
     }
 }
