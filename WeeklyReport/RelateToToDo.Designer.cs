@@ -35,15 +35,6 @@
             this.groupBoxToDoList = new System.Windows.Forms.GroupBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.dataGridViewToDoList = new System.Windows.Forms.DataGridView();
-            this.ColumnDone = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.ColumnOrderNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnProject = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnBranch = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnTitle = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnAssignedTo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnPriority = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnSeverity = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnPlannedEndTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxSearchProject = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -70,6 +61,15 @@
             this.label28 = new System.Windows.Forms.Label();
             this.comboBoxSearchFinishUser = new System.Windows.Forms.ComboBox();
             this.groupBoxSearch = new System.Windows.Forms.GroupBox();
+            this.ColumnDone = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.ColumnOrderNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnProject = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnBranch = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnTitle = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnAssignedTo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnPriority = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnSeverity = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnPlannedEndTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panelButtons.SuspendLayout();
             this.groupBoxToDoList.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -82,18 +82,20 @@
             this.panelButtons.Controls.Add(this.buttonClose);
             this.panelButtons.Controls.Add(this.buttonRelate);
             this.panelButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelButtons.Location = new System.Drawing.Point(0, 498);
+            this.panelButtons.Location = new System.Drawing.Point(0, 622);
+            this.panelButtons.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panelButtons.Name = "panelButtons";
-            this.panelButtons.Size = new System.Drawing.Size(857, 38);
+            this.panelButtons.Size = new System.Drawing.Size(1143, 48);
             this.panelButtons.TabIndex = 2;
             // 
             // buttonClose
             // 
             this.buttonClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonClose.Location = new System.Drawing.Point(467, 9);
+            this.buttonClose.Location = new System.Drawing.Point(623, 11);
+            this.buttonClose.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonClose.Name = "buttonClose";
-            this.buttonClose.Size = new System.Drawing.Size(75, 23);
+            this.buttonClose.Size = new System.Drawing.Size(100, 29);
             this.buttonClose.TabIndex = 1;
             this.buttonClose.Text = "关闭";
             this.buttonClose.UseVisualStyleBackColor = true;
@@ -101,9 +103,10 @@
             // 
             // buttonRelate
             // 
-            this.buttonRelate.Location = new System.Drawing.Point(282, 9);
+            this.buttonRelate.Location = new System.Drawing.Point(376, 11);
+            this.buttonRelate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonRelate.Name = "buttonRelate";
-            this.buttonRelate.Size = new System.Drawing.Size(75, 23);
+            this.buttonRelate.Size = new System.Drawing.Size(100, 29);
             this.buttonRelate.TabIndex = 0;
             this.buttonRelate.Text = "关联";
             this.buttonRelate.UseVisualStyleBackColor = true;
@@ -113,9 +116,11 @@
             // 
             this.groupBoxToDoList.Controls.Add(this.panel2);
             this.groupBoxToDoList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxToDoList.Location = new System.Drawing.Point(0, 107);
+            this.groupBoxToDoList.Location = new System.Drawing.Point(0, 134);
+            this.groupBoxToDoList.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBoxToDoList.Name = "groupBoxToDoList";
-            this.groupBoxToDoList.Size = new System.Drawing.Size(857, 391);
+            this.groupBoxToDoList.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBoxToDoList.Size = new System.Drawing.Size(1143, 488);
             this.groupBoxToDoList.TabIndex = 7;
             this.groupBoxToDoList.TabStop = false;
             this.groupBoxToDoList.Text = "待办列表";
@@ -124,9 +129,10 @@
             // 
             this.panel2.Controls.Add(this.dataGridViewToDoList);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(3, 17);
+            this.panel2.Location = new System.Drawing.Point(4, 22);
+            this.panel2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(851, 371);
+            this.panel2.Size = new System.Drawing.Size(1135, 462);
             this.panel2.TabIndex = 7;
             // 
             // dataGridViewToDoList
@@ -146,87 +152,24 @@
             this.ColumnPlannedEndTime});
             this.dataGridViewToDoList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewToDoList.Location = new System.Drawing.Point(0, 0);
+            this.dataGridViewToDoList.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dataGridViewToDoList.MultiSelect = false;
             this.dataGridViewToDoList.Name = "dataGridViewToDoList";
             this.dataGridViewToDoList.ReadOnly = true;
             this.dataGridViewToDoList.RowHeadersVisible = false;
+            this.dataGridViewToDoList.RowHeadersWidth = 51;
             this.dataGridViewToDoList.RowTemplate.Height = 23;
             this.dataGridViewToDoList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewToDoList.Size = new System.Drawing.Size(851, 371);
+            this.dataGridViewToDoList.Size = new System.Drawing.Size(1135, 462);
             this.dataGridViewToDoList.TabIndex = 0;
-            // 
-            // ColumnDone
-            // 
-            this.ColumnDone.FalseValue = "false";
-            this.ColumnDone.HeaderText = "完成";
-            this.ColumnDone.IndeterminateValue = "indeterminate";
-            this.ColumnDone.Name = "ColumnDone";
-            this.ColumnDone.ReadOnly = true;
-            this.ColumnDone.ThreeState = true;
-            this.ColumnDone.TrueValue = "true";
-            this.ColumnDone.Width = 40;
-            // 
-            // ColumnOrderNo
-            // 
-            this.ColumnOrderNo.HeaderText = "序号";
-            this.ColumnOrderNo.Name = "ColumnOrderNo";
-            this.ColumnOrderNo.ReadOnly = true;
-            this.ColumnOrderNo.Width = 52;
-            // 
-            // ColumnProject
-            // 
-            this.ColumnProject.HeaderText = "项目";
-            this.ColumnProject.Name = "ColumnProject";
-            this.ColumnProject.ReadOnly = true;
-            // 
-            // ColumnBranch
-            // 
-            this.ColumnBranch.HeaderText = "分支";
-            this.ColumnBranch.Name = "ColumnBranch";
-            this.ColumnBranch.ReadOnly = true;
-            // 
-            // ColumnTitle
-            // 
-            this.ColumnTitle.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ColumnTitle.HeaderText = "标题";
-            this.ColumnTitle.MinimumWidth = 150;
-            this.ColumnTitle.Name = "ColumnTitle";
-            this.ColumnTitle.ReadOnly = true;
-            // 
-            // ColumnAssignedTo
-            // 
-            this.ColumnAssignedTo.HeaderText = "指派给";
-            this.ColumnAssignedTo.Name = "ColumnAssignedTo";
-            this.ColumnAssignedTo.ReadOnly = true;
-            this.ColumnAssignedTo.Width = 75;
-            // 
-            // ColumnPriority
-            // 
-            this.ColumnPriority.HeaderText = "优先级";
-            this.ColumnPriority.Name = "ColumnPriority";
-            this.ColumnPriority.ReadOnly = true;
-            this.ColumnPriority.Width = 70;
-            // 
-            // ColumnSeverity
-            // 
-            this.ColumnSeverity.HeaderText = "严重度";
-            this.ColumnSeverity.Name = "ColumnSeverity";
-            this.ColumnSeverity.ReadOnly = true;
-            this.ColumnSeverity.Width = 70;
-            // 
-            // ColumnPlannedEndTime
-            // 
-            this.ColumnPlannedEndTime.HeaderText = "计划结束时间";
-            this.ColumnPlannedEndTime.Name = "ColumnPlannedEndTime";
-            this.ColumnPlannedEndTime.ReadOnly = true;
-            this.ColumnPlannedEndTime.Width = 120;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 23);
+            this.label1.Location = new System.Drawing.Point(16, 29);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(41, 12);
+            this.label1.Size = new System.Drawing.Size(52, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "项目：";
             // 
@@ -234,50 +177,56 @@
             // 
             this.comboBoxSearchProject.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSearchProject.FormattingEnabled = true;
-            this.comboBoxSearchProject.Location = new System.Drawing.Point(59, 20);
+            this.comboBoxSearchProject.Location = new System.Drawing.Point(79, 25);
+            this.comboBoxSearchProject.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboBoxSearchProject.Name = "comboBoxSearchProject";
-            this.comboBoxSearchProject.Size = new System.Drawing.Size(248, 20);
+            this.comboBoxSearchProject.Size = new System.Drawing.Size(329, 23);
             this.comboBoxSearchProject.TabIndex = 1;
             this.comboBoxSearchProject.SelectedIndexChanged += new System.EventHandler(this.comboBoxSearchProject_SelectedIndexChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 50);
+            this.label2.Location = new System.Drawing.Point(16, 62);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(41, 12);
+            this.label2.Size = new System.Drawing.Size(52, 15);
             this.label2.TabIndex = 8;
             this.label2.Text = "标题：";
             // 
             // textBoxSearchTitle
             // 
-            this.textBoxSearchTitle.Location = new System.Drawing.Point(59, 46);
+            this.textBoxSearchTitle.Location = new System.Drawing.Point(79, 58);
+            this.textBoxSearchTitle.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBoxSearchTitle.Name = "textBoxSearchTitle";
-            this.textBoxSearchTitle.Size = new System.Drawing.Size(248, 21);
+            this.textBoxSearchTitle.Size = new System.Drawing.Size(329, 25);
             this.textBoxSearchTitle.TabIndex = 9;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(315, 50);
+            this.label3.Location = new System.Drawing.Point(420, 62);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(41, 12);
+            this.label3.Size = new System.Drawing.Size(52, 15);
             this.label3.TabIndex = 10;
             this.label3.Text = "内容：";
             // 
             // textBoxSearchContent
             // 
-            this.textBoxSearchContent.Location = new System.Drawing.Point(356, 46);
+            this.textBoxSearchContent.Location = new System.Drawing.Point(475, 58);
+            this.textBoxSearchContent.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBoxSearchContent.Name = "textBoxSearchContent";
-            this.textBoxSearchContent.Size = new System.Drawing.Size(165, 21);
+            this.textBoxSearchContent.Size = new System.Drawing.Size(219, 25);
             this.textBoxSearchContent.TabIndex = 11;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(529, 23);
+            this.label4.Location = new System.Drawing.Point(705, 29);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(53, 12);
+            this.label4.Size = new System.Drawing.Size(68, 15);
             this.label4.TabIndex = 4;
             this.label4.Text = "状  态：";
             // 
@@ -285,18 +234,20 @@
             // 
             this.comboBoxSearchStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSearchStatus.FormattingEnabled = true;
-            this.comboBoxSearchStatus.Location = new System.Drawing.Point(582, 20);
+            this.comboBoxSearchStatus.Location = new System.Drawing.Point(776, 25);
+            this.comboBoxSearchStatus.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboBoxSearchStatus.Name = "comboBoxSearchStatus";
-            this.comboBoxSearchStatus.Size = new System.Drawing.Size(106, 20);
+            this.comboBoxSearchStatus.Size = new System.Drawing.Size(140, 23);
             this.comboBoxSearchStatus.TabIndex = 5;
             this.comboBoxSearchStatus.SelectedIndexChanged += new System.EventHandler(this.comboBoxSearchStatus_SelectedIndexChanged);
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(12, 79);
+            this.label8.Location = new System.Drawing.Point(16, 99);
+            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(65, 12);
+            this.label8.Size = new System.Drawing.Size(82, 15);
             this.label8.TabIndex = 14;
             this.label8.Text = "完成时间：";
             // 
@@ -304,18 +255,20 @@
             // 
             this.dateTimePickerSearchFisnishTimeFrom.CustomFormat = "yyyy年MM月dd日 HH时";
             this.dateTimePickerSearchFisnishTimeFrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePickerSearchFisnishTimeFrom.Location = new System.Drawing.Point(83, 73);
+            this.dateTimePickerSearchFisnishTimeFrom.Location = new System.Drawing.Point(111, 91);
+            this.dateTimePickerSearchFisnishTimeFrom.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dateTimePickerSearchFisnishTimeFrom.Name = "dateTimePickerSearchFisnishTimeFrom";
             this.dateTimePickerSearchFisnishTimeFrom.ShowCheckBox = true;
-            this.dateTimePickerSearchFisnishTimeFrom.Size = new System.Drawing.Size(170, 21);
+            this.dateTimePickerSearchFisnishTimeFrom.Size = new System.Drawing.Size(225, 25);
             this.dateTimePickerSearchFisnishTimeFrom.TabIndex = 15;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(259, 79);
+            this.label7.Location = new System.Drawing.Point(345, 99);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(17, 12);
+            this.label7.Size = new System.Drawing.Size(22, 15);
             this.label7.TabIndex = 16;
             this.label7.Text = "～";
             // 
@@ -323,17 +276,19 @@
             // 
             this.dateTimePickerSearchFinishTimeTo.CustomFormat = "yyyy年MM月dd日 HH时";
             this.dateTimePickerSearchFinishTimeTo.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePickerSearchFinishTimeTo.Location = new System.Drawing.Point(282, 73);
+            this.dateTimePickerSearchFinishTimeTo.Location = new System.Drawing.Point(376, 91);
+            this.dateTimePickerSearchFinishTimeTo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dateTimePickerSearchFinishTimeTo.Name = "dateTimePickerSearchFinishTimeTo";
             this.dateTimePickerSearchFinishTimeTo.ShowCheckBox = true;
-            this.dateTimePickerSearchFinishTimeTo.Size = new System.Drawing.Size(170, 21);
+            this.dateTimePickerSearchFinishTimeTo.Size = new System.Drawing.Size(225, 25);
             this.dateTimePickerSearchFinishTimeTo.TabIndex = 17;
             // 
             // buttonSearch
             // 
-            this.buttonSearch.Location = new System.Drawing.Point(699, 45);
+            this.buttonSearch.Location = new System.Drawing.Point(932, 56);
+            this.buttonSearch.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonSearch.Name = "buttonSearch";
-            this.buttonSearch.Size = new System.Drawing.Size(143, 50);
+            this.buttonSearch.Size = new System.Drawing.Size(191, 62);
             this.buttonSearch.TabIndex = 18;
             this.buttonSearch.Text = "查   询";
             this.buttonSearch.UseVisualStyleBackColor = true;
@@ -342,9 +297,10 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(315, 23);
+            this.label23.Location = new System.Drawing.Point(420, 29);
+            this.label23.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(41, 12);
+            this.label23.Size = new System.Drawing.Size(52, 15);
             this.label23.TabIndex = 2;
             this.label23.Text = "分支：";
             // 
@@ -352,33 +308,37 @@
             // 
             this.comboBoxSearchBranch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSearchBranch.FormattingEnabled = true;
-            this.comboBoxSearchBranch.Location = new System.Drawing.Point(356, 20);
+            this.comboBoxSearchBranch.Location = new System.Drawing.Point(475, 25);
+            this.comboBoxSearchBranch.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboBoxSearchBranch.Name = "comboBoxSearchBranch";
-            this.comboBoxSearchBranch.Size = new System.Drawing.Size(165, 20);
+            this.comboBoxSearchBranch.Size = new System.Drawing.Size(219, 23);
             this.comboBoxSearchBranch.TabIndex = 3;
             this.comboBoxSearchBranch.SelectedIndexChanged += new System.EventHandler(this.comboBoxSearchBranch_SelectedIndexChanged);
             // 
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(529, 50);
+            this.label25.Location = new System.Drawing.Point(705, 62);
+            this.label25.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(53, 12);
+            this.label25.Size = new System.Drawing.Size(68, 15);
             this.label25.TabIndex = 12;
             this.label25.Text = "关联ID：";
             // 
             // textBoxSearchRelatedID
             // 
-            this.textBoxSearchRelatedID.Location = new System.Drawing.Point(582, 46);
+            this.textBoxSearchRelatedID.Location = new System.Drawing.Point(776, 58);
+            this.textBoxSearchRelatedID.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBoxSearchRelatedID.Name = "textBoxSearchRelatedID";
-            this.textBoxSearchRelatedID.Size = new System.Drawing.Size(106, 21);
+            this.textBoxSearchRelatedID.Size = new System.Drawing.Size(140, 25);
             this.textBoxSearchRelatedID.TabIndex = 13;
             // 
             // buttonSearchToday
             // 
-            this.buttonSearchToday.Location = new System.Drawing.Point(466, 72);
+            this.buttonSearchToday.Location = new System.Drawing.Point(621, 90);
+            this.buttonSearchToday.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonSearchToday.Name = "buttonSearchToday";
-            this.buttonSearchToday.Size = new System.Drawing.Size(38, 23);
+            this.buttonSearchToday.Size = new System.Drawing.Size(51, 29);
             this.buttonSearchToday.TabIndex = 19;
             this.buttonSearchToday.Text = "今日";
             this.buttonSearchToday.UseVisualStyleBackColor = true;
@@ -386,9 +346,10 @@
             // 
             // buttonSearchYesterday
             // 
-            this.buttonSearchYesterday.Location = new System.Drawing.Point(503, 72);
+            this.buttonSearchYesterday.Location = new System.Drawing.Point(671, 90);
+            this.buttonSearchYesterday.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonSearchYesterday.Name = "buttonSearchYesterday";
-            this.buttonSearchYesterday.Size = new System.Drawing.Size(38, 23);
+            this.buttonSearchYesterday.Size = new System.Drawing.Size(51, 29);
             this.buttonSearchYesterday.TabIndex = 20;
             this.buttonSearchYesterday.Text = "昨日";
             this.buttonSearchYesterday.UseVisualStyleBackColor = true;
@@ -396,9 +357,10 @@
             // 
             // buttonSearchTomorrow
             // 
-            this.buttonSearchTomorrow.Location = new System.Drawing.Point(540, 72);
+            this.buttonSearchTomorrow.Location = new System.Drawing.Point(720, 90);
+            this.buttonSearchTomorrow.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonSearchTomorrow.Name = "buttonSearchTomorrow";
-            this.buttonSearchTomorrow.Size = new System.Drawing.Size(38, 23);
+            this.buttonSearchTomorrow.Size = new System.Drawing.Size(51, 29);
             this.buttonSearchTomorrow.TabIndex = 21;
             this.buttonSearchTomorrow.Text = "明日";
             this.buttonSearchTomorrow.UseVisualStyleBackColor = true;
@@ -406,9 +368,10 @@
             // 
             // buttonSearchThisWeek
             // 
-            this.buttonSearchThisWeek.Location = new System.Drawing.Point(577, 72);
+            this.buttonSearchThisWeek.Location = new System.Drawing.Point(769, 90);
+            this.buttonSearchThisWeek.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonSearchThisWeek.Name = "buttonSearchThisWeek";
-            this.buttonSearchThisWeek.Size = new System.Drawing.Size(38, 23);
+            this.buttonSearchThisWeek.Size = new System.Drawing.Size(51, 29);
             this.buttonSearchThisWeek.TabIndex = 22;
             this.buttonSearchThisWeek.Text = "本周";
             this.buttonSearchThisWeek.UseVisualStyleBackColor = true;
@@ -416,9 +379,10 @@
             // 
             // buttonSearchLastWeek
             // 
-            this.buttonSearchLastWeek.Location = new System.Drawing.Point(614, 72);
+            this.buttonSearchLastWeek.Location = new System.Drawing.Point(819, 90);
+            this.buttonSearchLastWeek.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonSearchLastWeek.Name = "buttonSearchLastWeek";
-            this.buttonSearchLastWeek.Size = new System.Drawing.Size(38, 23);
+            this.buttonSearchLastWeek.Size = new System.Drawing.Size(51, 29);
             this.buttonSearchLastWeek.TabIndex = 23;
             this.buttonSearchLastWeek.Text = "上周";
             this.buttonSearchLastWeek.UseVisualStyleBackColor = true;
@@ -426,9 +390,10 @@
             // 
             // buttonSearchNextWeek
             // 
-            this.buttonSearchNextWeek.Location = new System.Drawing.Point(651, 72);
+            this.buttonSearchNextWeek.Location = new System.Drawing.Point(868, 90);
+            this.buttonSearchNextWeek.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonSearchNextWeek.Name = "buttonSearchNextWeek";
-            this.buttonSearchNextWeek.Size = new System.Drawing.Size(38, 23);
+            this.buttonSearchNextWeek.Size = new System.Drawing.Size(51, 29);
             this.buttonSearchNextWeek.TabIndex = 24;
             this.buttonSearchNextWeek.Text = "下周";
             this.buttonSearchNextWeek.UseVisualStyleBackColor = true;
@@ -437,9 +402,10 @@
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(697, 23);
+            this.label28.Location = new System.Drawing.Point(929, 29);
+            this.label28.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(53, 12);
+            this.label28.Size = new System.Drawing.Size(67, 15);
             this.label28.TabIndex = 6;
             this.label28.Text = "完成人：";
             // 
@@ -447,9 +413,10 @@
             // 
             this.comboBoxSearchFinishUser.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSearchFinishUser.FormattingEnabled = true;
-            this.comboBoxSearchFinishUser.Location = new System.Drawing.Point(750, 20);
+            this.comboBoxSearchFinishUser.Location = new System.Drawing.Point(1000, 25);
+            this.comboBoxSearchFinishUser.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboBoxSearchFinishUser.Name = "comboBoxSearchFinishUser";
-            this.comboBoxSearchFinishUser.Size = new System.Drawing.Size(91, 20);
+            this.comboBoxSearchFinishUser.Size = new System.Drawing.Size(120, 23);
             this.comboBoxSearchFinishUser.TabIndex = 7;
             // 
             // groupBoxSearch
@@ -481,22 +448,101 @@
             this.groupBoxSearch.Controls.Add(this.label1);
             this.groupBoxSearch.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBoxSearch.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxSearch.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBoxSearch.Name = "groupBoxSearch";
-            this.groupBoxSearch.Size = new System.Drawing.Size(857, 107);
+            this.groupBoxSearch.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBoxSearch.Size = new System.Drawing.Size(1143, 134);
             this.groupBoxSearch.TabIndex = 1;
             this.groupBoxSearch.TabStop = false;
             this.groupBoxSearch.Text = "查询";
             // 
+            // ColumnDone
+            // 
+            this.ColumnDone.FalseValue = "false";
+            this.ColumnDone.HeaderText = "完成";
+            this.ColumnDone.IndeterminateValue = "indeterminate";
+            this.ColumnDone.MinimumWidth = 6;
+            this.ColumnDone.Name = "ColumnDone";
+            this.ColumnDone.ReadOnly = true;
+            this.ColumnDone.ThreeState = true;
+            this.ColumnDone.TrueValue = "true";
+            this.ColumnDone.Width = 60;
+            // 
+            // ColumnOrderNo
+            // 
+            this.ColumnOrderNo.HeaderText = "序号";
+            this.ColumnOrderNo.MinimumWidth = 6;
+            this.ColumnOrderNo.Name = "ColumnOrderNo";
+            this.ColumnOrderNo.ReadOnly = true;
+            this.ColumnOrderNo.Width = 60;
+            // 
+            // ColumnProject
+            // 
+            this.ColumnProject.HeaderText = "项目";
+            this.ColumnProject.MinimumWidth = 6;
+            this.ColumnProject.Name = "ColumnProject";
+            this.ColumnProject.ReadOnly = true;
+            this.ColumnProject.Width = 125;
+            // 
+            // ColumnBranch
+            // 
+            this.ColumnBranch.HeaderText = "分支";
+            this.ColumnBranch.MinimumWidth = 6;
+            this.ColumnBranch.Name = "ColumnBranch";
+            this.ColumnBranch.ReadOnly = true;
+            this.ColumnBranch.Width = 125;
+            // 
+            // ColumnTitle
+            // 
+            this.ColumnTitle.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ColumnTitle.HeaderText = "标题";
+            this.ColumnTitle.MinimumWidth = 150;
+            this.ColumnTitle.Name = "ColumnTitle";
+            this.ColumnTitle.ReadOnly = true;
+            // 
+            // ColumnAssignedTo
+            // 
+            this.ColumnAssignedTo.HeaderText = "指派给";
+            this.ColumnAssignedTo.MinimumWidth = 6;
+            this.ColumnAssignedTo.Name = "ColumnAssignedTo";
+            this.ColumnAssignedTo.ReadOnly = true;
+            this.ColumnAssignedTo.Width = 80;
+            // 
+            // ColumnPriority
+            // 
+            this.ColumnPriority.HeaderText = "优先级";
+            this.ColumnPriority.MinimumWidth = 6;
+            this.ColumnPriority.Name = "ColumnPriority";
+            this.ColumnPriority.ReadOnly = true;
+            this.ColumnPriority.Width = 80;
+            // 
+            // ColumnSeverity
+            // 
+            this.ColumnSeverity.HeaderText = "严重度";
+            this.ColumnSeverity.MinimumWidth = 6;
+            this.ColumnSeverity.Name = "ColumnSeverity";
+            this.ColumnSeverity.ReadOnly = true;
+            this.ColumnSeverity.Width = 80;
+            // 
+            // ColumnPlannedEndTime
+            // 
+            this.ColumnPlannedEndTime.HeaderText = "计划结束时间";
+            this.ColumnPlannedEndTime.MinimumWidth = 6;
+            this.ColumnPlannedEndTime.Name = "ColumnPlannedEndTime";
+            this.ColumnPlannedEndTime.ReadOnly = true;
+            this.ColumnPlannedEndTime.Width = 160;
+            // 
             // RelateToToDo
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonClose;
-            this.ClientSize = new System.Drawing.Size(857, 536);
+            this.ClientSize = new System.Drawing.Size(1143, 670);
             this.Controls.Add(this.groupBoxToDoList);
             this.Controls.Add(this.panelButtons);
             this.Controls.Add(this.groupBoxSearch);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "RelateToToDo";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "关联待办项";
@@ -516,15 +562,6 @@
         private System.Windows.Forms.GroupBox groupBoxToDoList;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.DataGridView dataGridViewToDoList;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn ColumnDone;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnOrderNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnProject;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnBranch;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnTitle;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnAssignedTo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPriority;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnSeverity;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPlannedEndTime;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox comboBoxSearchProject;
         private System.Windows.Forms.Label label2;
@@ -553,5 +590,14 @@
         private System.Windows.Forms.GroupBox groupBoxSearch;
         private System.Windows.Forms.Button buttonClose;
         private System.Windows.Forms.Button buttonRelate;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn ColumnDone;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnOrderNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnProject;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnBranch;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnTitle;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnAssignedTo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPriority;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnSeverity;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnPlannedEndTime;
     }
 }

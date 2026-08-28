@@ -34,6 +34,7 @@ namespace WRManagement
         public MainForm()
         {
             InitializeComponent();
+            AutoScaleMode = AutoScaleMode.Dpi;
         }
 
         private void MainForm_Load(object sender, EventArgs e)

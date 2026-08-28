@@ -103,7 +103,10 @@ namespace Model
                         sBuilder.AppendLine("内容：" + ToDo.Content);
                     if (!string.IsNullOrWhiteSpace(ToDo.Memo))
                         sBuilder.AppendLine("备注：" + ToDo.Memo);
-                    content = sBuilder.ToString();
+                    // StringBuilder.AppendLine 在行尾加的换行符是 Environment.NewLine。
+                    // RichTextBox（无论是 WinForms 还是 WPF）在内部使用 Native RichEdit 控件，该控件会将所有换行符统一转换为 \n（LF）存储。
+                    // 所以这里统一替换成 \n ，避免后续因为换行符不一致而提示保存。
+                    content = sBuilder.Replace(Environment.NewLine, "\n").ToString();
                 }
                 return content;
             }

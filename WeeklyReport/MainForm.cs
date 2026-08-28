@@ -25,6 +25,7 @@ namespace WeeklyReport
         public MainForm()
         {
             InitializeComponent();
+            AutoScaleMode = AutoScaleMode.Dpi;
             comboBoxOperateBranch.DrawMode = DrawMode.OwnerDrawFixed;
         }
 

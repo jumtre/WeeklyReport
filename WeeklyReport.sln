@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoList", "ToDoList\ToDoLi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReminderTile", "ReminderTile\ReminderTile.csproj", "{6AFE504F-5A8A-464D-8649-874532231514}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XControls", "XControls\XControls.csproj", "{47370CE2-30D7-4F36-B3BC-16D8857F8918}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{6AFE504F-5A8A-464D-8649-874532231514}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6AFE504F-5A8A-464D-8649-874532231514}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6AFE504F-5A8A-464D-8649-874532231514}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47370CE2-30D7-4F36-B3BC-16D8857F8918}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47370CE2-30D7-4F36-B3BC-16D8857F8918}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47370CE2-30D7-4F36-B3BC-16D8857F8918}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47370CE2-30D7-4F36-B3BC-16D8857F8918}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
