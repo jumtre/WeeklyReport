@@ -23,11 +23,13 @@ namespace ToDoList
         public ExportForm()
         {
             InitializeComponent();
+            AutoScaleMode = AutoScaleMode.Dpi;
         }
 
         public ExportForm(List<ToDo> todos, DateTime? plannedStartFrom, DateTime? plannedStartTo, DateTime? plannedEndFrom, DateTime? plannedEndTo)
         {
             InitializeComponent();
+            AutoScaleMode = AutoScaleMode.Dpi;
             todoList = todos;
             plannedTimeStartFrom = plannedStartFrom;
             plannedTimeStartTo = plannedStartTo;

@@ -42,6 +42,7 @@ namespace ToDoList
         public MainForm()
         {
             InitializeComponent();
+            AutoScaleMode = AutoScaleMode.Dpi;
         }
 
         private void MainForm_Load(object sender, EventArgs e)

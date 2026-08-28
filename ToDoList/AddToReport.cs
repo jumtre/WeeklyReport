@@ -19,11 +19,13 @@ namespace ToDoList
         public AddToReport()
         {
             InitializeComponent();
+            AutoScaleMode = AutoScaleMode.Dpi;
         }
 
         public AddToReport(ToDo toDoAdd)
         {
             InitializeComponent();
+            AutoScaleMode = AutoScaleMode.Dpi;
             toDo = toDoAdd;
         }
 
