@@ -60,9 +60,10 @@
             this.buttonColor.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gainsboro;
             this.buttonColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonColor.Font = new System.Drawing.Font("宋体", 12F);
-            this.buttonColor.Location = new System.Drawing.Point(293, 180);
+            this.buttonColor.Location = new System.Drawing.Point(391, 225);
+            this.buttonColor.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonColor.Name = "buttonColor";
-            this.buttonColor.Size = new System.Drawing.Size(18, 18);
+            this.buttonColor.Size = new System.Drawing.Size(24, 22);
             this.buttonColor.TabIndex = 8;
             this.buttonColor.Text = "█";
             this.buttonColor.UseVisualStyleBackColor = false;
@@ -78,9 +79,10 @@
             this.buttonClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
             this.buttonClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gainsboro;
             this.buttonClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonClose.Location = new System.Drawing.Point(311, 180);
+            this.buttonClose.Location = new System.Drawing.Point(415, 225);
+            this.buttonClose.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonClose.Name = "buttonClose";
-            this.buttonClose.Size = new System.Drawing.Size(18, 18);
+            this.buttonClose.Size = new System.Drawing.Size(24, 22);
             this.buttonClose.TabIndex = 9;
             this.buttonClose.Text = "×";
             this.buttonClose.UseVisualStyleBackColor = false;
@@ -92,9 +94,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBoxContent.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBoxContent.Location = new System.Drawing.Point(8, 8);
+            this.richTextBoxContent.Location = new System.Drawing.Point(11, 10);
+            this.richTextBoxContent.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.richTextBoxContent.Name = "richTextBoxContent";
-            this.richTextBoxContent.Size = new System.Drawing.Size(314, 168);
+            this.richTextBoxContent.Size = new System.Drawing.Size(419, 210);
             this.richTextBoxContent.TabIndex = 0;
             this.richTextBoxContent.Text = "";
             this.richTextBoxContent.BackColorChanged += new System.EventHandler(this.richTextBoxContent_BackColorChanged);
@@ -111,9 +114,10 @@
             this.buttonTop.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
             this.buttonTop.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gainsboro;
             this.buttonTop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonTop.Location = new System.Drawing.Point(275, 180);
+            this.buttonTop.Location = new System.Drawing.Point(367, 225);
+            this.buttonTop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonTop.Name = "buttonTop";
-            this.buttonTop.Size = new System.Drawing.Size(18, 18);
+            this.buttonTop.Size = new System.Drawing.Size(24, 22);
             this.buttonTop.TabIndex = 7;
             this.buttonTop.Text = "↓";
             this.buttonTop.UseVisualStyleBackColor = false;
@@ -129,9 +133,10 @@
             this.buttonPrevious.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
             this.buttonPrevious.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gainsboro;
             this.buttonPrevious.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonPrevious.Location = new System.Drawing.Point(185, 180);
+            this.buttonPrevious.Location = new System.Drawing.Point(247, 225);
+            this.buttonPrevious.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonPrevious.Name = "buttonPrevious";
-            this.buttonPrevious.Size = new System.Drawing.Size(18, 18);
+            this.buttonPrevious.Size = new System.Drawing.Size(24, 22);
             this.buttonPrevious.TabIndex = 2;
             this.buttonPrevious.Text = "<";
             this.buttonPrevious.UseVisualStyleBackColor = false;
@@ -147,9 +152,10 @@
             this.buttonNext.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
             this.buttonNext.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gainsboro;
             this.buttonNext.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonNext.Location = new System.Drawing.Point(203, 180);
+            this.buttonNext.Location = new System.Drawing.Point(271, 225);
+            this.buttonNext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonNext.Name = "buttonNext";
-            this.buttonNext.Size = new System.Drawing.Size(18, 18);
+            this.buttonNext.Size = new System.Drawing.Size(24, 22);
             this.buttonNext.TabIndex = 3;
             this.buttonNext.Text = ">";
             this.buttonNext.UseVisualStyleBackColor = false;
@@ -165,9 +171,10 @@
             this.buttonAdd.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
             this.buttonAdd.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gainsboro;
             this.buttonAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonAdd.Location = new System.Drawing.Point(221, 180);
+            this.buttonAdd.Location = new System.Drawing.Point(295, 225);
+            this.buttonAdd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonAdd.Name = "buttonAdd";
-            this.buttonAdd.Size = new System.Drawing.Size(18, 18);
+            this.buttonAdd.Size = new System.Drawing.Size(24, 22);
             this.buttonAdd.TabIndex = 4;
             this.buttonAdd.Text = "+";
             this.buttonAdd.UseVisualStyleBackColor = false;
@@ -183,9 +190,10 @@
             this.buttonSave.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
             this.buttonSave.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gainsboro;
             this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSave.Location = new System.Drawing.Point(239, 180);
+            this.buttonSave.Location = new System.Drawing.Point(319, 225);
+            this.buttonSave.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(18, 18);
+            this.buttonSave.Size = new System.Drawing.Size(24, 22);
             this.buttonSave.TabIndex = 5;
             this.buttonSave.Text = "✓";
             this.buttonSave.UseVisualStyleBackColor = false;
@@ -201,9 +209,10 @@
             this.buttonDelete.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
             this.buttonDelete.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gainsboro;
             this.buttonDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonDelete.Location = new System.Drawing.Point(257, 180);
+            this.buttonDelete.Location = new System.Drawing.Point(343, 225);
+            this.buttonDelete.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonDelete.Name = "buttonDelete";
-            this.buttonDelete.Size = new System.Drawing.Size(18, 18);
+            this.buttonDelete.Size = new System.Drawing.Size(24, 22);
             this.buttonDelete.TabIndex = 6;
             this.buttonDelete.Text = "-";
             this.buttonDelete.UseVisualStyleBackColor = false;
@@ -213,9 +222,10 @@
             // 
             this.panelBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panelBar.Location = new System.Drawing.Point(0, 180);
+            this.panelBar.Location = new System.Drawing.Point(0, 225);
+            this.panelBar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panelBar.Name = "panelBar";
-            this.panelBar.Size = new System.Drawing.Size(165, 18);
+            this.panelBar.Size = new System.Drawing.Size(220, 22);
             this.panelBar.TabIndex = 9;
             this.panelBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelBar_MouseDown);
             this.panelBar.MouseEnter += new System.EventHandler(this.panelBar_MouseEnter);
@@ -233,23 +243,24 @@
             // 
             // contextMenuStripNotify
             // 
+            this.contextMenuStripNotify.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripNotify.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ToolStripMenuItemTop,
             this.ToolStripMenuItemExit});
             this.contextMenuStripNotify.Name = "contextMenuStripNotify";
-            this.contextMenuStripNotify.Size = new System.Drawing.Size(101, 48);
+            this.contextMenuStripNotify.Size = new System.Drawing.Size(109, 52);
             // 
             // ToolStripMenuItemTop
             // 
             this.ToolStripMenuItemTop.Name = "ToolStripMenuItemTop";
-            this.ToolStripMenuItemTop.Size = new System.Drawing.Size(100, 22);
+            this.ToolStripMenuItemTop.Size = new System.Drawing.Size(108, 24);
             this.ToolStripMenuItemTop.Text = "置顶";
             this.ToolStripMenuItemTop.Click += new System.EventHandler(this.ToolStripMenuItemTop_Click);
             // 
             // ToolStripMenuItemExit
             // 
             this.ToolStripMenuItemExit.Name = "ToolStripMenuItemExit";
-            this.ToolStripMenuItemExit.Size = new System.Drawing.Size(100, 22);
+            this.ToolStripMenuItemExit.Size = new System.Drawing.Size(108, 24);
             this.ToolStripMenuItemExit.Text = "退出";
             this.ToolStripMenuItemExit.Click += new System.EventHandler(this.ToolStripMenuItemExit_Click);
             // 
@@ -262,9 +273,10 @@
             this.buttonRefresh.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightGray;
             this.buttonRefresh.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gainsboro;
             this.buttonRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonRefresh.Location = new System.Drawing.Point(167, 180);
+            this.buttonRefresh.Location = new System.Drawing.Point(223, 225);
+            this.buttonRefresh.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonRefresh.Name = "buttonRefresh";
-            this.buttonRefresh.Size = new System.Drawing.Size(18, 18);
+            this.buttonRefresh.Size = new System.Drawing.Size(24, 22);
             this.buttonRefresh.TabIndex = 1;
             this.buttonRefresh.Text = "¤";
             this.buttonRefresh.UseVisualStyleBackColor = false;
@@ -272,9 +284,9 @@
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(330, 200);
+            this.ClientSize = new System.Drawing.Size(440, 250);
             this.Controls.Add(this.panelBar);
             this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.buttonColor);
@@ -289,6 +301,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "MainForm";
             this.ShowInTaskbar = false;
             this.Text = "提醒磁贴";

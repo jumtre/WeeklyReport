@@ -15,10 +15,51 @@ namespace ReminderTile
 {
     public partial class MainForm : Form
     {
+        private readonly Timer mouseCheckTimer = new Timer();
+        private readonly Timer fadeTimer = new Timer();
+        private double targetOpacity = 0.5;
+
         public MainForm()
         {
             InitializeComponent();
             AutoScaleMode = AutoScaleMode.Dpi;
+
+            // ==================== 可调整参数 ====================
+            // 鼠标离开窗体后的透明度。
+            // 取值范围：0.0 ~ 1.0
+            // 0.0 = 完全透明
+            // 0.5 = 50% 透明度
+            // 1.0 = 完全不透明
+            this.Opacity = 0.5;
+
+            // 鼠标位置检测间隔，单位：毫秒。
+            // 这个 Timer 只在鼠标位于窗体内时运行，
+            // 用来判断鼠标是否已经真正离开整个窗体。
+            //
+            // 数值越小：离开窗体后的响应越快，但检测频率越高。
+            // 数值越大：检测频率越低，但离开后的响应会有一定延迟。
+            //
+            // 推荐：30 ~ 100
+            // 50ms 通常是响应速度和检测频率之间比较合适的值。
+            mouseCheckTimer.Interval = 50;
+
+            // 渐变动画刷新间隔，单位：毫秒。
+            //
+            // 数值越小：动画刷新越频繁，视觉上越平滑。
+            // 数值越大：动画刷新频率越低，可能出现明显的逐级变化。
+            //
+            // 推荐：15 ~ 30
+            // 一般不建议通过大幅增加 Interval 来降低动画速度，
+            // 应主要通过 easing 调整动画快慢。
+            fadeTimer.Interval = 15;
+            // ==================================================
+
+            mouseCheckTimer.Tick += MouseCheckTimer_Tick;
+            fadeTimer.Tick += FadeTimer_Tick;
+
+            // 给窗体以及所有现有子控件统一注册 MouseEnter。
+            RegisterMouseEnter(this);
+
             //XScrollBar scrollBar = new XScrollBar();
             //richTextBoxContent.ScrollBars = scrollBar;
         }
@@ -679,6 +720,139 @@ namespace ReminderTile
                 buttonClose.PerformClick();
                 e.Handled = true;
             }
+        }
+
+        /// <summary>
+        /// 递归给窗体及其所有子控件注册 MouseEnter 事件。
+        /// 这样即使子控件铺满整个无边框窗体，也能检测到鼠标进入。
+        /// </summary>
+        private void RegisterMouseEnter(Control parent)
+        {
+            parent.MouseEnter += Control_MouseEnter;
+
+            foreach (Control control in parent.Controls)
+            {
+                RegisterMouseEnter(control);
+            }
+        }
+
+        /// <summary>
+        /// 鼠标进入窗体或任意子控件
+        /// </summary>
+        private void Control_MouseEnter(object sender, EventArgs e)
+        {
+            // Timer 没有运行，说明鼠标之前位于整个窗体外。
+            // 因此只有真正从窗体外进入时才进行处理，
+            // 在各个子控件之间移动不会重复启动动画。
+            if (!mouseCheckTimer.Enabled)
+            {
+                // 开始监测鼠标什么时候真正离开整个窗体。
+                mouseCheckTimer.Start();
+
+                // 渐变到完全不透明。
+                FadeTo(1.0);
+            }
+        }
+
+        /// <summary>
+        /// 检查鼠标是否真正离开了整个窗体
+        /// </summary>
+        private void MouseCheckTimer_Tick(object sender, EventArgs e)
+        {
+            // Bounds 是整个窗体在屏幕上的矩形范围。
+            // 因此无论鼠标当前位于 Form、Panel、Button、Label
+            // 还是其他子控件上，只要仍在 Bounds 内，就认为没有离开窗体。
+            if (this.Bounds.Contains(Cursor.Position))
+            {
+                return;
+            }
+
+            // 鼠标已经真正离开整个窗体，不再需要继续检测。
+            mouseCheckTimer.Stop();
+
+            // 渐变到 50% 透明度。
+            FadeTo(0.5);
+        }
+
+        /// <summary>
+        /// 置目标透明度，并启动渐变动画。
+        /// </summary>
+        private void FadeTo(double opacity)
+        {
+            targetOpacity = opacity;
+
+            // 如果当前已经是目标透明度，就不需要启动 Timer
+            if (Math.Abs(this.Opacity - targetOpacity) < 0.001)
+            {
+                this.Opacity = targetOpacity;
+                return;
+            }
+
+            // fadeTimer 只在实际需要执行渐变时运行。
+            if (!fadeTimer.Enabled)
+            {
+                fadeTimer.Start();
+            }
+        }
+
+        /// <summary>
+        /// 使用 Ease-Out 方式进行透明度渐变
+        /// </summary>
+        private void FadeTimer_Tick(object sender, EventArgs e)
+        {
+            // ==================== 可调整参数 ====================
+
+            // 缓动系数，是控制动画速度最主要的参数。
+            //
+            // 每次 Tick 移动“当前透明度与目标透明度之间剩余距离”的这个比例。
+            //
+            // 数值越大：渐变越快。
+            // 数值越小：渐变越慢、越柔和。
+            //
+            // 推荐范围：
+            // 0.05 = 比较慢，渐变效果非常明显
+            // 0.08 = 较慢且自然（推荐）
+            // 0.10 = 中等速度
+            // 0.15 = 较快
+            // 0.20 = 很快
+            //
+            // 原来使用 0.20，变化太快，所以这里调整为 0.08。
+            const double easing = 0.08;
+
+            // 判断“已经到达目标透明度”的误差范围。
+            //
+            // Ease-Out 是按剩余距离的比例逐渐逼近目标值，
+            // 理论上会无限接近目标值而不会精确等于目标值，
+            // 所以需要设置一个足够小的误差范围来结束动画。
+            //
+            // 数值越小：动画尾部持续时间越长。
+            // 数值越大：越早结束动画并直接设置为目标值。
+            //
+            // 推荐：0.003 ~ 0.01
+            const double minDifference = 0.005;
+
+            // ==================================================
+
+            // 计算目标透明度与当前透明度之间还剩多少距离。
+            double difference = targetOpacity - this.Opacity;
+
+            // 已经非常接近目标透明度，直接设置最终值并停止 Timer。
+            if (Math.Abs(difference) <= minDifference)
+            {
+                this.Opacity = targetOpacity;
+                fadeTimer.Stop();
+                return;
+            }
+
+            // 每次移动剩余距离的一部分。
+            //
+            // 例如 easing = 0.08：
+            // 当前 0.50，目标 1.00：
+            // 第一次增加 (1.00 - 0.50) × 0.08
+            //
+            // 随着越来越接近目标值，每次变化量也会越来越小，
+            // 从而形成“开始较快、接近目标时逐渐减速”的 Ease-Out 效果。
+            this.Opacity += difference * easing;
         }
     }
 }
