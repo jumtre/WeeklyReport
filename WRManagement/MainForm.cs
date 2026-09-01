@@ -45,6 +45,7 @@ namespace WRManagement
                 this.Close();
             }
             BindDict();
+            // 随系统启动
             FileInfo fileInfoWeeklyReport = new FileInfo(Path.Combine(CommonData.ApplicationPath, "WeeklyReport.exe"));
             checkBoxWeeklyReportAutoStartup.CheckedChanged -= checkBoxWeeklyReportAutoStartup_CheckedChanged;
             checkBoxWeeklyReportAutoStartup.Checked = CommonFunc.IsStartup(fileInfoWeeklyReport);
@@ -57,6 +58,13 @@ namespace WRManagement
             checkBoxReminderTileAutoStartup.CheckedChanged -= checkBoxReminderTileAutoStartup_CheckedChanged;
             checkBoxReminderTileAutoStartup.Checked = CommonFunc.IsStartup(fileInfoReminderTile);
             checkBoxReminderTileAutoStartup.CheckedChanged += checkBoxReminderTileAutoStartup_CheckedChanged;
+            // 提醒磁贴
+            checkBoxReminderTileAutoHide.CheckedChanged -= checkBoxReminderTileAutoHide_CheckedChanged;
+            checkBoxReminderTileAutoHide.Checked = CommonData.IniHelper.Read("ReminderTile", "AutoHide").ToLower() == "true" ? true : false;
+            checkBoxReminderTileAutoHide.CheckedChanged += checkBoxReminderTileAutoHide_CheckedChanged;
+            checkBoxReminderTileOpacityEffect.CheckedChanged -= checkBoxReminderTileOpacityEffect_CheckedChanged;
+            checkBoxReminderTileOpacityEffect.Checked = CommonData.IniHelper.Read("ReminderTile", "OpacityEffect").ToLower() == "true" ? true : false;
+            checkBoxReminderTileOpacityEffect.CheckedChanged += checkBoxReminderTileOpacityEffect_CheckedChanged;
         }
 
         private void BindDict()
@@ -615,7 +623,7 @@ namespace WRManagement
                 CommonData.IniHelper.Write("Common", "CurrentBranchID", currentBranch.ID.ToString());
                 CommonData.IniHelper.Write("Common", "CurrentBranchName", currentBranch.Name);
             }
-            CommonData.IniHelper.Write("Common", "ApplyCurrentProjectAndBranchToSearch", checkBoxApplyCurrentProjectAndBranchToSearch.Checked ? "true" : "false");
+            CommonData.IniHelper.Write("Common", "ApplyCurrentProjectAndBranchToSearch", checkBoxApplyCurrentProjectAndBranchToSearch.Checked ? true.ToString() : false.ToString());
         }
 
         private void comboBoxCurrentProject_SelectedIndexChanged(object sender, EventArgs e)
@@ -717,6 +725,16 @@ namespace WRManagement
             {
                 textBoxWorkingDirectory.Text = folderBrowserDialog.SelectedPath;
             }
+        }
+
+        private void checkBoxReminderTileAutoHide_CheckedChanged(object sender, EventArgs e)
+        {
+            CommonData.IniHelper.Write("ReminderTile", "AutoHide", checkBoxReminderTileAutoHide.Checked.ToString());
+        }
+
+        private void checkBoxReminderTileOpacityEffect_CheckedChanged(object sender, EventArgs e)
+        {
+            CommonData.IniHelper.Write("ReminderTile", "OpacityEffect", checkBoxReminderTileOpacityEffect.Checked.ToString());
         }
     }
 }
