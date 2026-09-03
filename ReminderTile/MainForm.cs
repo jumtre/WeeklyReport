@@ -885,17 +885,40 @@ namespace ReminderTile
 
         private void notifyIconNofity_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            //if (this.Visible)
-            //{
-            //    //notifyIconNofity.Visible = true;
-            //    this.Hide();
-            //}
-            //else
-            //{
-            //    this.Show();
-            //    this.Activate();
-            //}
-            this.Show();
+            // 如果窗体之前通过 Close → Hide() 隐藏，先重新显示窗体。
+            if (!this.Visible)
+            {
+                this.Show();
+            }
+
+            // 如果窗体处于最小化状态，先恢复到正常状态。
+            // 当前程序设置为无边框，且没有最小化逻辑，但这里加上可以让托盘唤醒逻辑更加完整。
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.WindowState = FormWindowState.Normal;
+            }
+
+
+            // ========================================================
+            // 自动贴边状态
+            // =======================================================
+            // 如果当前处于自动贴边模式并且已经隐藏，则将窗体完整展开。
+            // ShowDockWindow() 只会：isHidden = false + 把窗体缓动到完整显示位置，不会清除：dockSide 和 dockScreen
+            // 因此当前贴边状态仍然保留。
+            if (EnableAutoHideDock && dockSide != DockSide.None && isHidden)
+            {
+                // 确保托盘双击以后不会因为之前残留的 mouseCheckTimer 立即再次触发自动隐藏。
+                // 正常隐藏流程本来就会停止这个 Timer，这里再 Stop() 一次作为状态保护。
+                mouseCheckTimer.Stop();
+                ShowDockWindow();
+            }
+
+            // ========================================================
+            // 将窗体显示到前台
+            // ========================================================
+            // BringToFront + Activate 只负责这一次把窗口唤到前台，不修改 TopMost 属性。
+            // 因此：TopMost = true → 窗口仍然保持置顶。TopMost = false → 只是托盘双击这一刻显示到前面，后续仍然允许其他窗口覆盖它。
+            this.BringToFront();
             this.Activate();
         }
 
