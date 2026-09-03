@@ -1045,9 +1045,9 @@ namespace Common
                 if (registryKey == null)
                     return false;
                 //System.Diagnostics.ProcessModule processMainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule;
-                //string appName = "X" + processMainModule.ModuleName;
+                //string appName = processMainModule.ModuleName;
                 //string appPath = processMainModule.FileName;
-                string appName = "X" + fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length);
+                string appName = fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length);
                 //string appPath = fileInfo.FullName;
                 if (registryKey.GetValueNames().Count(n => n.ToUpper() == appName.ToUpper()) == 0)
                     return false;
@@ -1075,9 +1075,9 @@ namespace Common
                 if (!Directory.Exists(startupPath))
                     return false;
                 //System.Diagnostics.ProcessModule processMainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule;
-                //string appName = "X" + processMainModule.ModuleName;
+                //string appName = processMainModule.ModuleName;
                 //string appPath = processMainModule.FileName;
-                string appName = "X" + fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length);
+                string appName = fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length);
                 string appPath = fileInfo.FullName;
                 string[] lnkFiles = Directory.GetFiles(startupPath, "*.lnk");
                 string appLnkPath = Path.Combine(startupPath, appName + ".lnk");
@@ -1130,9 +1130,9 @@ namespace Common
                         return true;
                 }
                 //System.Diagnostics.ProcessModule processMainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule;
-                //string appName = "X" + processMainModule.ModuleName;
+                //string appName = processMainModule.ModuleName;
                 //string appPath = processMainModule.FileName;
-                string appName = "X" + fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length);
+                string appName = fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length);
                 if (registryKey.GetValueNames().Count(n => n.ToUpper() == appName.ToUpper()) == 0)
                 {
                     if (startup)
@@ -1178,10 +1178,10 @@ namespace Common
             try
             {
                 //System.Diagnostics.ProcessModule processMainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule;
-                //string appName = "X" + processMainModule.ModuleName;
+                //string appName = processMainModule.ModuleName;
                 //string appPath = processMainModule.FileName;
                 string startupPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
-                string appName = "X" + fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length);
+                string appName = fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length);
                 string appLnkPath = Path.Combine(startupPath, appName + ".lnk");
 
                 string[] lnkFiles = null;
