@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Win32;
 //using XControls;
 
 namespace XReminderTile
@@ -269,6 +270,11 @@ namespace XReminderTile
 
             // WinForms 有一种情况：鼠标按下以后拖动过程中，控件失去鼠标捕获，MouseUp 不一定按照预想的流程发生。因此可以给 panelBar 再增加一个 MouseCaptureChanged
             panelBar.MouseCaptureChanged += panelBar_MouseCaptureChanged;
+
+            // 监听 Windows 显示器配置变化。
+            // 例如：插入 / 拔出显示器；修改显示器排列；修改分辨率；其他会导致虚拟桌面区域变化的操作。
+            // 显示器配置变化以后，原来保存的 dockScreen 以及基于旧屏幕坐标建立的贴边状态已经不再可靠，因此需要重新处理。
+            SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
 
             // 跨屏幕拖动时，如果窗体的 DPI 不同，为了让混合 DPI 更稳，可以考虑加一个 DpiChanged 处理。
             // 当前项目基于 .NET Framework 4.5，不启用 DpiChanged 处理。如果以后升级到支持 Per-Monitor DPI / DpiChanged 的框架版本，可以结合文件末尾保留的参考代码重新评估是否启用。
@@ -946,9 +952,15 @@ namespace XReminderTile
             }
             else if (e.CloseReason == CloseReason.UserClosing)
             {
+                // 普通关闭只是隐藏到托盘，不真正销毁窗体。
                 e.Cancel = true;
                 //notifyIconNofity.Visible = true;
                 this.Hide();
+            }
+            // 只有这次关闭没有被取消，窗体才会真正进入销毁流程。SystemEvents 是静态事件，真正销毁前必须解除订阅。
+            if (!e.Cancel)
+            {
+                SystemEvents.DisplaySettingsChanged -= SystemEvents_DisplaySettingsChanged;
             }
         }
 
@@ -2014,6 +2026,96 @@ namespace XReminderTile
                 return max;
             }
             return value;
+        }
+
+        /// <summary>
+        /// Windows 显示器配置发生变化。
+        /// 例如：
+        /// 1. 插入 / 拔出显示器；
+        /// 2. 修改多显示器排列；
+        /// 3. 修改显示器分辨率。
+        /// 显示器配置改变以后，原来的 dockScreen、WorkingArea 以及虚拟桌面坐标关系都可能已经发生变化。
+        /// 因此当前自动贴边状态不应该继续沿用，而是恢复成普通自由悬浮状态，并确保窗体完整位于当前仍然有效的某个显示器内。
+        /// </summary>
+        private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
+        {
+            // SystemEvents 不保证一定在 WinForms UI 线程触发。
+            // 窗体、Timer、Location 等 UI 操作必须切回 UI 线程执行。
+            if (this.IsDisposed || this.Disposing)
+            {
+                return;
+            }
+
+            if (this.InvokeRequired)
+            {
+                try
+                {
+                    this.BeginInvoke(new Action(HandleDisplaySettingsChanged));
+                }
+                catch
+                {
+                    // 程序退出过程中 Handle 可能已经销毁，此时无需继续处理显示器变化。
+                }
+                return;
+            }
+            HandleDisplaySettingsChanged();
+        }
+
+        /// <summary>
+        /// 在 UI 线程中处理显示器配置变化。
+        /// </summary>
+        private void HandleDisplaySettingsChanged()
+        {
+            // ========================================================
+            // 1. 停止与旧贴边状态有关的动画和检测
+            // ========================================================
+            // 原来的 targetLocation 很可能是根据旧显示器坐标计算的，显示器配置变化以后不能再继续执行。
+            slideTimer.Stop();
+            // 当前 MouseLeave 检测可能也是基于旧 Dock 状态运行的，先停止，后面再根据新的状态决定是否需要重新启动。
+            mouseCheckTimer.Stop();
+
+            // ========================================================
+            // 2. 清除旧的自动贴边状态
+            // ========================================================
+            // 显示器配置发生变化以后，不继续沿用旧 dockScreen。
+            // 原因包括：
+            // - 原来的显示器可能已经被拔掉；
+            // - Screen.AllScreens 已经发生变化；
+            // - 显示器 DeviceName 可能重新映射；
+            // - 虚拟桌面坐标可能变化；
+            // - WorkingArea 可能变化。
+            // 因此最安全、最符合用户预期的行为是：
+            // 自动退出旧贴边模式，
+            // 恢复普通自由悬浮状态。
+            // 用户之后如果仍然需要贴边，可以重新拖出屏幕 DockTriggerDistance 后再次进入。
+            dockSide = DockSide.None;
+            dockScreen = null;
+            isHidden = false;
+
+            // ========================================================
+            // 3. 确保窗体完整位于当前有效显示器内
+            // ========================================================
+            // Windows 在显示器被拔掉以后通常会主动调整窗口位置，所以如果当前窗体已经完整位于某个有效显示器内，这里实际上不会改变它的位置。
+            // 只有窗口仍然有部分落在已经不存在的虚拟桌面区域时，才把它限制回当前有效显示器。
+            Screen screen = Screen.FromRectangle(this.Bounds);
+            Rectangle area = screen.WorkingArea;
+            int maxX = Math.Max(area.Left, area.Right - this.Width);
+            int maxY = Math.Max(area.Top, area.Bottom - this.Height);
+            int newX = Clamp(this.Left, area.Left, maxX);
+            int newY = Clamp(this.Top, area.Top, maxY);
+            this.Location = new Point(newX, newY);
+
+            // ========================================================
+            // 4. 恢复普通透明度 / 鼠标检测逻辑
+            // ========================================================
+            if (EnableOpacityEffect)
+            {
+                // 已经退出自动贴边模式，所以重新根据当前鼠标位置确定目标透明度。
+                FadeTo(IsMouseInActiveArea() ? ActiveOpacity : InactiveOpacity);
+            }
+
+            // 根据当前普通悬浮状态重新决定 mouseCheckTimer 是否需要运行。
+            UpdateMouseCheckTimer();
         }
 
         /*
